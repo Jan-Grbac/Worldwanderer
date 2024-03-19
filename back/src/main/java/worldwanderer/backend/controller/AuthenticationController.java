@@ -1,6 +1,7 @@
 package worldwanderer.backend.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import worldwanderer.backend.dto.JWTAuthenticationResponse;
@@ -16,12 +17,12 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
-    @PostMapping(value="/signup")
+    @PostMapping(value="/signup", consumes = "application/json", produces = "application/json")
     public ResponseEntity<User> signUp(@RequestBody SignUpRequest signUpRequest) {
         return ResponseEntity.ok(authenticationService.signUp(signUpRequest));
     }
 
-    @PostMapping(value="/signin")
+    @PostMapping(value="/signin", consumes = "application/json", produces = "application/json")
     public ResponseEntity<JWTAuthenticationResponse> signIn(@RequestBody SignInRequest signInRequest) {
         return ResponseEntity.ok(authenticationService.signIn(signInRequest));
     }

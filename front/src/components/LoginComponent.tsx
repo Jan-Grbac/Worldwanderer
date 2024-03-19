@@ -6,7 +6,6 @@ interface Props {}
 
 function RegistrationComponent(props: Props) {
   const [user, setUser] = useState({
-    email: "",
     username: "",
     password: "",
   });
@@ -14,10 +13,6 @@ function RegistrationComponent(props: Props) {
 
   function handleInputChange(param: string, value: any) {
     let newUser = { ...user };
-    if (param === "email") {
-      newUser[param] = value;
-      setUser(newUser);
-    }
     if (param === "username") {
       newUser[param] = value;
       setUser(newUser);
@@ -28,18 +23,9 @@ function RegistrationComponent(props: Props) {
     }
   }
 
-  function isValidEmail(email: string) {
-    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    return emailPattern.test(email);
-  }
-
-  function handleRegisterButtonClick() {
-    if (!isValidEmail(user.email)) {
-      alert("Wrong email format!");
-      return;
-    }
+  function handleLoginButtonClick() {
     if (user.username === "") {
-      alert("Password cannot be empty!");
+      alert("Username cannot be empty!");
       return;
     }
     if (user.password === "") {
@@ -56,7 +42,7 @@ function RegistrationComponent(props: Props) {
       method: "POST",
       body: JSON.stringify(user),
     };
-    fetch("/api/auth/signup", fetchData)
+    fetch("/api/auth/signin", fetchData)
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -64,21 +50,11 @@ function RegistrationComponent(props: Props) {
       })
       .then((data) => {
         console.log(data);
-        navigate("/");
       });
   }
 
   return (
     <div className="d-flex flex-column justify-content-center align-items-center">
-      <div className="p-2">
-        Email:
-        <input
-          type="email"
-          placeholder="john.doe@email.com"
-          value={user.email}
-          onChange={(event) => handleInputChange("email", event.target.value)}
-        ></input>
-      </div>
       <div className="p-2">
         Username:
         <input
@@ -99,7 +75,7 @@ function RegistrationComponent(props: Props) {
           }
         ></input>
       </div>
-      <button onClick={handleRegisterButtonClick}>Register</button>
+      <button onClick={handleLoginButtonClick}>Login</button>
     </div>
   );
 }
