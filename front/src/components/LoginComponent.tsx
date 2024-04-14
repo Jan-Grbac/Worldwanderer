@@ -3,10 +3,11 @@ import { useNavigate } from "react-router-dom";
 
 interface Props {
   setJwt: Function;
+  setUsername: Function;
 }
 
-function RegistrationComponent(props: Props) {
-  const { setJwt } = { ...props };
+function LoginComponent(props: Props) {
+  const { setJwt, setUsername } = { ...props };
   const [user, setUser] = useState({
     username: "",
     password: "",
@@ -52,6 +53,7 @@ function RegistrationComponent(props: Props) {
       })
       .then((data) => {
         setJwt(data.token);
+        setUsername(user.username);
         navigate("/");
       });
   }
@@ -87,4 +89,4 @@ function RegistrationComponent(props: Props) {
   );
 }
 
-export default RegistrationComponent;
+export default LoginComponent;

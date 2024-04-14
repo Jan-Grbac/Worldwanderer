@@ -4,10 +4,11 @@ import { useNavigate } from "react-router-dom";
 
 interface Props {
   setJwt: Function;
+  setUsername: Function;
 }
 
 function RegistrationComponent(props: Props) {
-  const { setJwt } = { ...props };
+  const { setJwt, setUsername } = { ...props };
   const [user, setUser] = useState({
     email: "",
     username: "",
@@ -42,7 +43,7 @@ function RegistrationComponent(props: Props) {
       return;
     }
     if (user.username === "") {
-      alert("Password cannot be empty!");
+      alert("Username cannot be empty!");
       return;
     }
     if (user.password === "") {
@@ -67,7 +68,8 @@ function RegistrationComponent(props: Props) {
       })
       .then((data) => {
         setJwt(data.token);
-        navigate("/");
+        setUsername(user.username);
+        navigate("/home");
       });
   }
 

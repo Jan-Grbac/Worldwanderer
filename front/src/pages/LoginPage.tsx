@@ -7,22 +7,23 @@ import NavbarComponent from "../components/NavbarComponent";
 interface Props {
   jwtIsValid: boolean;
   setJwt: Function;
+  setUsername: Function;
 }
 
 function LoginPage(props: Props) {
-  const { jwtIsValid, setJwt } = { ...props };
+  const { jwtIsValid, setJwt, setUsername } = { ...props };
   const navigate = useNavigate();
 
   useEffect(() => {
     if (jwtIsValid) {
-      navigate("/");
+      navigate("/home");
     }
   }, []);
 
   return (
     <>
       <NavbarComponent />
-      <LoginComponent setJwt={setJwt} />
+      <LoginComponent setJwt={setJwt} setUsername={setUsername} />
     </>
   );
 }

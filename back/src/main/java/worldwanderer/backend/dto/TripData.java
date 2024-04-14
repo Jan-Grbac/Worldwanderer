@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 @Data
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class CreateTripRequest {
+public class TripData {
     private String name;
     private String description;
 }

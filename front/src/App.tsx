@@ -5,10 +5,12 @@ import HomePage from "./pages/HomePage";
 import RegistrationPage from "./pages/RegistrationPage";
 import LoginPage from "./pages/LoginPage";
 import { useState, useEffect } from "react";
-import { jwtDecode } from "jwt-decode";
+import { JwtHeader, jwtDecode } from "jwt-decode";
+import TripsPage from "./pages/TripsPage";
 
 function App() {
   const cookies = new Cookies();
+  const [username, setUsername] = useState("");
   const [jwt, setJwt] = useState(
     cookies.get("jwt") !== undefined ? cookies.get("jwt") : ""
   );
@@ -29,13 +31,14 @@ function App() {
           }
         })
         .then((data) => {
-          setJwtIsValid(data);
+          setJwtIsValid(data.valid);
           if (data) {
-            const decoded = jwtDecode(jwt);
+            const decoded = jwtDecode(jwt, { header: false });
             if (decoded.exp !== undefined) {
               cookies.set("jwt", jwt, {
                 expires: new Date(decoded.exp * 1000),
               });
+              setUsername(decoded.sub as string);
             }
           } else {
             cookies.remove("jwt");
@@ -47,20 +50,50 @@ function App() {
     }
   });
 
+  function logout() {
+    setJwt("");
+    setJwtIsValid(false);
+    const cookies = new Cookies();
+    cookies.remove("jwt");
+  }
+
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/home" element={<HomePage />} />
+          <Route
+            path="/home"
+            element={<HomePage jwtIsValid={jwtIsValid} username={username} />}
+          />
           <Route
             path="/signup"
             element={
-              <RegistrationPage jwtIsValid={jwtIsValid} setJwt={setJwt} />
+              <RegistrationPage
+                jwtIsValid={jwtIsValid}
+                setJwt={setJwt}
+                setUsername={setUsername}
+              />
             }
           />
           <Route
             path="/signin"
-            element={<LoginPage jwtIsValid={jwtIsValid} setJwt={setJwt} />}
+            element={
+              <LoginPage
+                jwtIsValid={jwtIsValid}
+                setJwt={setJwt}
+                setUsername={setUsername}
+              />
+            }
+          />
+          <Route
+            path="/trips"
+            element={
+              <TripsPage
+                jwt={jwt}
+                jwtIsValid={jwtIsValid}
+                username={username}
+              />
+            }
           />
         </Routes>
       </BrowserRouter>

@@ -5,14 +5,15 @@ import NavbarComponent from "../components/NavbarComponent";
 interface Props {
   jwtIsValid: boolean;
   setJwt: Function;
+  setUsername: Function;
 }
 
 function RegistrationPage(props: Props) {
-  const { jwtIsValid, setJwt } = { ...props };
+  const { jwtIsValid, setJwt, setUsername } = { ...props };
   return (
     <>
       <NavbarComponent />
-      <RegistrationComponent setJwt={setJwt} />
+      <RegistrationComponent setJwt={setJwt} setUsername={setUsername} />
     </>
   );
 }

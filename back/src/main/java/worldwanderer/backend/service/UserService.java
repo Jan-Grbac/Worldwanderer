@@ -12,4 +12,5 @@ public interface UserService {
     UserDetailsService userDetailsService();
 
     void store(User user);
+    User getUserByUsername(String username);
 }

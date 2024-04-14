@@ -21,8 +21,13 @@ public class AuthenticationController {
     private final JWTService jwtService;
 
     @PostMapping(value="/signup", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<User> signUp(@RequestBody SignUpRequest signUpRequest) {
-        return ResponseEntity.ok(authenticationService.signUp(signUpRequest));
+    public ResponseEntity<JWTAuthenticationResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
+        authenticationService.signUp(signUpRequest);
+        return ResponseEntity.ok(authenticationService.signIn(
+                SignInRequest.builder()
+                        .username(signUpRequest.getUsername())
+                        .password(signUpRequest.getPassword())
+                        .build()));
     }
 
     @PostMapping(value="/signin", consumes = "application/json", produces = "application/json")
