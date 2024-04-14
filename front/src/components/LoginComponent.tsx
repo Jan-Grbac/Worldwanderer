@@ -49,6 +49,9 @@ function LoginComponent(props: Props) {
       .then((response) => {
         if (response.ok) {
           return response.json();
+        } else {
+          alert("Wrong login info.");
+          return;
         }
       })
       .then((data) => {

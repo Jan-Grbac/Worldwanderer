@@ -16,6 +16,8 @@ function TripsPage(props: Props) {
   });
   const navigate = useNavigate();
 
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     if (jwt && username) {
       if (!jwtIsValid) {
@@ -38,7 +40,11 @@ function TripsPage(props: Props) {
           .then((data) => {
             setTrips(data);
           });
+        setLoading(true);
       }
+    } else {
+      navigate("/home");
+      console.log("You need to be logged in to view your trips!");
     }
   }, [jwt, username]);
 
@@ -80,9 +86,7 @@ function TripsPage(props: Props) {
         }
       })
       .then((data) => {
-        console.log(data);
         let newTrips = trips.concat(data);
-        console.log(newTrips);
         setTrips(newTrips);
         setNewTrip({
           name: "",
@@ -92,40 +96,48 @@ function TripsPage(props: Props) {
       });
   }
 
+  function handleOnTripClick(id: number) {
+    navigate("/edittrip/" + id);
+  }
+
   return (
-    <>
-      <div>
-        {trips.map(function (trip: any) {
-          return (
-            <p>
-              {trip.name} {trip.description}
-            </p>
-          );
-        })}
-      </div>
-      <div>
-        Create new trip:
-        <div className="p-2">
-          Trip name:
-          <input
-            type="text"
-            value={newTrip.name}
-            onChange={(event) => handleInputChange("name", event.target.value)}
-          ></input>
+    loading && (
+      <>
+        <div>
+          {trips.map(function (trip: any) {
+            return (
+              <button onClick={(event) => handleOnTripClick(trip.id)}>
+                {trip.name} {trip.description}
+              </button>
+            );
+          })}
         </div>
-        <div className="p-2">
-          Trip description:
-          <input
-            type="text"
-            value={newTrip.description}
-            onChange={(event) =>
-              handleInputChange("description", event.target.value)
-            }
-          ></input>
+        <div>
+          Create new trip:
+          <div className="p-2">
+            Trip name:
+            <input
+              type="text"
+              value={newTrip.name}
+              onChange={(event) =>
+                handleInputChange("name", event.target.value)
+              }
+            ></input>
+          </div>
+          <div className="p-2">
+            Trip description:
+            <input
+              type="text"
+              value={newTrip.description}
+              onChange={(event) =>
+                handleInputChange("description", event.target.value)
+              }
+            ></input>
+          </div>
+          <button onClick={handleNewTripCreation}>Create new trip</button>
         </div>
-        <button onClick={handleNewTripCreation}>Create new trip</button>
-      </div>
-    </>
+      </>
+    )
   );
 }
 

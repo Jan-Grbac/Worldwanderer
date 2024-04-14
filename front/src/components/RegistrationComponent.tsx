@@ -64,6 +64,9 @@ function RegistrationComponent(props: Props) {
       .then((response) => {
         if (response.ok) {
           return response.json();
+        } else {
+          alert("User already exists!");
+          return;
         }
       })
       .then((data) => {

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class TripData {
+    private Long id;
     private String name;
     private String description;
 }

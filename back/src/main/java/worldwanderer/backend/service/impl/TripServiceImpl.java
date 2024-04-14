@@ -28,6 +28,11 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
+    public Trip getTripForId(long id) {
+        return tripRepository.findById(id).orElseThrow();
+    }
+
+    @Override
     public List<Trip> getTripsForUser(User user) {
         return tripRepository.findAllByUser(user);
     }
