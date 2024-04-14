@@ -2,9 +2,12 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-interface Props {}
+interface Props {
+  setJwt: Function;
+}
 
 function RegistrationComponent(props: Props) {
+  const { setJwt } = { ...props };
   const [user, setUser] = useState({
     email: "",
     username: "",
@@ -63,7 +66,7 @@ function RegistrationComponent(props: Props) {
         }
       })
       .then((data) => {
-        console.log(data);
+        setJwt(data.token);
         navigate("/");
       });
   }

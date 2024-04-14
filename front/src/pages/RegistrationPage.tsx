@@ -1,12 +1,18 @@
 import React from "react";
 import RegistrationComponent from "../components/RegistrationComponent";
+import NavbarComponent from "../components/NavbarComponent";
 
-interface Props {}
+interface Props {
+  jwtIsValid: boolean;
+  setJwt: Function;
+}
 
 function RegistrationPage(props: Props) {
+  const { jwtIsValid, setJwt } = { ...props };
   return (
     <>
-      <RegistrationComponent />
+      <NavbarComponent />
+      <RegistrationComponent setJwt={setJwt} />
     </>
   );
 }
