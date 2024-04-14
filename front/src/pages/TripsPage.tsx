@@ -40,11 +40,8 @@ function TripsPage(props: Props) {
           .then((data) => {
             setTrips(data);
           });
-        setLoading(true);
       }
-    } else {
-      navigate("/home");
-      console.log("You need to be logged in to view your trips!");
+      setLoading(true);
     }
   }, [jwt, username]);
 

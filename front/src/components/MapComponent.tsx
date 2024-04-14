@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   GoogleMap,
   useLoadScript,
@@ -17,29 +17,27 @@ const center = {
 };
 
 const MapComponent = () => {
-  const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: "AIzaSyBBy4rP_7WtQH5hdshJLR2UwxgNTlO3YBM",
-    libraries: libraries,
-  });
+  const [map, setMap] = useState<google.maps.Map>();
+  const ref = useRef<HTMLDivElement>();
 
-  if (loadError) {
-    return <div>Error loading maps</div>;
-  }
-
-  if (!isLoaded) {
-    return <div>Loading maps</div>;
-  }
+  useEffect(() => {
+    if (ref.current && !map) {
+      setMap(
+        new window.google.maps.Map(ref.current, {
+          center: { lat: 4.4333479181711075, lng: -75.21505129646759 },
+          zoom: 10,
+        })
+      );
+    }
+  }, [map]);
 
   return (
-    <div>
-      <GoogleMap
-        mapContainerStyle={mapContainerStyle}
-        zoom={10}
-        center={center}
-      >
-        <Marker position={center} />
-      </GoogleMap>
-    </div>
+    <>
+      <div
+        ref={ref as any}
+        style={{ height: "100%", width: "700px", minHeight: "700px" }}
+      ></div>
+    </>
   );
 };
 

@@ -17,6 +17,7 @@ function LoginPage(props: Props) {
   useEffect(() => {
     if (jwtIsValid) {
       navigate("/home");
+      alert("You are already signed in!");
     }
   }, []);
 

@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { JwtHeader, jwtDecode } from "jwt-decode";
 import TripsPage from "./pages/TripsPage";
 import TripPlannerPage from "./pages/TripPlannerPage";
+import LogoutPage from "./pages/LogoutPage";
 
 function App() {
   const cookies = new Cookies();
@@ -46,16 +47,13 @@ function App() {
             cookies.remove("jwt");
             setJwt("");
           }
-          setLoading(true);
         });
-    } else {
-      setJwtIsValid(false);
     }
+    setLoading(true);
   });
 
-  function logout() {
+  function doLogout() {
     setJwt("");
-    setJwtIsValid(false);
     const cookies = new Cookies();
     cookies.remove("jwt");
   }
@@ -99,17 +97,21 @@ function App() {
                 />
               }
             />
+            <Route
+              path="/edittrip/:id"
+              element={
+                <TripPlannerPage
+                  jwt={jwt}
+                  jwtIsValid={jwtIsValid}
+                  username={username}
+                />
+              }
+            />
+            <Route
+              path="/logout"
+              element={<LogoutPage doLogout={doLogout} />}
+            />
           </Routes>
-          <Route
-            path="/edittrip/:id"
-            element={
-              <TripPlannerPage
-                jwt={jwt}
-                jwtIsValid={jwtIsValid}
-                username={username}
-              />
-            }
-          />
         </BrowserRouter>
       </>
     )
