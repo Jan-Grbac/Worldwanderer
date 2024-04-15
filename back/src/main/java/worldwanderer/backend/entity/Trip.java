@@ -22,7 +22,7 @@ public class Trip {
     private User user;
 
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<DayInterval> intervals;
+    private List<DateInterval> intervals;
 
     private String name;
     private String description;

@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @Table(name="interval")
-public class DayInterval {
+public class DateInterval {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
@@ -28,7 +28,7 @@ public class DayInterval {
     private Date startDate;
     private Date endDate;
 
-    public DayInterval() {
+    public DateInterval() {
 
     }
 }

@@ -28,6 +28,15 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
+    public TripData transformTripIntoTripData(Trip trip) {
+        return TripData.builder()
+                .name(trip.getName())
+                .description(trip.getDescription())
+                .id(trip.getId())
+                .build();
+    }
+
+    @Override
     public Trip getTripForId(long id) {
         return tripRepository.findById(id).orElseThrow();
     }

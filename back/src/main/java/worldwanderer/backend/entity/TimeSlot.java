@@ -19,7 +19,7 @@ public class TimeSlot {
 
     @ManyToOne
     @JoinColumn(name="interval_id")
-    private DayInterval interval;
+    private DateInterval interval;
 
     private Time startTime;
     private Time endTime;

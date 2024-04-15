@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import TripListComponent from "../components/TripListComponent";
+import CreateTripComponent from "../components/CreateTripComponent";
 
 interface Props {
   jwt: string;
@@ -10,10 +12,6 @@ interface Props {
 function TripsPage(props: Props) {
   const { jwt, jwtIsValid, username } = { ...props };
   const [trips, setTrips] = useState(new Array());
-  const [newTrip, setNewTrip] = useState({
-    name: "",
-    description: "",
-  });
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -45,93 +43,17 @@ function TripsPage(props: Props) {
     }
   }, [jwt, username]);
 
-  function handleInputChange(param: string, value: any) {
-    let newTripChanged = { ...newTrip };
-    if (param === "name") {
-      newTripChanged[param] = value;
-      setNewTrip(newTripChanged);
-    }
-    if (param === "description") {
-      newTripChanged[param] = value;
-      setNewTrip(newTripChanged);
-    }
-  }
-
-  function handleNewTripCreation() {
-    if (newTrip.name === "") {
-      alert("Name cannot be empty!");
-      return;
-    }
-    if (newTrip.description === "") {
-      alert("Description cannot be empty!");
-      return;
-    }
-
-    const fetchData = {
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-      body: JSON.stringify(newTrip),
-    };
-    fetch(`/api/core/trip/createTrip/${username}`, fetchData)
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-      })
-      .then((data) => {
-        let newTrips = trips.concat(data);
-        setTrips(newTrips);
-        setNewTrip({
-          name: "",
-          description: "",
-        });
-        window.location.reload();
-      });
-  }
-
-  function handleOnTripClick(id: number) {
-    navigate("/edittrip/" + id);
-  }
-
   return (
     loading && (
       <>
         <div>
-          {trips.map(function (trip: any) {
-            return (
-              <button onClick={(event) => handleOnTripClick(trip.id)}>
-                {trip.name} {trip.description}
-              </button>
-            );
-          })}
-        </div>
-        <div>
-          Create new trip:
-          <div className="p-2">
-            Trip name:
-            <input
-              type="text"
-              value={newTrip.name}
-              onChange={(event) =>
-                handleInputChange("name", event.target.value)
-              }
-            ></input>
-          </div>
-          <div className="p-2">
-            Trip description:
-            <input
-              type="text"
-              value={newTrip.description}
-              onChange={(event) =>
-                handleInputChange("description", event.target.value)
-              }
-            ></input>
-          </div>
-          <button onClick={handleNewTripCreation}>Create new trip</button>
+          <TripListComponent trips={trips} />
+          <CreateTripComponent
+            jwt={jwt}
+            username={username}
+            trips={trips}
+            setTrips={setTrips}
+          />
         </div>
       </>
     )

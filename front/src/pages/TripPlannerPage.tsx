@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Status, Wrapper } from "@googlemaps/react-wrapper";
 import NavbarComponent from "../components/NavbarComponent";
+import TripDataComponent from "../components/TripDataComponent";
 import MapComponent from "../components/MapComponent";
 import { useNavigate } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.css";
+import CreateDateIntervalComponent from "../components/CreateDateIntervalComponent";
 
 interface Props {
   jwt: string;
@@ -17,6 +20,7 @@ function TripPlannerPage(props: Props) {
     name: "",
     description: "",
   });
+  const [dateIntervals, setDateIntervals] = useState(new Array());
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -48,25 +52,52 @@ function TripPlannerPage(props: Props) {
           .then((data) => {
             setTrip(data);
           });
+        fetch(`/api/core/dateInterval/getIntervals/${tripId}`, {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          method: "GET",
+        })
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+          })
+          .then((data) => {
+            setDateIntervals(data);
+          });
+        console.log(dateIntervals);
         setLoading(true);
       }
     }
-  });
+  }, [jwt, username]);
 
   const render = (status: Status) => <h1>{status}</h1>;
   return (
     loading && (
       <>
         <NavbarComponent />
-        <p>Planning for trip with ID: {tripId}</p>
-        <p>Trip name: {trip.name}</p>
-        <p>Trip description: {trip.description}</p>
-        <Wrapper
-          apiKey={"AIzaSyBBy4rP_7WtQH5hdshJLR2UwxgNTlO3YBM"}
-          render={render}
-        >
-          <MapComponent />
-        </Wrapper>
+        <div className="d-flex flex-row">
+          <div>
+            <TripDataComponent trip={trip} dateIntervals={dateIntervals} />
+            <CreateDateIntervalComponent
+              jwt={jwt}
+              tripId={tripId}
+              dateIntervals={dateIntervals}
+              setDateIntervals={setDateIntervals}
+            />
+          </div>
+          <div>
+            <Wrapper
+              apiKey={"AIzaSyBBy4rP_7WtQH5hdshJLR2UwxgNTlO3YBM"}
+              render={render}
+            >
+              <MapComponent />
+            </Wrapper>
+          </div>
+        </div>
       </>
     )
   );

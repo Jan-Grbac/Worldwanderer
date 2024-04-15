@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface TripRepository extends JpaRepository<Trip, Long> {
 
-    public List<Trip> findAllByUser(User user);
+    List<Trip> findAllByUser(User user);
 }
