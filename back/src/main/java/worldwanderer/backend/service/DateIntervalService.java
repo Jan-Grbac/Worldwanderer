@@ -1,7 +1,6 @@
 package worldwanderer.backend.service;
 
 import worldwanderer.backend.dto.DateIntervalData;
-import worldwanderer.backend.dto.TripData;
 import worldwanderer.backend.entity.DateInterval;
 import worldwanderer.backend.entity.Trip;
 
