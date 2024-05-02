@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TripListComponent from "../components/TripListComponent";
 import CreateTripComponent from "../components/CreateTripComponent";
+import NavbarComponent from "../components/NavbarComponent";
 
 interface Props {
   jwt: string;
@@ -47,6 +48,7 @@ function TripsPage(props: Props) {
     loading && (
       <>
         <div>
+          <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
           <TripListComponent trips={trips} />
           <CreateTripComponent
             jwt={jwt}

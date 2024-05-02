@@ -57,12 +57,12 @@ function LoginComponent(props: Props) {
       .then((data) => {
         setJwt(data.token);
         setUsername(user.username);
-        navigate("/");
+        navigate("/home");
       });
   }
 
   function cancel() {
-    navigate("/");
+    navigate("/home");
   }
 
   return (

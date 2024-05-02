@@ -23,7 +23,6 @@ function LoginPage(props: Props) {
 
   return (
     <>
-      <NavbarComponent />
       <LoginComponent setJwt={setJwt} setUsername={setUsername} />
     </>
   );

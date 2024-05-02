@@ -78,7 +78,7 @@ function TripPlannerPage(props: Props) {
   return (
     loading && (
       <>
-        <NavbarComponent />
+        <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
         <div className="d-flex flex-row">
           <div>
             <TripDataComponent trip={trip} dateIntervals={dateIntervals} />
