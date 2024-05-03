@@ -17,7 +17,7 @@ public class TimeSlotServiceImpl implements TimeSlotService {
     private final TimeSlotRepository timeSlotRepository;
 
     @Override
-    public TimeSlot createDateInterval(TimeSlotData timeSlotData, DateInterval dateInterval) {
+    public TimeSlot createTimeSlot(TimeSlotData timeSlotData, DateInterval dateInterval) {
         TimeSlot timeSlot = TimeSlot
                 .builder()
                 .startTime(timeSlotData.getStartTime())

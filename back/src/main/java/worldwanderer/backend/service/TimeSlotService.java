@@ -7,7 +7,7 @@ import worldwanderer.backend.entity.TimeSlot;
 import java.util.List;
 
 public interface TimeSlotService {
-    TimeSlot createDateInterval(TimeSlotData timeSlotData, DateInterval dateInterval);
+    TimeSlot createTimeSlot(TimeSlotData timeSlotData, DateInterval dateInterval);
     TimeSlotData transformTimeSlotIntoTimeSlotData(TimeSlot timeSlot);
     TimeSlot getTimeSlotForId(long id);
     TimeSlot updateTimeSlot(TimeSlot timeSlot);

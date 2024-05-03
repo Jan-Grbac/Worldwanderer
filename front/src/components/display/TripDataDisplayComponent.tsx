@@ -5,62 +5,43 @@ import DateIntervalCreateComponent from "../create/DateIntervalCreateComponent";
 
 interface Props {
   jwt: string;
-  tripId: string;
+  trip: any;
+  dateIntervals: any;
+  setDateIntervals: Function;
+  timeslots: any;
+  setTimeslots: Function;
 }
 
 function TripDataDisplayComponent(props: Props) {
-  const { jwt, tripId } = { ...props };
-
-  const [dateIntervals, setDateIntervals] = useState(new Array());
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (jwt && tripId) {
-      fetch(`/api/core/dateInterval/getIntervals/${tripId}`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        method: "GET",
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            navigate("/trips");
-            return;
-          }
-        })
-        .then((data) => {
-          setDateIntervals(data);
-        });
-      setLoading(true);
-    }
-  }, []);
+  const {
+    jwt,
+    trip,
+    dateIntervals,
+    setDateIntervals,
+    timeslots,
+    setTimeslots,
+  } = { ...props };
 
   return (
-    loading && (
-      <>
-        <DateIntervalCreateComponent
-          jwt={jwt}
-          tripId={tripId}
-          dateIntervals={dateIntervals}
-          setDateIntervals={setDateIntervals}
-        />
-        {dateIntervals.map(function (dateInterval: any) {
-          return (
-            <>
-              <DateIntervalDisplayComponent
-                jwt={jwt}
-                dateInterval={dateInterval}
-              />
-            </>
-          );
-        })}
-      </>
-    )
+    <>
+      <DateIntervalCreateComponent
+        jwt={jwt}
+        tripId={trip.id}
+        dateIntervals={dateIntervals}
+        setDateIntervals={setDateIntervals}
+      />
+      {dateIntervals.map(function (dateInterval: any, index: number) {
+        return (
+          <DateIntervalDisplayComponent
+            key={dateInterval.id as string}
+            jwt={jwt}
+            dateInterval={dateInterval}
+            timeslots={timeslots[index]}
+            setTimeslots={setTimeslots}
+          />
+        );
+      })}
+    </>
   );
 }
 

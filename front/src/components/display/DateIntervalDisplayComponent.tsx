@@ -6,58 +6,45 @@ import TimeSlotCreateComponent from "../create/TimeSlotCreateComponent";
 interface Props {
   jwt: string;
   dateInterval: any;
+  timeslots: any;
+  setTimeslots: Function;
 }
 
 function DateIntervalDisplayComponent(props: Props) {
-  const { jwt, dateInterval } = { ...props };
+  const { jwt, dateInterval, timeslots, setTimeslots } = { ...props };
 
-  const [timeslots, setTimeslots] = useState(new Array());
-  const [loading, setLoading] = useState(false);
+  function formatDate(date: string) {
+    let year = date.substring(0, 4);
+    let month = date.substring(5, 7);
+    let day = date.substring(8, 10);
 
-  const navigate = useNavigate();
+    let newDate = day + "/" + month + "/" + year;
 
-  useEffect(() => {
-    if (jwt && dateInterval) {
-      fetch(`/api/core/timeslot/getTimeslots/${dateInterval.id}`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        method: "GET",
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            navigate("/trips");
-            return;
-          }
-        })
-        .then((data) => {
-          setTimeslots(data);
-        });
-      console.log(timeslots);
-      setLoading(true);
-    }
-  }, []);
+    return newDate;
+  }
 
   return (
-    loading && (
-      <>
-        <p>
-          {dateInterval.startDate} {dateInterval.endDate}
-        </p>
-        <TimeSlotCreateComponent />
-        {timeslots.map(function (timeslot: any) {
-          return (
-            <>
-              <TimeslotDisplayComponent jwt={jwt} timeslot={timeslot} />
-            </>
-          );
-        })}
-      </>
-    )
+    <>
+      <p>
+        Start date: {formatDate(dateInterval.startDate)} <br />
+        End date: {formatDate(dateInterval.endDate)}
+      </p>
+      <TimeSlotCreateComponent
+        jwt={jwt}
+        dateIntervalId={dateInterval.id}
+        timeslots={timeslots}
+        setTimeslots={setTimeslots}
+      />
+      {timeslots.map(function (timeslot: any) {
+        return (
+          <TimeslotDisplayComponent
+            key={timeslot.id as string}
+            jwt={jwt}
+            timeslot={timeslot}
+          />
+        );
+      })}
+    </>
   );
 }
 

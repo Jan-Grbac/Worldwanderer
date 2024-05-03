@@ -32,7 +32,7 @@ function DateIntervalCreateComponent(props: Props) {
       return;
     }
     if (newDateInterval.endDate === undefined) {
-      alert("Description cannot be empty!");
+      alert("End date must be selected!");
       return;
     }
 

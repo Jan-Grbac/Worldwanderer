@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Status, Wrapper } from "@googlemaps/react-wrapper";
 import NavbarComponent from "../components/NavbarComponent";
 import MapComponent from "../components/display/MapComponent";
@@ -19,17 +19,20 @@ function TripPlannerPage(props: Props) {
     name: "",
     description: "",
   });
+  const [dateIntervals, setDateIntervals] = useState(new Array());
+  const [timeslots, setTimeslots] = useState(new Array());
+
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
-  const tripId = window.location.href.split("/")[4];
   useEffect(() => {
     if (jwt && username) {
       if (!jwtIsValid) {
         navigate("/home");
         console.log("You need to be logged in to edit a trip!");
       } else {
+        const tripId = window.location.href.split("/")[4];
         fetch(`/api/core/trip/getTrip/${tripId}`, {
           headers: {
             Authorization: `Bearer ${jwt}`,
@@ -41,16 +44,51 @@ function TripPlannerPage(props: Props) {
           .then((response) => {
             if (response.ok) {
               return response.json();
-            } else {
-              navigate("/trips");
-              alert("Trip doesn't exist or doesn't belong to user.");
-              return;
             }
           })
           .then((data) => {
-            setTrip(data);
+            const newTrip = trip;
+
+            newTrip.id = data.id;
+            newTrip.name = data.name;
+            newTrip.description = data.description;
+            setTrip(newTrip);
           });
-        setLoading(true);
+
+        fetch(`/api/core/dateInterval/getIntervals/${tripId}`, {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          method: "GET",
+        })
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+          })
+          .then((data) => {
+            setDateIntervals(data);
+          });
+
+        fetch(`/api/core/timeslot/getTimeslotsForTrip/${tripId}`, {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          method: "GET",
+        })
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+          })
+          .then((data) => {
+            setTimeslots(data);
+            setLoading(true);
+          });
       }
     }
   }, [jwt, username]);
@@ -62,7 +100,14 @@ function TripPlannerPage(props: Props) {
         <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
         <div className="d-flex flex-row">
           <div>
-            <TripDataDisplayComponent jwt={jwt} tripId={trip.id} />
+            <TripDataDisplayComponent
+              jwt={jwt}
+              trip={trip}
+              dateIntervals={dateIntervals}
+              setDateIntervals={setDateIntervals}
+              timeslots={timeslots}
+              setTimeslots={setTimeslots}
+            />
           </div>
           <div>
             <Wrapper

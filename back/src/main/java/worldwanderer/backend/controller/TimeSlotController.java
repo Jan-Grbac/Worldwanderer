@@ -11,7 +11,6 @@ import worldwanderer.backend.service.DateIntervalService;
 import worldwanderer.backend.service.TimeSlotService;
 import worldwanderer.backend.service.TripService;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class TimeSlotController {
     @PostMapping("/createTimeslot/{dateIntervalId}")
     public ResponseEntity<TimeSlotData> createTimeSlot(@PathVariable Long dateIntervalId, @RequestBody TimeSlotData timeSlotData) {
         DateInterval dateInterval = dateIntervalService.getDateIntervalForId(dateIntervalId);
-        TimeSlot timeSlot = timeSlotService.createDateInterval(timeSlotData, dateInterval);
+        TimeSlot timeSlot = timeSlotService.createTimeSlot(timeSlotData, dateInterval);
         return ResponseEntity.ok(timeSlotService.transformTimeSlotIntoTimeSlotData(timeSlot));
     }
 
