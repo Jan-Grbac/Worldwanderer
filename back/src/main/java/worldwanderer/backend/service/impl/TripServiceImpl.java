@@ -38,7 +38,7 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public Trip getTripForId(long id) {
-        return tripRepository.findById(id).orElseThrow();
+        return tripRepository.findById(id).orElse(null);
     }
 
     @Override

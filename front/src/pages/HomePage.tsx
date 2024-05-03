@@ -1,5 +1,5 @@
 import React from "react";
-import MapComponent from "../components/MapComponent";
+import MapComponent from "../components/display/MapComponent";
 import NavbarComponent from "../components/NavbarComponent";
 
 interface Props {

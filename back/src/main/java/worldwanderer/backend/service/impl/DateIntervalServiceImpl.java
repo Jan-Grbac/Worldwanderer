@@ -38,7 +38,7 @@ public class DateIntervalServiceImpl implements DateIntervalService {
 
     @Override
     public DateInterval getDateIntervalForId(long id) {
-        return dateIntervalRepository.findById(id).orElseThrow();
+        return dateIntervalRepository.findById(id).orElse(null);
     }
 
     @Override

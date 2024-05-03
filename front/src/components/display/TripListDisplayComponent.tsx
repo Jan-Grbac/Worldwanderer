@@ -5,7 +5,7 @@ interface Props {
   trips: Array<Object>;
 }
 
-function TripListComponent(props: Props) {
+function TripListDisplayComponent(props: Props) {
   const { trips } = { ...props };
   const navigate = useNavigate();
 
@@ -28,4 +28,4 @@ function TripListComponent(props: Props) {
   );
 }
 
-export default TripListComponent;
+export default TripListDisplayComponent;

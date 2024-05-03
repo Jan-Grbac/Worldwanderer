@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Status, Wrapper } from "@googlemaps/react-wrapper";
 import NavbarComponent from "../components/NavbarComponent";
-import TripDataComponent from "../components/TripDataComponent";
-import MapComponent from "../components/MapComponent";
+import MapComponent from "../components/display/MapComponent";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
-import CreateDateIntervalComponent from "../components/CreateDateIntervalComponent";
+import TripDataDisplayComponent from "../components/display/TripDataDisplayComponent";
 
 interface Props {
   jwt: string;
@@ -20,7 +19,6 @@ function TripPlannerPage(props: Props) {
     name: "",
     description: "",
   });
-  const [dateIntervals, setDateIntervals] = useState(new Array());
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -52,23 +50,6 @@ function TripPlannerPage(props: Props) {
           .then((data) => {
             setTrip(data);
           });
-        fetch(`/api/core/dateInterval/getIntervals/${tripId}`, {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          method: "GET",
-        })
-          .then((response) => {
-            if (response.ok) {
-              return response.json();
-            }
-          })
-          .then((data) => {
-            setDateIntervals(data);
-          });
-        console.log(dateIntervals);
         setLoading(true);
       }
     }
@@ -81,13 +62,7 @@ function TripPlannerPage(props: Props) {
         <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
         <div className="d-flex flex-row">
           <div>
-            <TripDataComponent trip={trip} dateIntervals={dateIntervals} />
-            <CreateDateIntervalComponent
-              jwt={jwt}
-              tripId={tripId}
-              dateIntervals={dateIntervals}
-              setDateIntervals={setDateIntervals}
-            />
+            <TripDataDisplayComponent jwt={jwt} tripId={trip.id} />
           </div>
           <div>
             <Wrapper

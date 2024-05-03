@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import TripListComponent from "../components/TripListComponent";
-import CreateTripComponent from "../components/CreateTripComponent";
+import TripListDisplayComponent from "../components/display/TripListDisplayComponent";
+import TripCreateComponent from "../components/create/TripCreateComponent";
 import NavbarComponent from "../components/NavbarComponent";
 
 interface Props {
@@ -49,8 +49,8 @@ function TripsPage(props: Props) {
       <>
         <div>
           <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
-          <TripListComponent trips={trips} />
-          <CreateTripComponent
+          <TripListDisplayComponent trips={trips} />
+          <TripCreateComponent
             jwt={jwt}
             username={username}
             trips={trips}

@@ -29,7 +29,7 @@ public class DateIntervalController {
 
     @GetMapping("/getIntervals/{tripId}")
     public ResponseEntity<List<DateIntervalData>> getIntervalsForTripId(@PathVariable String tripId) {
-            Trip trip = tripService.getTripForId(Long.parseLong(tripId));
+        Trip trip = tripService.getTripForId(Long.parseLong(tripId));
         List<DateInterval> intervals = dateIntervalService.getDateIntervalsForTrip(trip);
         List<DateIntervalData> intervalsData = new LinkedList<>();
         for(DateInterval dateInterval : intervals) {

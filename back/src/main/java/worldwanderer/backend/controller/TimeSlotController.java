@@ -6,9 +6,12 @@ import org.springframework.web.bind.annotation.*;
 import worldwanderer.backend.dto.TimeSlotData;
 import worldwanderer.backend.entity.DateInterval;
 import worldwanderer.backend.entity.TimeSlot;
+import worldwanderer.backend.entity.Trip;
 import worldwanderer.backend.service.DateIntervalService;
 import worldwanderer.backend.service.TimeSlotService;
+import worldwanderer.backend.service.TripService;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TimeSlotController {
 
+    private final TripService tripService;
     private final DateIntervalService dateIntervalService;
     private final TimeSlotService timeSlotService;
 
@@ -25,6 +29,25 @@ public class TimeSlotController {
         DateInterval dateInterval = dateIntervalService.getDateIntervalForId(dateIntervalId);
         TimeSlot timeSlot = timeSlotService.createDateInterval(timeSlotData, dateInterval);
         return ResponseEntity.ok(timeSlotService.transformTimeSlotIntoTimeSlotData(timeSlot));
+    }
+
+    @GetMapping("/getTimeslotsForTrip/{tripId}")
+    public ResponseEntity<List<List<TimeSlotData>>> getTimeSlotsForTrip(@PathVariable Long tripId) {
+        Trip trip = tripService.getTripForId(tripId);
+        List<DateInterval> dateIntervals = dateIntervalService.getDateIntervalsForTrip(trip);
+
+        List<List<TimeSlotData>> timeSlotsForTrip = new ArrayList<>();
+
+        for(DateInterval dateInterval : dateIntervals) {
+            List<TimeSlot> timeSlots = timeSlotService.getTimeSlotsForDateInterval(dateInterval);
+            List<TimeSlotData> timeSlotsData = new ArrayList<>();
+            for(TimeSlot timeSlot : timeSlots) {
+                timeSlotsData.add(timeSlotService.transformTimeSlotIntoTimeSlotData(timeSlot));
+            }
+            timeSlotsForTrip.add(timeSlotsData);
+        }
+
+        return ResponseEntity.ok(timeSlotsForTrip);
     }
 
     @GetMapping("/getTimeslots/{dateIntervalId}")

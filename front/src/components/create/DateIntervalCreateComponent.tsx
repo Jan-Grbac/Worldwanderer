@@ -7,11 +7,11 @@ interface Props {
   setDateIntervals: Function;
 }
 
-function CreateDateIntervalComponent(props: Props) {
+function DateIntervalCreateComponent(props: Props) {
   const { jwt, tripId, dateIntervals, setDateIntervals } = { ...props };
   const [newDateInterval, setNewDateInterval] = useState({
-    startDate: new Date(),
-    endDate: new Date(),
+    startDate: undefined,
+    endDate: undefined,
   });
 
   function handleInputChange(param: string, value: any) {
@@ -55,8 +55,8 @@ function CreateDateIntervalComponent(props: Props) {
         let newDateIntervals = dateIntervals.concat(data);
         setDateIntervals(newDateIntervals);
         setNewDateInterval({
-          startDate: new Date(),
-          endDate: new Date(),
+          startDate: undefined,
+          endDate: undefined,
         });
         window.location.reload();
       });
@@ -92,4 +92,4 @@ function CreateDateIntervalComponent(props: Props) {
   );
 }
 
-export default CreateDateIntervalComponent;
+export default DateIntervalCreateComponent;
