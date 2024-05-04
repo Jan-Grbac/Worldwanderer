@@ -110,12 +110,7 @@ function TripPlannerPage(props: Props) {
             />
           </div>
           <div>
-            <Wrapper
-              apiKey={"AIzaSyBBy4rP_7WtQH5hdshJLR2UwxgNTlO3YBM"}
-              render={render}
-            >
-              <MapComponent />
-            </Wrapper>
+            <MapComponent />
           </div>
         </div>
       </>
