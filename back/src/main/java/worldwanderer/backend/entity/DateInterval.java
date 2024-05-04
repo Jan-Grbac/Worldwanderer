@@ -22,7 +22,7 @@ public class DateInterval {
     @JoinColumn(name="trip_id")
     private Trip trip;
 
-    @OneToMany(mappedBy = "interval", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "interval", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<TimeSlot> timeslots;
 
     private Date startDate;

@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface DateIntervalService {
     DateInterval createDateInterval(DateIntervalData dateIntervalData, Trip trip);
+    void deleteDateInterval(long id);
     DateIntervalData transformDateIntervalIntoDateIntervalData(DateInterval dateInterval);
     DateInterval getDateIntervalForId(long id);
     List<DateInterval> getDateIntervalsForTrip(Trip trip);

@@ -21,7 +21,7 @@ public class Trip {
     @JoinColumn(name="user_id")
     private User user;
 
-    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<DateInterval> intervals;
 
     private String name;

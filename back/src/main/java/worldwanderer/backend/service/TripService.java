@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface TripService {
     Trip createTrip(TripData tripRequest, User user);
+    void deleteTrip(long id);
     TripData transformTripIntoTripData(Trip trip);
     Trip getTripForId(long id);
     List<Trip> getTripsForUser(User user);

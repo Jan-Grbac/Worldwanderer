@@ -5,6 +5,7 @@ import MapComponent from "../components/display/MapComponent";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import TripDataDisplayComponent from "../components/display/TripDataDisplayComponent";
+import RemoveTripComponent from "../components/remove/RemoveTripComponent";
 
 interface Props {
   jwt: string;

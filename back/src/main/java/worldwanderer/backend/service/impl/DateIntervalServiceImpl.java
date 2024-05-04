@@ -28,6 +28,11 @@ public class DateIntervalServiceImpl implements DateIntervalService {
     }
 
     @Override
+    public void deleteDateInterval(long id) {
+        dateIntervalRepository.deleteById(id);
+    }
+
+    @Override
     public DateIntervalData transformDateIntervalIntoDateIntervalData(DateInterval dateInterval) {
         return DateIntervalData.builder()
                 .startDate(dateInterval.getStartDate())

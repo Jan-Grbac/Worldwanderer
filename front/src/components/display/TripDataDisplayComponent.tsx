@@ -36,8 +36,11 @@ function TripDataDisplayComponent(props: Props) {
             key={dateInterval.id as string}
             jwt={jwt}
             dateInterval={dateInterval}
+            dateIntervals={dateIntervals}
+            setDateIntervals={setDateIntervals}
             timeslots={timeslots[index]}
             setTimeslots={setTimeslots}
+            tripId={trip.id}
           />
         );
       })}

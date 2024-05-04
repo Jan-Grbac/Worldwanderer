@@ -45,4 +45,10 @@ public class TripController {
         TripData tripData = tripService.transformTripIntoTripData(trip);
         return ResponseEntity.ok(tripData);
     }
+
+    @DeleteMapping("/deleteTrip/{id}")
+    public ResponseEntity<Void> deleteTrip(@PathVariable String id) {
+        tripService.deleteTrip(Long.parseLong(id));
+        return ResponseEntity.ok().build();
+    }
 }

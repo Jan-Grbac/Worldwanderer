@@ -28,6 +28,11 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
+    public void deleteTrip(long id) {
+        tripRepository.deleteById(id);
+    }
+
+    @Override
     public TripData transformTripIntoTripData(Trip trip) {
         return TripData.builder()
                 .name(trip.getName())

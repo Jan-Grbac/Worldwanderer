@@ -39,4 +39,10 @@ public class DateIntervalController {
         }
         return ResponseEntity.ok(intervalsData);
     }
+
+    @DeleteMapping("/deleteDateInterval/{dateIntervalId}")
+    public ResponseEntity<Void> deleteDateInterval(@PathVariable String dateIntervalId) {
+        dateIntervalService.deleteDateInterval(Long.parseLong(dateIntervalId));
+        return ResponseEntity.ok().build();
+    }
 }

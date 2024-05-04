@@ -49,7 +49,11 @@ function TripsPage(props: Props) {
       <>
         <div>
           <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
-          <TripListDisplayComponent trips={trips} />
+          <TripListDisplayComponent
+            jwt={jwt}
+            trips={trips}
+            setTrips={setTrips}
+          />
           <TripCreateComponent
             jwt={jwt}
             username={username}
