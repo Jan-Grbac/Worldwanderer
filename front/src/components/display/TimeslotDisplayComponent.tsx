@@ -6,7 +6,15 @@ interface Props {
 }
 
 function TimeslotDisplayComponent(props: Props) {
-  return <></>;
+  const { jwt, timeslot } = { ...props };
+
+  return (
+    <>
+      <p>
+        {timeslot.startTime} {timeslot.endTime}
+      </p>
+    </>
+  );
 }
 
 export default TimeslotDisplayComponent;

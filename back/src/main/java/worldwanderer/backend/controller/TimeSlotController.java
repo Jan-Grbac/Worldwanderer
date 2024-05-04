@@ -11,6 +11,7 @@ import worldwanderer.backend.service.DateIntervalService;
 import worldwanderer.backend.service.TimeSlotService;
 import worldwanderer.backend.service.TripService;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,8 +65,8 @@ public class TimeSlotController {
     public ResponseEntity<TimeSlotData> updateTimeSlot(@PathVariable Long timeSlotId, @RequestBody TimeSlotData timeSlotData) {
         TimeSlot timeSlot = timeSlotService.getTimeSlotForId(timeSlotId);
 
-        timeSlot.setStartTime(timeSlotData.getStartTime());
-        timeSlot.setEndTime(timeSlotData.getEndTime());
+        timeSlot.setStartTime(LocalTime.parse(timeSlotData.getStartTime()));
+        timeSlot.setEndTime(LocalTime.parse(timeSlotData.getEndTime()));
 
         timeSlotService.updateTimeSlot(timeSlot);
         return ResponseEntity.ok(timeSlotService.transformTimeSlotIntoTimeSlotData(timeSlot));

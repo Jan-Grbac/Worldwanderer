@@ -13,6 +13,6 @@ import java.sql.Time;
 @AllArgsConstructor
 public class TimeSlotData {
     private Long id;
-    private Time startTime;
-    private Time endTime;
+    private String startTime;
+    private String endTime;
 }

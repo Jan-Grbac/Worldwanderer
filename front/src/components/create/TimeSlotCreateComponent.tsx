@@ -72,6 +72,7 @@ function TimeSlotCreateComponent(props: Props) {
           endTime: undefined,
         };
         setTimeslot(cleanTimeslot);
+        window.location.reload();
       });
   }
 

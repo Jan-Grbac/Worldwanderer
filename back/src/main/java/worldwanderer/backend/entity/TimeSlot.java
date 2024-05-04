@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.sql.Time;
+import java.time.LocalTime;
 
 @Entity
 @Data
@@ -21,8 +21,8 @@ public class TimeSlot {
     @JoinColumn(name="interval_id")
     private DateInterval interval;
 
-    private Time startTime;
-    private Time endTime;
+    private LocalTime startTime;
+    private LocalTime endTime;
 
     public TimeSlot() {
 

@@ -8,6 +8,10 @@ import worldwanderer.backend.entity.TimeSlot;
 import worldwanderer.backend.repository.TimeSlotRepository;
 import worldwanderer.backend.service.TimeSlotService;
 
+import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -18,10 +22,14 @@ public class TimeSlotServiceImpl implements TimeSlotService {
 
     @Override
     public TimeSlot createTimeSlot(TimeSlotData timeSlotData, DateInterval dateInterval) {
+
+        LocalTime startTime = LocalTime.parse(timeSlotData.getStartTime());
+        LocalTime endTime = LocalTime.parse(timeSlotData.getEndTime());
+
         TimeSlot timeSlot = TimeSlot
                 .builder()
-                .startTime(timeSlotData.getStartTime())
-                .endTime(timeSlotData.getEndTime())
+                .startTime(startTime)
+                .endTime(endTime)
                 .interval(dateInterval).build();
 
         return timeSlotRepository.save(timeSlot);
@@ -30,8 +38,8 @@ public class TimeSlotServiceImpl implements TimeSlotService {
     @Override
     public TimeSlotData transformTimeSlotIntoTimeSlotData(TimeSlot timeSlot) {
         return TimeSlotData.builder()
-                .startTime(timeSlot.getStartTime())
-                .endTime(timeSlot.getEndTime())
+                .startTime(timeSlot.getStartTime().toString())
+                .endTime(timeSlot.getEndTime().toString())
                 .id(timeSlot.getId())
                 .build();
     }
