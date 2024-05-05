@@ -39,6 +39,9 @@
             <column name="description" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
+            <column name="rating" type="float" defaultValue="0" defaultOnNull="true">
+                <constraints nullable="false" />
+            </column>
         </createTable>
     </changeSet>
 

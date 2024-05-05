@@ -1,6 +1,9 @@
 package worldwanderer.backend.repository;
 
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Limit;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import worldwanderer.backend.entity.Trip;

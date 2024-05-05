@@ -20,19 +20,17 @@ function TripListDisplayComponent(props: Props) {
     <>
       {trips.map(function (trip: any) {
         return (
-          <>
-            <div>
-              <button onClick={(event) => handleOnTripClick(trip.id)}>
-                {trip.name} {trip.description}
-              </button>
-              <RemoveTripComponent
-                jwt={jwt}
-                tripId={trip.id}
-                trips={trips}
-                setTrips={setTrips}
-              />
-            </div>
-          </>
+          <div key={trip.id}>
+            <button onClick={(event) => handleOnTripClick(trip.id)}>
+              {trip.name} {trip.description}
+            </button>
+            <RemoveTripComponent
+              jwt={jwt}
+              tripId={trip.id}
+              trips={trips}
+              setTrips={setTrips}
+            />
+          </div>
         );
       })}
     </>

@@ -5,12 +5,11 @@ interface Props {
   jwt: string;
   dateIntervalId: string;
   dateIntervals: any;
-  setDateIntervals: Function;
   tripId: string;
 }
 
 function RemoveDateIntervalComponent(props: Props) {
-  const { jwt, dateIntervalId, dateIntervals, setDateIntervals, tripId } = {
+  const { jwt, dateIntervalId, dateIntervals, tripId } = {
     ...props,
   };
 
@@ -39,7 +38,6 @@ function RemoveDateIntervalComponent(props: Props) {
       fetchData
     );
 
-    setDateIntervals(newDateIntervals);
     navigate("/edittrip/" + tripId);
   }
 

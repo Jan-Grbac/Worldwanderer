@@ -65,7 +65,13 @@ function App() {
           <Routes>
             <Route
               path="/home"
-              element={<HomePage jwtIsValid={jwtIsValid} username={username} />}
+              element={
+                <HomePage
+                  jwt={jwt}
+                  jwtIsValid={jwtIsValid}
+                  username={username}
+                />
+              }
             />
             <Route
               path="/signup"

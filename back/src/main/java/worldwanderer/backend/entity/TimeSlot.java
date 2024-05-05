@@ -1,5 +1,6 @@
 package worldwanderer.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +20,7 @@ public class TimeSlot {
 
     @ManyToOne
     @JoinColumn(name="interval_id")
+    @JsonBackReference
     private DateInterval interval;
 
     private LocalTime startTime;

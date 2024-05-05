@@ -9,6 +9,7 @@ import worldwanderer.backend.entity.User;
 import worldwanderer.backend.service.TripService;
 import worldwanderer.backend.service.UserService;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -50,5 +51,11 @@ public class TripController {
     public ResponseEntity<Void> deleteTrip(@PathVariable String id) {
         tripService.deleteTrip(Long.parseLong(id));
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/getHighestRatedTrips")
+    public ResponseEntity<List<Trip>> getHighestRatedTrips() {
+        List<Trip> trips = tripService.getHighestRatedTrips(5);
+        return ResponseEntity.ok(new ArrayList<>(trips));
     }
 }

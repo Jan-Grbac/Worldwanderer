@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import TimeslotDisplayComponent from "./TimeslotDisplayComponent";
-import TimeSlotCreateComponent from "../create/TimeSlotCreateComponent";
 import RemoveDateIntervalComponent from "../remove/RemoveDateIntervalComponent";
+import TimeSlotCreateComponent from "../create/TimeSlotCreateComponent";
+import TimeSlotDisplayComponent from "./TimeSlotDisplayComponent";
 
 interface Props {
   jwt: string;
@@ -46,7 +46,6 @@ function DateIntervalDisplayComponent(props: Props) {
           jwt={jwt}
           dateIntervalId={dateInterval.id}
           dateIntervals={dateIntervals}
-          setDateIntervals={setDateIntervals}
           tripId={tripId}
         />
       </div>
@@ -58,10 +57,13 @@ function DateIntervalDisplayComponent(props: Props) {
       />
       {timeslots.map(function (timeslot: any) {
         return (
-          <TimeslotDisplayComponent
+          <TimeSlotDisplayComponent
             key={timeslot.id as string}
             jwt={jwt}
             timeslot={timeslot}
+            timeslots={timeslots}
+            setTimeslots={setTimeslots}
+            tripId={tripId}
           />
         );
       })}

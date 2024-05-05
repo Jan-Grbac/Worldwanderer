@@ -8,9 +8,6 @@ import worldwanderer.backend.entity.TimeSlot;
 import worldwanderer.backend.repository.TimeSlotRepository;
 import worldwanderer.backend.service.TimeSlotService;
 
-import java.sql.Time;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -52,6 +49,11 @@ public class TimeSlotServiceImpl implements TimeSlotService {
     @Override
     public TimeSlot updateTimeSlot(TimeSlot timeSlot) {
         return timeSlotRepository.save(timeSlot);
+    }
+
+    @Override
+    public void deleteTimeSlot(long id) {
+        timeSlotRepository.deleteById(id);
     }
 
     @Override

@@ -16,8 +16,8 @@ public class TripAccess {
     @Id
     private Long id;
 
-    private User user;
-    private Trip trip;
+    //private User user;
+    //private Trip trip;
 
     public TripAccess() {
 

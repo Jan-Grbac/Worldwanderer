@@ -1,5 +1,7 @@
 package worldwanderer.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,9 +22,11 @@ public class DateInterval {
 
     @ManyToOne
     @JoinColumn(name="trip_id")
+    @JsonBackReference
     private Trip trip;
 
     @OneToMany(mappedBy = "interval", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonManagedReference
     private List<TimeSlot> timeslots;
 
     private Date startDate;

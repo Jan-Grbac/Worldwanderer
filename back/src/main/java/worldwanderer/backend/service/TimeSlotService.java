@@ -11,5 +11,6 @@ public interface TimeSlotService {
     TimeSlotData transformTimeSlotIntoTimeSlotData(TimeSlot timeSlot);
     TimeSlot getTimeSlotForId(long id);
     TimeSlot updateTimeSlot(TimeSlot timeSlot);
+    void deleteTimeSlot(long id);
     List<TimeSlot> getTimeSlotsForDateInterval(DateInterval dateInterval);
 }

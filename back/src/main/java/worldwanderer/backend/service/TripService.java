@@ -12,4 +12,5 @@ public interface TripService {
     TripData transformTripIntoTripData(Trip trip);
     Trip getTripForId(long id);
     List<Trip> getTripsForUser(User user);
+    List<Trip> getHighestRatedTrips(int limit);
 }
