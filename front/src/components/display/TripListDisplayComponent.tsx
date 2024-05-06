@@ -4,12 +4,13 @@ import RemoveTripComponent from "../remove/RemoveTripComponent";
 
 interface Props {
   jwt: string;
-  trips: any;
-  setTrips: Function;
+  ownedTrips: any;
+  setOwnedTrips: Function;
+  sharedTrips: any;
 }
 
 function TripListDisplayComponent(props: Props) {
-  const { jwt, trips, setTrips } = { ...props };
+  const { jwt, ownedTrips, setOwnedTrips, sharedTrips } = { ...props };
   const navigate = useNavigate();
 
   function handleOnTripClick(id: number) {
@@ -18,7 +19,8 @@ function TripListDisplayComponent(props: Props) {
 
   return (
     <>
-      {trips.map(function (trip: any) {
+      Your trips:
+      {ownedTrips.map(function (trip: any) {
         return (
           <div key={trip.id}>
             <button onClick={(event) => handleOnTripClick(trip.id)}>
@@ -27,9 +29,20 @@ function TripListDisplayComponent(props: Props) {
             <RemoveTripComponent
               jwt={jwt}
               tripId={trip.id}
-              trips={trips}
-              setTrips={setTrips}
+              trips={ownedTrips}
+              setTrips={setOwnedTrips}
             />
+          </div>
+        );
+      })}
+      <br />
+      Shared with you:
+      {sharedTrips.map(function (trip: any) {
+        return (
+          <div key={trip.id}>
+            <button onClick={(event) => handleOnTripClick(trip.id)}>
+              {trip.name} {trip.description}
+            </button>
           </div>
         );
       })}

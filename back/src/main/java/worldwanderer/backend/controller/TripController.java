@@ -1,6 +1,8 @@
 package worldwanderer.backend.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import worldwanderer.backend.dto.TripData;
@@ -25,6 +27,7 @@ public class TripController {
     public ResponseEntity<TripData> createTrip(@PathVariable String username, @RequestBody TripData tripData) {
         User user = userService.getUserByUsername(username);
         Trip trip = tripService.createTrip(tripData, user);
+        tripService.giveTripAccess(trip, user);
         return ResponseEntity.ok(tripService.transformTripIntoTripData(trip));
     }
 
@@ -40,6 +43,17 @@ public class TripController {
         return ResponseEntity.ok(tripDataList);
     }
 
+    @GetMapping("/getSharedTrips/{username}")
+    public ResponseEntity<List<TripData>> getSharedTripsForUsername(@PathVariable String username) {
+        User user = userService.getUserByUsername(username);
+        List<Trip> trips = tripService.getSharedTripsForUser(user);
+        List<TripData> tripDataList = new LinkedList<>();
+        for(Trip trip: trips) {
+            tripDataList.add(tripService.transformTripIntoTripData(trip));
+        }
+        return ResponseEntity.ok(tripDataList);
+    }
+
     @GetMapping("/getTrip/{id}")
     public ResponseEntity<TripData> getTripForId(@PathVariable String id) {
         Trip trip = tripService.getTripForId(Long.parseLong(id));
@@ -50,6 +64,44 @@ public class TripController {
     @DeleteMapping("/deleteTrip/{id}")
     public ResponseEntity<Void> deleteTrip(@PathVariable String id) {
         tripService.deleteTrip(Long.parseLong(id));
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/getAllowedUsers/{tripId}")
+    public ResponseEntity<List<User>> getAllowedUsers(@PathVariable String tripId) {
+        Trip trip = tripService.getTripForId(Long.parseLong(tripId));
+        List<User> allowedUsers = tripService.getAllowedUsers(trip);
+        return ResponseEntity.ok(allowedUsers);
+    }
+
+    @PostMapping("/checkTripAccess/{username}/{tripId}")
+    public ResponseEntity<Void> checkTripAccess(@PathVariable String username, @PathVariable String tripId) {
+        User user = userService.getUserByUsername(username);
+        Trip trip = tripService.getTripForId(Long.parseLong(tripId));
+        if(tripService.checkTripAccess(trip, user)) {
+            return ResponseEntity.ok().build();
+        }
+        else {
+            return ResponseEntity.status(HttpStatusCode.valueOf(403)).build();
+        }
+    }
+
+    @PostMapping("/giveTripAccess/{username}/{tripId}")
+    public ResponseEntity<Void> giveTripAccess(@PathVariable String username, @PathVariable String tripId) {
+        User user = userService.getUserByUsername(username);
+        if(user == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        Trip trip = tripService.getTripForId(Long.parseLong(tripId));
+        tripService.giveTripAccess(trip, user);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/revokeTripAccess/{username}/{tripId}")
+    public ResponseEntity<Void> revokeTripAccess(@PathVariable String username, @PathVariable String tripId) {
+        User user = userService.getUserByUsername(username);
+        Trip trip = tripService.getTripForId(Long.parseLong(tripId));
+        tripService.revokeTripAccess(trip, user);
         return ResponseEntity.ok().build();
     }
 

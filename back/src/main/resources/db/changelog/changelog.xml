@@ -79,4 +79,23 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="createTripAccessTable" author="yourname">
+        <createTable tableName="tripaccess">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="trip_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="makeTripAccessUnique" author="yourname">
+        <addUniqueConstraint tableName="tripaccess" columnNames="trip_id user_id">
+        </addUniqueConstraint>
+    </changeSet>
+
 </databaseChangeLog>

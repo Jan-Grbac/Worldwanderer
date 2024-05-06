@@ -24,6 +24,13 @@ function TripDataDisplayComponent(props: Props) {
 
   return (
     <>
+      <div>
+        Trip name: {trip.name}
+        <br />
+        Trip description: {trip.description}
+        <br />
+        Created by: {trip.ownerUsername}
+      </div>
       <DateIntervalCreateComponent
         jwt={jwt}
         tripId={trip.id}

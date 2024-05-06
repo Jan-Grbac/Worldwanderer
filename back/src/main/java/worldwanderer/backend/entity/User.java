@@ -36,6 +36,10 @@ public class User implements UserDetails {
     @JsonManagedReference
     private List<Trip> trips;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonManagedReference
+    private List<TripAccess> tripAccesses;
+
     public User() {}
 
     @Override

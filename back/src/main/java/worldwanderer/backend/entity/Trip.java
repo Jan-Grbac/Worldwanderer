@@ -28,6 +28,10 @@ public class Trip {
     @JsonManagedReference
     private List<DateInterval> intervals;
 
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonManagedReference
+    private List<TripAccess> tripAccesses;
+
     private String name;
     private String description;
 

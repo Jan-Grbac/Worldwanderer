@@ -13,5 +13,6 @@ public class TripData {
     private Long id;
     private String name;
     private String description;
+    private String ownerUsername;
     private float rating;
 }

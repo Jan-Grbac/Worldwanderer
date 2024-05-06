@@ -12,7 +12,8 @@ interface Props {
 
 function TripsPage(props: Props) {
   const { jwt, jwtIsValid, username } = { ...props };
-  const [trips, setTrips] = useState(new Array());
+  const [ownedTrips, setOwnedTrips] = useState(new Array());
+  const [sharedTrips, setSharedTrips] = useState(new Array());
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -37,7 +38,24 @@ function TripsPage(props: Props) {
             }
           })
           .then((data) => {
-            setTrips(data);
+            setOwnedTrips(data);
+          });
+
+        fetch(`/api/core/trip/getSharedTrips/${username}`, {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          method: "GET",
+        })
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+          })
+          .then((data) => {
+            setSharedTrips(data);
           });
       }
       setLoading(true);
@@ -51,14 +69,15 @@ function TripsPage(props: Props) {
           <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
           <TripListDisplayComponent
             jwt={jwt}
-            trips={trips}
-            setTrips={setTrips}
+            ownedTrips={ownedTrips}
+            setOwnedTrips={setOwnedTrips}
+            sharedTrips={sharedTrips}
           />
           <TripCreateComponent
             jwt={jwt}
             username={username}
-            trips={trips}
-            setTrips={setTrips}
+            trips={ownedTrips}
+            setTrips={setOwnedTrips}
           />
         </div>
       </>

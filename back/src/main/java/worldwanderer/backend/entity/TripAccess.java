@@ -1,8 +1,7 @@
 package worldwanderer.backend.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,13 +10,22 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-@Table(name="tripAccess")
+@Table(name="tripaccess")
 public class TripAccess {
+
     @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    //private User user;
-    //private Trip trip;
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    @JsonBackReference
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name="trip_id")
+    @JsonBackReference
+    private Trip trip;
 
     public TripAccess() {
 
