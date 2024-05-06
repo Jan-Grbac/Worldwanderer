@@ -11,7 +11,7 @@ import TripPlannerPage from "./pages/TripPlannerPage";
 import LogoutPage from "./pages/LogoutPage";
 
 function App() {
-  const cookies = new Cookies();
+  let cookies = new Cookies();
   const [username, setUsername] = useState("");
   const [jwt, setJwt] = useState(
     cookies.get("jwt") !== undefined ? cookies.get("jwt") : ""
@@ -54,7 +54,7 @@ function App() {
 
   function doLogout() {
     setJwt("");
-    const cookies = new Cookies();
+    cookies = new Cookies();
     cookies.remove("jwt");
   }
 

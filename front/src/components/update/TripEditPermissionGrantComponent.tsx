@@ -4,16 +4,44 @@ import { useNavigate } from "react-router-dom";
 interface Props {
   jwt: string;
   trip: any;
+  allowedUsers: Array<any>;
+  setAllowedUsers: Function;
 }
 
 function TripEditPermissionGrantComponent(props: Props) {
-  const { jwt, trip } = { ...props };
+  const { jwt, trip, allowedUsers, setAllowedUsers } = { ...props };
 
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
 
   function grantPermission() {
-    const fetchData = {
+    let newAllowedUsers = allowedUsers;
+
+    let fetchData = {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "GET",
+    };
+    fetch(`/api/core/user/getUser/${username}`, fetchData)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          return;
+        }
+      })
+      .then((data) => {
+        console.log(data);
+        newAllowedUsers.push(data);
+        console.log(allowedUsers);
+        console.log(newAllowedUsers);
+        setAllowedUsers(newAllowedUsers);
+      });
+
+    fetchData = {
       headers: {
         Authorization: `Bearer ${jwt}`,
         Accept: "application/json",

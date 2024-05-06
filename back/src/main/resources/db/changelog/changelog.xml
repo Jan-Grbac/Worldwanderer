@@ -94,7 +94,7 @@
     </changeSet>
 
     <changeSet id="makeTripAccessUnique" author="yourname">
-        <addUniqueConstraint tableName="tripaccess" columnNames="trip_id user_id">
+        <addUniqueConstraint tableName="tripaccess" columnNames="trip_id, user_id">
         </addUniqueConstraint>
     </changeSet>
 

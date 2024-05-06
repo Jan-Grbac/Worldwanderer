@@ -5,7 +5,6 @@ import MapComponent from "../components/display/MapComponent";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import TripDataDisplayComponent from "../components/display/TripDataDisplayComponent";
-import RemoveTripComponent from "../components/remove/RemoveTripComponent";
 import TripEditPermissionGrantComponent from "../components/update/TripEditPermissionGrantComponent";
 import TripEditPermissionDisplayComponent from "../components/display/TripEditPermissionDisplayComponent";
 
@@ -147,13 +146,19 @@ function TripPlannerPage(props: Props) {
         <TripEditPermissionDisplayComponent
           jwt={jwt}
           allowedUsers={allowedUsers}
+          setAllowedUsers={setAllowedUsers}
           trip={trip}
           isOwner={isOwner}
           username={username}
         />
         {isOwner && (
           <div>
-            <TripEditPermissionGrantComponent jwt={jwt} trip={trip} />
+            <TripEditPermissionGrantComponent
+              jwt={jwt}
+              trip={trip}
+              allowedUsers={allowedUsers}
+              setAllowedUsers={setAllowedUsers}
+            />
           </div>
         )}
         <div className="d-flex flex-row">

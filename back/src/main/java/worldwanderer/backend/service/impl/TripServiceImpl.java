@@ -9,12 +9,10 @@ import worldwanderer.backend.entity.TripAccess;
 import worldwanderer.backend.entity.User;
 import worldwanderer.backend.repository.TripAccessRepository;
 import worldwanderer.backend.repository.TripRepository;
-import worldwanderer.backend.repository.UserRepository;
 import worldwanderer.backend.service.TripService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -94,11 +92,7 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public void revokeTripAccess(Trip trip, User user) {
-        TripAccess tripAccess = TripAccess.builder()
-                .trip(trip)
-                .user(user)
-                .build();
-        tripAccessRepository.delete(tripAccess);
+        tripAccessRepository.deleteByTripAndUser(trip, user);
     }
 
     @Override
