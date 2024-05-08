@@ -3,6 +3,7 @@ import { Status, Wrapper } from "@googlemaps/react-wrapper";
 import NavbarComponent from "../components/NavbarComponent";
 import MapComponent from "../components/display/MapComponent";
 import { useNavigate } from "react-router-dom";
+import io from "socket.io-client";
 import "bootstrap/dist/css/bootstrap.css";
 import TripDataDisplayComponent from "../components/display/TripDataDisplayComponent";
 import TripEditPermissionGrantComponent from "../components/update/TripEditPermissionGrantComponent";
@@ -28,6 +29,7 @@ function TripPlannerPage(props: Props) {
 
   const [isOwner, setIsOwner] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [canConnect, setCanConnect] = useState(false);
 
   const navigate = useNavigate();
 
@@ -99,6 +101,7 @@ function TripPlannerPage(props: Props) {
               setIsOwner(true);
             }
             setTrip(newTrip);
+            setCanConnect(true);
           });
 
         fetch(`/api/core/dateInterval/getIntervals/${tripId}`, {
@@ -139,6 +142,21 @@ function TripPlannerPage(props: Props) {
     }
   }, [jwt, username]);
 
+  useEffect(() => {
+    if (canConnect) {
+      const socket = io("http://localhost:8081", {
+        reconnection: true,
+        query: { trip: trip.id },
+      });
+      socket.connect();
+      return () => {
+        socket.disconnect();
+      };
+    } else {
+      return;
+    }
+  }, [trip, canConnect]);
+
   return (
     loading && (
       <>
@@ -149,7 +167,6 @@ function TripPlannerPage(props: Props) {
           setAllowedUsers={setAllowedUsers}
           trip={trip}
           isOwner={isOwner}
-          username={username}
         />
         {isOwner && (
           <div>

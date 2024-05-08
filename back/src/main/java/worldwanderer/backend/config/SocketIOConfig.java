@@ -1,0 +1,29 @@
+package worldwanderer.backend.config;
+
+import com.corundumstudio.socketio.SocketConfig;
+import com.corundumstudio.socketio.SocketIOServer;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class SocketIOConfig {
+
+    @Value("${server.address}")
+    private String host;
+
+    @Value("${server.port}")
+    private Integer port;
+
+    @Bean
+    public SocketIOServer socketIOServer() {
+        com.corundumstudio.socketio.Configuration config = new com.corundumstudio.socketio.Configuration();
+        config.setHostname(host);
+        config.setPort(port + 1);
+        SocketConfig sockConfig = new SocketConfig();
+        sockConfig.setReuseAddress(true);
+        config.setSocketConfig(sockConfig);
+        return new SocketIOServer(config);
+    }
+}
+

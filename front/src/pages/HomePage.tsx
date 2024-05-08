@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import NavbarComponent from "../components/NavbarComponent";
+import TripPublicDisplayComponent from "../components/pure_display/TripPublicDisplayComponent";
 
 interface Props {
   jwt: string;
@@ -39,7 +40,11 @@ function HomePage(props: Props) {
         <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
         <p>Hello there!</p>
         <p>Logged in: {username}</p>
-        <div></div>
+        <div className="d-flex flex-row">
+          {highestRatedTrips.map((trip: any) => {
+            return <TripPublicDisplayComponent trip={trip} />;
+          })}
+        </div>
       </>
     )
   );

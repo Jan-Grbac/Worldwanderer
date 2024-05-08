@@ -8,11 +8,10 @@ interface Props {
   setAllowedUsers: Function;
   trip: any;
   isOwner: boolean;
-  username: string;
 }
 
 function TripEditPermissionDisplayComponent(props: Props) {
-  const { jwt, allowedUsers, setAllowedUsers, trip, isOwner, username } = {
+  const { jwt, allowedUsers, setAllowedUsers, trip, isOwner } = {
     ...props,
   };
 
@@ -24,8 +23,9 @@ function TripEditPermissionDisplayComponent(props: Props) {
           return (
             <>
               <div>
-                {user.username} {user.username === username && "(Owner)"}
-                {isOwner && user.username !== username && (
+                {user.username}{" "}
+                {user.username === trip.ownerUsername && "(Owner)"}
+                {isOwner && user.username !== trip.ownerUsername && (
                   <TripEditPermissionRemoveComponent
                     jwt={jwt}
                     trip={trip}
