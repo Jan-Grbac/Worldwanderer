@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Socket } from "socket.io-client";
 
 interface Props {
   jwt: string;
@@ -7,10 +8,13 @@ interface Props {
   username: string;
   allowedUsers: any;
   setAllowedUsers: Function;
+  socket: Socket | undefined;
 }
 
 function TripEditPermissionRemoveComponent(props: Props) {
-  const { jwt, trip, username, allowedUsers, setAllowedUsers } = { ...props };
+  const { jwt, trip, username, allowedUsers, setAllowedUsers, socket } = {
+    ...props,
+  };
 
   const navigate = useNavigate();
 
@@ -41,7 +45,19 @@ function TripEditPermissionRemoveComponent(props: Props) {
       })
       .then(() => {
         setAllowedUsers(newUsers);
-        navigate("/edittrip/" + trip.id);
+        if (socket) {
+          socket.emit(
+            "UPDATE",
+            trip.id +
+              ":" +
+              trip.ownerUsername +
+              ":" +
+              "REVOKED_EDIT_PRIVILEGE" +
+              ":" +
+              username
+          );
+        }
+        navigate("/edittrip/" + trip.id, { replace: true });
         return;
       });
   }

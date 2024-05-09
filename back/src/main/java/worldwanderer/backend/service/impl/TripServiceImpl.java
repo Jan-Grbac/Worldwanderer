@@ -34,6 +34,17 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
+    public Trip createTripCopy(Trip trip, User user) {
+        Trip tripCopy = Trip.builder()
+                .name(trip.getName())
+                .description(trip.getDescription())
+                .user(user)
+                .build();
+
+        return tripRepository.save(tripCopy);
+    }
+
+    @Override
     public void deleteTrip(long id) {
         tripRepository.deleteById(id);
     }

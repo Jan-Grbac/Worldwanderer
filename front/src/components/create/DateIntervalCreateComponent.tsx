@@ -15,8 +15,6 @@ function DateIntervalCreateComponent(props: Props) {
     endDate: undefined,
   });
 
-  const navigate = useNavigate();
-
   function handleInputChange(param: string, value: any) {
     let newDateIntervalChanged = { ...newDateInterval };
     if (param === "startDate") {
@@ -55,13 +53,13 @@ function DateIntervalCreateComponent(props: Props) {
         }
       })
       .then((data) => {
-        let newDateIntervals = dateIntervals.concat(data);
+        let newDateIntervals = { ...dateIntervals };
+        newDateIntervals = newDateIntervals.concat(data);
         setDateIntervals(newDateIntervals);
         setNewDateInterval({
           startDate: undefined,
           endDate: undefined,
         });
-        navigate("/edittrip/" + tripId);
       });
   }
 

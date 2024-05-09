@@ -8,10 +8,11 @@ interface Props {
   jwt: string;
   dateInterval: any;
   dateIntervals: any;
-  setDateIntervals: Function;
   timeslots: any;
+  dateIntervalTimeslots: any;
   setTimeslots: Function;
   tripId: string;
+  editable: boolean;
 }
 
 function DateIntervalDisplayComponent(props: Props) {
@@ -19,10 +20,11 @@ function DateIntervalDisplayComponent(props: Props) {
     jwt,
     dateInterval,
     dateIntervals,
-    setDateIntervals,
     timeslots,
+    dateIntervalTimeslots,
     setTimeslots,
     tripId,
+    editable,
   } = { ...props };
 
   function formatDate(date: string) {
@@ -42,29 +44,34 @@ function DateIntervalDisplayComponent(props: Props) {
           Start date: {formatDate(dateInterval.startDate)} <br />
           End date: {formatDate(dateInterval.endDate)}
         </p>
-        <RemoveDateIntervalComponent
+        {editable && (
+          <RemoveDateIntervalComponent
+            jwt={jwt}
+            dateIntervalId={dateInterval.id}
+            dateIntervals={dateIntervals}
+            tripId={tripId}
+          />
+        )}
+      </div>
+      {editable && (
+        <TimeSlotCreateComponent
           jwt={jwt}
           dateIntervalId={dateInterval.id}
-          dateIntervals={dateIntervals}
+          timeslots={timeslots}
+          dateIntervalTimeslots={dateIntervalTimeslots}
+          setTimeslots={setTimeslots}
           tripId={tripId}
         />
-      </div>
-      <TimeSlotCreateComponent
-        jwt={jwt}
-        tripId={tripId}
-        dateIntervalId={dateInterval.id}
-        timeslots={timeslots}
-        setTimeslots={setTimeslots}
-      />
-      {timeslots.map(function (timeslot: any) {
+      )}
+      {dateIntervalTimeslots.map(function (timeslot: any) {
         return (
           <TimeSlotDisplayComponent
             key={timeslot.id as string}
             jwt={jwt}
             timeslot={timeslot}
-            timeslots={timeslots}
-            setTimeslots={setTimeslots}
+            timeslots={dateIntervalTimeslots}
             tripId={tripId}
+            editable={editable}
           />
         );
       })}

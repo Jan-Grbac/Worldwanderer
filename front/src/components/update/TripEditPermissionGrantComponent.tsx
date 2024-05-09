@@ -1,17 +1,22 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Socket } from "socket.io-client";
 
 interface Props {
   jwt: string;
   trip: any;
-  allowedUsers: Array<any>;
+  allowedUsers: any;
   setAllowedUsers: Function;
+  username: string;
+  socket: Socket | undefined;
 }
 
 function TripEditPermissionGrantComponent(props: Props) {
-  const { jwt, trip, allowedUsers, setAllowedUsers } = { ...props };
+  const { jwt, trip, allowedUsers, setAllowedUsers, username, socket } = {
+    ...props,
+  };
 
-  const [username, setUsername] = useState("");
+  const [grantUsername, setGrantUsername] = useState("");
   const navigate = useNavigate();
 
   async function grantPermission() {
@@ -27,12 +32,12 @@ function TripEditPermissionGrantComponent(props: Props) {
     };
 
     await fetch(
-      `/api/core/trip/giveTripAccess/${username}/${trip.id}`,
+      `/api/core/trip/giveTripAccess/${grantUsername}/${trip.id}`,
       fetchData
     )
       .then((response) => {
         if (response.ok) {
-          setUsername("");
+          setGrantUsername("");
           return true;
         } else {
           alert("User doesn't exist or is already able to edit the trip!");
@@ -52,7 +57,7 @@ function TripEditPermissionGrantComponent(props: Props) {
           method: "GET",
         };
 
-        fetch(`/api/core/user/getUser/${username}`, fetchData)
+        fetch(`/api/core/user/getUser/${grantUsername}`, fetchData)
           .then((response) => {
             if (response.ok) {
               return response.json();
@@ -66,13 +71,25 @@ function TripEditPermissionGrantComponent(props: Props) {
             }
             setAllowedUsers(newAllowedUsers);
             navigate("/edittrip/" + trip.id);
+            if (socket) {
+              socket.emit(
+                "UPDATE",
+                trip.id +
+                  ":" +
+                  username +
+                  ":" +
+                  "GRANTED_EDIT_PRIVILEGE" +
+                  ":" +
+                  data.username
+              );
+            }
           });
       });
   }
 
   function handleInputChange(param: string, value: any) {
     if (param === "username") {
-      setUsername(value);
+      setGrantUsername(value);
     }
   }
 
@@ -82,7 +99,7 @@ function TripEditPermissionGrantComponent(props: Props) {
         Username:
         <input
           type="text"
-          value={username}
+          value={grantUsername}
           onChange={(event) =>
             handleInputChange("username", event.target.value)
           }

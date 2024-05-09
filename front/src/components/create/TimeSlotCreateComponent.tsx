@@ -3,22 +3,29 @@ import { useNavigate } from "react-router-dom";
 
 interface Props {
   jwt: string;
-  tripId: string;
   dateIntervalId: string;
   timeslots: any;
+  dateIntervalTimeslots: any;
   setTimeslots: Function;
+  tripId: string;
 }
 
 function TimeSlotCreateComponent(props: Props) {
-  const { jwt, tripId, dateIntervalId, timeslots, setTimeslots } = { ...props };
+  const {
+    jwt,
+    dateIntervalId,
+    timeslots,
+    dateIntervalTimeslots,
+    setTimeslots,
+  } = {
+    ...props,
+  };
 
   const [timeslot, setTimeslot] = useState({
     id: "",
     startTime: undefined,
     endTime: undefined,
   });
-
-  const navigate = useNavigate();
 
   function handleInputChange(param: string, value: any) {
     let newTimeslot = { ...timeslot };
@@ -61,16 +68,29 @@ function TimeSlotCreateComponent(props: Props) {
         }
       })
       .then((data) => {
-        let newTimeslots = timeslots + data;
-        setTimeslots(newTimeslots);
+        let newTimeslots = [...timeslots];
+        let newDateIntervalTimeslots = [...dateIntervalTimeslots];
 
-        let cleanTimeslot = {
+        newDateIntervalTimeslots.push(data);
+
+        if (timeslots.length === 0) {
+          newTimeslots.push(newDateIntervalTimeslots);
+        } else {
+          for (let i = 0; i < timeslots.length; i++) {
+            if (timeslots[i] === dateIntervalTimeslots) {
+              newTimeslots[i] = newDateIntervalTimeslots;
+              break;
+            }
+          }
+        }
+
+        setTimeslots(newTimeslots);
+        setTimeslot({
           id: "",
           startTime: undefined,
           endTime: undefined,
-        };
-        setTimeslot(cleanTimeslot);
-        navigate("/edittrip/" + tripId);
+        });
+        document.querySelector("input")?.setAttribute("value", null as any);
       });
   }
 

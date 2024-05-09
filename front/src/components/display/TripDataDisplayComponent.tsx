@@ -10,6 +10,7 @@ interface Props {
   setDateIntervals: Function;
   timeslots: any;
   setTimeslots: Function;
+  editable: boolean;
 }
 
 function TripDataDisplayComponent(props: Props) {
@@ -20,6 +21,7 @@ function TripDataDisplayComponent(props: Props) {
     setDateIntervals,
     timeslots,
     setTimeslots,
+    editable,
   } = { ...props };
 
   return (
@@ -31,12 +33,14 @@ function TripDataDisplayComponent(props: Props) {
         <br />
         Created by: {trip.ownerUsername}
       </div>
-      <DateIntervalCreateComponent
-        jwt={jwt}
-        tripId={trip.id}
-        dateIntervals={dateIntervals}
-        setDateIntervals={setDateIntervals}
-      />
+      {editable && (
+        <DateIntervalCreateComponent
+          jwt={jwt}
+          tripId={trip.id}
+          dateIntervals={dateIntervals}
+          setDateIntervals={setDateIntervals}
+        />
+      )}
       {dateIntervals.map(function (dateInterval: any, index: number) {
         return (
           <DateIntervalDisplayComponent
@@ -44,10 +48,11 @@ function TripDataDisplayComponent(props: Props) {
             jwt={jwt}
             dateInterval={dateInterval}
             dateIntervals={dateIntervals}
-            setDateIntervals={setDateIntervals}
-            timeslots={timeslots[index]}
+            timeslots={timeslots}
+            dateIntervalTimeslots={timeslots[index]}
             setTimeslots={setTimeslots}
             tripId={trip.id}
+            editable={editable}
           />
         );
       })}

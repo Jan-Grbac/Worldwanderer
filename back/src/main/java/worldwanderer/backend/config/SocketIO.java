@@ -34,10 +34,24 @@ public class SocketIO {
     };
 
     private final DataListener<String> updateListener = (senderClient, data, ackSender) -> {
-        System.out.println(senderClient.getSessionId().toString() + " sent a message: " + data);
-        for(SocketIOClient client : senderClient.getNamespace().getRoomOperations(data).getClients()) {
+        String trip = data.split(":")[0];
+        String user = data.split(":")[1];
+        String operation = data.split(":")[2];
+        System.out.println(user + " sent a message: " + data);
+        for(SocketIOClient client : senderClient.getNamespace().getRoomOperations(trip).getClients()) {
             if(!client.getSessionId().equals(senderClient.getSessionId())) {
-                client.sendEvent("RENDER_UPDATE", data);
+                switch(operation) {
+                    case "GRANTED_EDIT_PRIVILEGE":
+                        String grantedUser = data.split(":")[3];
+                        System.out.println(grantedUser + " was granted edit privileges on trip: " + trip);
+                        client.sendEvent("GRANTED_EDIT_PRIVILEGE", grantedUser);
+                        break;
+                    case "REVOKED_EDIT_PRIVILEGE":
+                        String revokedUser = data.split(":")[3];
+                        System.out.println(revokedUser + "'s edit privileges on trip: " + trip + " were revoked");
+                        client.sendEvent("REVOKED_EDIT_PRIVILEGE", revokedUser);
+                        break;
+                }
             }
         }
     };

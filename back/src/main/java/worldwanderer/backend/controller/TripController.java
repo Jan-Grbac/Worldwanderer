@@ -31,6 +31,15 @@ public class TripController {
         return ResponseEntity.ok(tripService.transformTripIntoTripData(trip));
     }
 
+    @PostMapping("/createTripCopy/{tripId}/{username}")
+    public ResponseEntity<TripData> createTripCopy(@PathVariable String tripId, @PathVariable String username) {
+        Trip trip = tripService.getTripForId(Long.parseLong(tripId));
+        User user = userService.getUserByUsername(username);
+        Trip tripCopy = tripService.createTripCopy(trip, user);
+        tripService.giveTripAccess(tripCopy, user);
+        return ResponseEntity.ok(tripService.transformTripIntoTripData(tripCopy));
+    }
+
     @GetMapping("/getTrips/{username}")
     public ResponseEntity<List<TripData>> getTripsForUsername(@PathVariable String username) {
         User user = userService.getUserByUsername(username);

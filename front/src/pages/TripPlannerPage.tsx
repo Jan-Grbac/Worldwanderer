@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useReducer, useState } from "react";
 import { Status, Wrapper } from "@googlemaps/react-wrapper";
 import NavbarComponent from "../components/NavbarComponent";
 import MapComponent from "../components/display/MapComponent";
@@ -13,19 +13,20 @@ interface Props {
   jwt: string;
   jwtIsValid: boolean;
   username: string;
+  editable: boolean;
 }
 
 function TripPlannerPage(props: Props) {
-  const { jwt, jwtIsValid, username } = { ...props };
+  const { jwt, jwtIsValid, username, editable } = { ...props };
   const [trip, setTrip] = useState({
     id: "",
     name: "",
     description: "",
     ownerUsername: "",
   });
-  const [dateIntervals, setDateIntervals] = useState(new Array());
-  const [timeslots, setTimeslots] = useState(new Array());
-  const [allowedUsers, setAllowedUsers] = useState(new Array());
+  const [dateIntervals, setDateIntervals] = useState<Array<any>>();
+  const [timeslots, setTimeslots] = useState<Array<Array<any>>>();
+  const [allowedUsers, setAllowedUsers] = useState<Array<any>>();
 
   const [isOwner, setIsOwner] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -43,40 +44,24 @@ function TripPlannerPage(props: Props) {
       } else {
         const tripId = window.location.href.split("/")[4];
 
-        fetch(`/api/core/trip/checkTripAccess/${username}/${tripId}`, {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          method: "POST",
-        }).then((response) => {
-          if (response.ok) {
-          } else {
-            navigate("/home");
-            alert("You are not allowed to edit this trip!");
-          }
-        });
-
-        fetch(`/api/core/trip/getAllowedUsers/${tripId}`, {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          method: "GET",
-        })
-          .then((response) => {
+        if (editable) {
+          fetch(`/api/core/trip/checkTripAccess/${username}/${tripId}`, {
+            headers: {
+              Authorization: `Bearer ${jwt}`,
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            method: "POST",
+          }).then((response) => {
             if (response.ok) {
-              return response.json();
             } else {
               navigate("/home");
               alert("You are not allowed to edit this trip!");
             }
-          })
-          .then((data) => {
-            setAllowedUsers(data);
           });
+        }
+
+        fetchAllowedUsers(tripId);
 
         fetch(`/api/core/trip/getTrip/${tripId}`, {
           headers: {
@@ -103,46 +88,97 @@ function TripPlannerPage(props: Props) {
               setIsOwner(true);
             }
             setTrip(newTrip);
-            setCanConnect(true);
+
+            if (editable) {
+              setCanConnect(true);
+            }
           });
 
-        fetch(`/api/core/dateInterval/getIntervals/${tripId}`, {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          method: "GET",
-        })
-          .then((response) => {
-            if (response.ok) {
-              return response.json();
-            }
-          })
-          .then((data) => {
-            setDateIntervals(data);
-          });
-
-        fetch(`/api/core/timeslot/getTimeslotsForTrip/${tripId}`, {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          method: "GET",
-        })
-          .then((response) => {
-            if (response.ok) {
-              return response.json();
-            }
-          })
-          .then((data) => {
-            setTimeslots(data);
-            setLoading(true);
-          });
+        fetchDateIntervals(tripId);
+        fetchTimeslots(tripId);
       }
     }
   }, [jwt, username]);
+
+  function fetchAllowedUsers(tripId: string) {
+    fetch(`/api/core/trip/getAllowedUsers/${tripId}`, {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "GET",
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          navigate("/home");
+          alert("You are not allowed to edit this trip!");
+        }
+      })
+      .then((data) => {
+        setAllowedUsers(data);
+      });
+  }
+
+  function fetchDateIntervals(tripId: string) {
+    fetch(`/api/core/dateInterval/getIntervals/${tripId}`, {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "GET",
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        setDateIntervals(data);
+      });
+  }
+
+  function fetchTimeslots(tripId: string) {
+    fetch(`/api/core/timeslot/getTimeslotsForTrip/${tripId}`, {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "GET",
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        setTimeslots(data);
+      });
+  }
+
+  useEffect(() => {
+    if (jwt && username && trip && dateIntervals && timeslots && allowedUsers) {
+      setLoading(true);
+    }
+  }, [jwt, username, trip, dateIntervals, timeslots, allowedUsers]);
+
+  function userGrantedEditPrivilege(data: string) {
+    alert("User " + data + " was granted edit privilege.");
+    fetchAllowedUsers(trip.id);
+  }
+  function userRevokedEditPrivilege(data: string) {
+    if (data === username) {
+      alert("Your edit privileges were revoked.");
+      navigate("/home");
+    } else {
+      alert("User " + data + "'s edit privilege was revoked.");
+      fetchAllowedUsers(trip.id);
+    }
+  }
 
   useEffect(() => {
     if (canConnect) {
@@ -152,13 +188,42 @@ function TripPlannerPage(props: Props) {
       });
       s.connect();
       setSocket(s);
+
+      s.on("GRANTED_EDIT_PRIVILEGE", userGrantedEditPrivilege);
+      s.on("REVOKED_EDIT_PRIVILEGE", userRevokedEditPrivilege);
+
       return () => {
+        s.off("GRANTED_EDIT_PRIVILEGE");
+        s.off("REVOKED_EDIT_PRIVILEGE");
+
         s.disconnect();
       };
     } else {
       return;
     }
   }, [trip, canConnect]);
+
+  function copyTrip() {
+    const fetchData = {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    };
+    fetch(`/api/core/trip/createTripCopy/${trip.id}/${username}`, fetchData)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        alert("Copy created! Happy editing.");
+        navigate("/edittrip/" + data.id);
+        window.location.reload();
+      });
+  }
 
   return (
     loading && (
@@ -170,16 +235,18 @@ function TripPlannerPage(props: Props) {
           setAllowedUsers={setAllowedUsers}
           trip={trip}
           isOwner={isOwner}
+          editable={editable}
+          socket={socket}
         />
-        {isOwner && (
-          <div>
-            <TripEditPermissionGrantComponent
-              jwt={jwt}
-              trip={trip}
-              allowedUsers={allowedUsers}
-              setAllowedUsers={setAllowedUsers}
-            />
-          </div>
+        {isOwner && editable && (
+          <TripEditPermissionGrantComponent
+            jwt={jwt}
+            trip={trip}
+            allowedUsers={allowedUsers}
+            setAllowedUsers={setAllowedUsers}
+            username={username}
+            socket={socket}
+          />
         )}
         <div className="d-flex flex-row">
           <div>
@@ -190,11 +257,13 @@ function TripPlannerPage(props: Props) {
               setDateIntervals={setDateIntervals}
               timeslots={timeslots}
               setTimeslots={setTimeslots}
+              editable={editable}
             />
           </div>
           <div>
             <MapComponent />
           </div>
+          {!editable && <button onClick={copyTrip}>Copy and edit</button>}
         </div>
       </>
     )

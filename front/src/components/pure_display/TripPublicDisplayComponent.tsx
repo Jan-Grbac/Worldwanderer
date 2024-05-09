@@ -11,7 +11,7 @@ function TripPublicDisplayComponent(props: Props) {
   const navigate = useNavigate();
 
   function viewTrip(tripId: number) {
-    navigate("/edittrip/" + tripId);
+    navigate("/viewtrip/" + tripId);
   }
 
   return (
