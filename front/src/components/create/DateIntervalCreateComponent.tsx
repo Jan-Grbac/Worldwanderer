@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   jwt: string;
@@ -13,6 +14,8 @@ function DateIntervalCreateComponent(props: Props) {
     startDate: undefined,
     endDate: undefined,
   });
+
+  const navigate = useNavigate();
 
   function handleInputChange(param: string, value: any) {
     let newDateIntervalChanged = { ...newDateInterval };
@@ -58,7 +61,7 @@ function DateIntervalCreateComponent(props: Props) {
           startDate: undefined,
           endDate: undefined,
         });
-        window.location.reload();
+        navigate("/edittrip/" + tripId);
       });
   }
 

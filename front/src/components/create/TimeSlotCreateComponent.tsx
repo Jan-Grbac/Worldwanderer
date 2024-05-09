@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   jwt: string;
+  tripId: string;
   dateIntervalId: string;
   timeslots: any;
   setTimeslots: Function;
 }
 
 function TimeSlotCreateComponent(props: Props) {
-  const { jwt, dateIntervalId, timeslots, setTimeslots } = { ...props };
+  const { jwt, tripId, dateIntervalId, timeslots, setTimeslots } = { ...props };
 
   const [timeslot, setTimeslot] = useState({
     id: "",
@@ -16,11 +18,7 @@ function TimeSlotCreateComponent(props: Props) {
     endTime: undefined,
   });
 
-  useEffect(() => {
-    console.log(jwt);
-    console.log(dateIntervalId);
-    console.log(timeslots);
-  }, [props]);
+  const navigate = useNavigate();
 
   function handleInputChange(param: string, value: any) {
     let newTimeslot = { ...timeslot };
@@ -72,7 +70,7 @@ function TimeSlotCreateComponent(props: Props) {
           endTime: undefined,
         };
         setTimeslot(cleanTimeslot);
-        window.location.reload();
+        navigate("/edittrip/" + tripId);
       });
   }
 

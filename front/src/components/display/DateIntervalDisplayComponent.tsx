@@ -51,6 +51,7 @@ function DateIntervalDisplayComponent(props: Props) {
       </div>
       <TimeSlotCreateComponent
         jwt={jwt}
+        tripId={tripId}
         dateIntervalId={dateInterval.id}
         timeslots={timeslots}
         setTimeslots={setTimeslots}

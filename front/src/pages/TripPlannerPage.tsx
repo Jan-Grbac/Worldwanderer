@@ -3,7 +3,7 @@ import { Status, Wrapper } from "@googlemaps/react-wrapper";
 import NavbarComponent from "../components/NavbarComponent";
 import MapComponent from "../components/display/MapComponent";
 import { useNavigate } from "react-router-dom";
-import io from "socket.io-client";
+import io, { Socket } from "socket.io-client";
 import "bootstrap/dist/css/bootstrap.css";
 import TripDataDisplayComponent from "../components/display/TripDataDisplayComponent";
 import TripEditPermissionGrantComponent from "../components/update/TripEditPermissionGrantComponent";
@@ -30,6 +30,8 @@ function TripPlannerPage(props: Props) {
   const [isOwner, setIsOwner] = useState(false);
   const [loading, setLoading] = useState(false);
   const [canConnect, setCanConnect] = useState(false);
+
+  const [socket, setSocket] = useState<Socket>();
 
   const navigate = useNavigate();
 
@@ -144,13 +146,14 @@ function TripPlannerPage(props: Props) {
 
   useEffect(() => {
     if (canConnect) {
-      const socket = io("http://localhost:8081", {
+      const s = io("http://localhost:8081", {
         reconnection: true,
         query: { trip: trip.id },
       });
-      socket.connect();
+      s.connect();
+      setSocket(s);
       return () => {
-        socket.disconnect();
+        s.disconnect();
       };
     } else {
       return;

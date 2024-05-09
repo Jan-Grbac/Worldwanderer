@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   jwt: string;
@@ -14,6 +15,8 @@ function CreateTripComponent(props: Props) {
     name: "",
     description: "",
   });
+
+  const navigate = useNavigate();
 
   function handleInputChange(param: string, value: any) {
     let newTripChanged = { ...newTrip };
@@ -59,7 +62,7 @@ function CreateTripComponent(props: Props) {
           name: "",
           description: "",
         });
-        window.location.reload();
+        navigate("/trips");
       });
   }
 
