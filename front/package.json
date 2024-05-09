@@ -17,6 +17,7 @@
     "google-map-react": "^2.2.1",
     "google-maps-react-markers": "^2.0.9",
     "http-proxy-middleware": "^2.0.6",
+    "jquery": "^3.7.1",
     "jwt-decode": "^4.0.0",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.4",
@@ -32,6 +33,7 @@
   "devDependencies": {
     "@types/google-map-react": "^2.1.10",
     "@types/google.maps": "^3.55.7",
+    "@types/jquery": "^3.5.30",
     "@types/react": "^18.2.56",
     "@types/react-dom": "^18.2.19",
     "@typescript-eslint/eslint-plugin": "^7.0.2",

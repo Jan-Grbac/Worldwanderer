@@ -14,25 +14,35 @@ interface Props {
   socket: Socket | undefined;
 }
 
-const AnyReactComponent = ({ lat, lng }: { lat: number; lng: number }) => (
-  <div>{`Marker at ${lat}, ${lng}`}</div>
-);
+interface BasicMarkerInfo {
+  lat: number;
+  lng: number;
+  text: string;
+}
+
+const BasicMarker = ({
+  lat,
+  lng,
+  text,
+}: {
+  lat: number;
+  lng: number;
+  text: string;
+}) => <div>{`${text}`}</div>;
 
 const MapComponent = (props: Props) => {
   const { jwt, username, trip, dateIntervals, timeslots, socket } = {
     ...props,
   };
-  const mapRef = useRef<any>(null);
-  const [service, setService] =
-    useState<google.maps.places.AutocompleteService>();
-  const [searchBox, setSearchBox] = useState<google.maps.places.Autocomplete>();
 
-  const [loading, setLoading] = useState<boolean>(false);
-  const input = document.getElementById("searchBox");
+  const [markers, setMarkers] = useState<Array<BasicMarkerInfo>>();
 
   useEffect(() => {
     console.log(jwt);
   }, [props]);
+
+  const mapRef = useRef<any>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const defaultProps = {
     center: {
@@ -40,10 +50,6 @@ const MapComponent = (props: Props) => {
       lng: 13.9651,
     },
     zoom: 11,
-  };
-  const options = {
-    fields: ["formatted_address", "geometry", "name"],
-    strictBounds: false,
   };
 
   function onGoogleApiLoaded({
@@ -54,30 +60,7 @@ const MapComponent = (props: Props) => {
     maps: MapContextProps["maps"];
   }) {
     mapRef.current = map;
-    setService(new google.maps.places.AutocompleteService());
-    setSearchBox(
-      new google.maps.places.Autocomplete(
-        document.getElementById("searchBox") as HTMLInputElement
-      )
-    );
-    searchBox?.addListener("place_changed", () => {
-      const place = searchBox.getPlace();
 
-      if (!place.geometry || !place.geometry.location) {
-        window.alert("No details available for input: '" + place.name + "'");
-        return;
-      }
-
-      if (place.geometry.viewport) {
-        map.fitBounds(place.geometry.viewport);
-      } else {
-        map.setCenter(place.geometry.location);
-        map.setZoom(15);
-      }
-
-      console.log(place.geometry.location.lat());
-      console.log(place.geometry.location.lng());
-    });
     setLoading(true);
   }
 
@@ -87,9 +70,47 @@ const MapComponent = (props: Props) => {
     }
   }, [loading]);
 
+  useEffect(() => {
+    let newMarkers = Array<BasicMarkerInfo>();
+    if (dateIntervals && timeslots) {
+      for (let i = 0; i < dateIntervals.length; i++) {
+        for (let j = 0; j < timeslots[i].length; j++) {
+          let timeslot = timeslots[i][j];
+
+          let startDateFormatted = formatDate(dateIntervals[i].startDate);
+          let endDateFormatted = formatDate(dateIntervals[i].endDate);
+
+          let newMarker = {
+            lat: timeslot.lat,
+            lng: timeslot.lng,
+            text:
+              startDateFormatted +
+              " - " +
+              endDateFormatted +
+              "\n" +
+              timeslot.name,
+          };
+
+          newMarkers.push(newMarker);
+        }
+      }
+    }
+
+    setMarkers(newMarkers);
+  }, [dateIntervals, timeslots]);
+
+  function formatDate(date: string) {
+    let year = date.substring(0, 4);
+    let month = date.substring(5, 7);
+    let day = date.substring(8, 10);
+
+    let newDate = day + "/" + month + "/" + year;
+
+    return newDate;
+  }
+
   return (
     <>
-      <input id="searchBox"></input>
       <div style={{ height: "100vh", width: "100vh", position: "relative" }}>
         <GoogleMap
           apiKey="AIzaSyACu8umhkkYq6tvxaHbP_Y_sAHRV9rCuMQ"
@@ -98,7 +119,16 @@ const MapComponent = (props: Props) => {
           onChange={(map) => console.log("Map moved", map)}
           onGoogleApiLoaded={onGoogleApiLoaded}
         >
-          <AnyReactComponent lat={45.4076} lng={13.9651} />
+          {markers &&
+            markers.map(function (marker: BasicMarkerInfo) {
+              return (
+                <BasicMarker
+                  lat={marker.lat}
+                  lng={marker.lng}
+                  text={marker.text}
+                />
+              );
+            })}
         </GoogleMap>
       </div>
     </>

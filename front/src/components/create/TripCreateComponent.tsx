@@ -57,7 +57,7 @@ function CreateTripComponent(props: Props) {
       .then((data) => {
         let newTrips = trips.concat(data);
         setTrips(newTrips);
-        setNewTrip(undefined);
+        setNewTrip({} as Trip);
         (document.getElementById("name-input-trip") as HTMLInputElement).value =
           "";
         (

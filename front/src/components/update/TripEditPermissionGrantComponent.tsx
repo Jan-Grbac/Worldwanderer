@@ -95,7 +95,7 @@ function TripEditPermissionGrantComponent(props: Props) {
 
   return (
     <>
-      <div className="p-2">
+      <div className="p-2 border border-black">
         Username:
         <input
           type="text"

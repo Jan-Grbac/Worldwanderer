@@ -112,4 +112,9 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="TimeslotTimesCanBeNull" author="me">
+        <dropNotNullConstraint tableName="timeslot" columnName="start_time" />
+        <dropNotNullConstraint tableName="timeslot" columnName="end_time" />
+    </changeSet>
+
 </databaseChangeLog>

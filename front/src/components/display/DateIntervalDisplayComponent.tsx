@@ -44,50 +44,55 @@ function DateIntervalDisplayComponent(props: Props) {
 
   return (
     <>
-      <div className="flex">
-        <p>
-          Start date: {formatDate(dateInterval.startDate)} <br />
-          End date: {formatDate(dateInterval.endDate)}
-        </p>
+      <div className="border border-black">
+        <div className="d-flex flex-row">
+          <p>
+            Start date: {formatDate(dateInterval.startDate)} <br />
+            End date: {formatDate(dateInterval.endDate)}
+          </p>
+          {editable && (
+            <RemoveDateIntervalComponent
+              jwt={jwt}
+              username={username}
+              dateIntervalId={dateInterval.id}
+              dateIntervals={dateIntervals}
+              setDateIntervals={setDateIntervals}
+              timeslots={timeslots}
+              setTimeslots={setTimeslots}
+              tripId={tripId}
+              socket={socket}
+            />
+          )}
+        </div>
         {editable && (
-          <RemoveDateIntervalComponent
+          <TimeSlotCreateComponent
             jwt={jwt}
             username={username}
             dateIntervalId={dateInterval.id}
-            dateIntervals={dateIntervals}
-            setDateIntervals={setDateIntervals}
+            timeslots={timeslots}
+            setTimeslots={setTimeslots}
+            dateIntervalTimeslots={dateIntervalTimeslots}
             tripId={tripId}
             socket={socket}
           />
         )}
+        {dateIntervalTimeslots &&
+          dateIntervalTimeslots.map(function (timeslot: TimeSlot) {
+            return (
+              <TimeSlotDisplayComponent
+                key={timeslot.id as string}
+                jwt={jwt}
+                username={username}
+                timeslot={timeslot}
+                timeslots={timeslots}
+                setTimeslots={setTimeslots}
+                tripId={tripId}
+                editable={editable}
+                socket={socket}
+              />
+            );
+          })}
       </div>
-      {editable && (
-        <TimeSlotCreateComponent
-          jwt={jwt}
-          username={username}
-          dateIntervalId={dateInterval.id}
-          timeslots={timeslots}
-          setTimeslots={setTimeslots}
-          dateIntervalTimeslots={dateIntervalTimeslots}
-          tripId={tripId}
-          socket={socket}
-        />
-      )}
-      {dateIntervalTimeslots?.map(function (timeslot: TimeSlot) {
-        return (
-          <TimeSlotDisplayComponent
-            key={timeslot.id as string}
-            jwt={jwt}
-            username={username}
-            timeslot={timeslot}
-            timeslots={timeslots}
-            setTimeslots={setTimeslots}
-            tripId={tripId}
-            editable={editable}
-            socket={socket}
-          />
-        );
-      })}
     </>
   );
 }

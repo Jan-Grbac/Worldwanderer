@@ -28,58 +28,27 @@ function TripDataDisplayComponent(props: Props) {
     socket,
   } = { ...props };
 
-  const [loading, setLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (
-      jwt &&
-      trip &&
-      username &&
-      dateIntervals &&
-      setDateIntervals &&
-      timeslots &&
-      setTimeslots &&
-      editable &&
-      socket
-    ) {
-      setLoading(true);
-    }
-  }, [
-    jwt,
-    trip,
-    username,
-    dateIntervals,
-    setDateIntervals,
-    timeslots,
-    setTimeslots,
-    editable,
-    socket,
-  ]);
-
   return (
-    loading && (
-      <>
-        <div>
-          Trip name: {trip.name}
-          <br />
-          Trip description: {trip.description}
-          <br />
-          Created by: {trip.ownerUsername}
-        </div>
-        {editable && (
-          <DateIntervalCreateComponent
-            jwt={jwt}
-            tripId={trip.id}
-            username={username}
-            dateIntervals={dateIntervals}
-            setDateIntervals={setDateIntervals}
-            socket={socket}
-          />
-        )}
-        {dateIntervals.map(function (
-          dateInterval: DateInterval,
-          index: number
-        ) {
+    <>
+      <div className="border border-black">
+        Trip name: {trip.name}
+        <br />
+        Trip description: {trip.description}
+        <br />
+        Created by: {trip.ownerUsername}
+      </div>
+      {editable && (
+        <DateIntervalCreateComponent
+          jwt={jwt}
+          tripId={trip.id}
+          username={username}
+          dateIntervals={dateIntervals}
+          setDateIntervals={setDateIntervals}
+          socket={socket}
+        />
+      )}
+      {dateIntervals &&
+        dateIntervals.map(function (dateInterval: DateInterval, index: number) {
           return (
             <DateIntervalDisplayComponent
               key={dateInterval.id as string}
@@ -97,8 +66,7 @@ function TripDataDisplayComponent(props: Props) {
             />
           );
         })}
-      </>
-    )
+    </>
   );
 }
 

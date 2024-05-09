@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 
 interface Props {
   jwt: string;
@@ -11,10 +10,8 @@ interface Props {
 function RemoveTripComponent(props: Props) {
   const { jwt, tripId, trips, setTrips } = { ...props };
 
-  const navigate = useNavigate();
-
   function removeTrip() {
-    let newTrips = trips;
+    let newTrips = [...trips];
 
     for (let i = 0; i < trips.length; i++) {
       if (trips[i].id === tripId) {
@@ -34,7 +31,6 @@ function RemoveTripComponent(props: Props) {
     fetch(`/api/core/trip/deleteTrip/${tripId}`, fetchData);
 
     setTrips(newTrips);
-    navigate("/trips");
   }
 
   return (

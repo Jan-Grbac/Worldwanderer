@@ -28,20 +28,31 @@ function TimeSlotDisplayComponent(props: Props) {
 
   return (
     <>
-      <p>
-        {timeslot.startTime} {timeslot.endTime}
-      </p>
-      {editable && timeslots.length !== 0 && (
-        <RemoveTimeSlotComponent
-          jwt={jwt}
-          username={username}
-          timeslotId={timeslot.id}
-          timeslots={timeslots}
-          setTimeslots={setTimeslots}
-          tripId={tripId}
-          socket={socket}
-        />
-      )}
+      <div className="d-flex flex-row">
+        <div>
+          <p>Name: {timeslot.name}</p>
+          {timeslot.notes && <p>Notes: {timeslot.notes}</p>}
+          <p>
+            Location: {timeslot.lat} {timeslot.lng}
+          </p>
+          {timeslot.startTime && timeslot.endTime && (
+            <p>
+              From: {timeslot.startTime}, To: {timeslot.endTime}
+            </p>
+          )}
+        </div>
+        {editable && timeslots.length !== 0 && (
+          <RemoveTimeSlotComponent
+            jwt={jwt}
+            username={username}
+            timeslotId={timeslot.id}
+            timeslots={timeslots}
+            setTimeslots={setTimeslots}
+            tripId={tripId}
+            socket={socket}
+          />
+        )}
+      </div>
     </>
   );
 }

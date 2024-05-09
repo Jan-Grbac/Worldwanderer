@@ -61,7 +61,7 @@ function DateIntervalCreateComponent(props: Props) {
         newDateIntervals.push(data);
 
         setDateIntervals(newDateIntervals);
-        setNewDateInterval(undefined);
+        setNewDateInterval({} as DateInterval);
 
         if (socket) {
           socket.emit(
@@ -74,7 +74,7 @@ function DateIntervalCreateComponent(props: Props) {
 
   return (
     <>
-      <div>
+      <div className="border border-black">
         Create new trip interval:
         <div className="p-2">
           Start date:

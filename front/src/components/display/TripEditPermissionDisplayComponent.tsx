@@ -28,7 +28,7 @@ function TripEditPermissionDisplayComponent(props: Props) {
 
   return (
     <>
-      <div>
+      <div className="border border-black">
         Allowed users:
         {allowedUsers.map(function (user: User) {
           return (

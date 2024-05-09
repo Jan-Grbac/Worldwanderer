@@ -6,6 +6,8 @@ interface Props {
   dateIntervalId: string;
   dateIntervals: Array<DateInterval>;
   setDateIntervals: Function;
+  timeslots: Array<Array<TimeSlot>>;
+  setTimeslots: Function;
   tripId: string;
   socket: Socket | undefined;
 }
@@ -17,6 +19,8 @@ function RemoveDateIntervalComponent(props: Props) {
     dateIntervalId,
     dateIntervals,
     setDateIntervals,
+    timeslots,
+    setTimeslots,
     tripId,
     socket,
   } = {
@@ -24,11 +28,22 @@ function RemoveDateIntervalComponent(props: Props) {
   };
 
   function removeDateInterval() {
+    console.log("Date removal:");
+    console.log(dateIntervals);
+    console.log(timeslots);
     let newDateIntervals = [...dateIntervals] as Array<DateInterval>;
+    let newTimeslots = [...timeslots] as Array<Array<TimeSlot>>;
 
     for (let i = 0; i < dateIntervals.length; i++) {
       if (dateIntervals[i].id === dateIntervalId) {
         newDateIntervals.splice(i, 1);
+        console.log(newDateIntervals);
+
+        newTimeslots.splice(i, 1);
+        if (newTimeslots.length === 0) {
+          newTimeslots.push([]);
+        }
+        console.log(newTimeslots);
         break;
       }
     }
@@ -47,6 +62,7 @@ function RemoveDateIntervalComponent(props: Props) {
     );
 
     setDateIntervals(newDateIntervals);
+    setTimeslots(newTimeslots);
 
     if (socket) {
       socket.emit("UPDATE", tripId + ":" + username + ":DELETED_DATE_INTERVAL");

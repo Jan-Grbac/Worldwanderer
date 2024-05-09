@@ -19,9 +19,9 @@ interface Props {
 function TripPlannerPage(props: Props) {
   const { jwt, jwtIsValid, username, editable } = { ...props };
   const [trip, setTrip] = useState<Trip>();
-  const [dateIntervals, setDateIntervals] = useState<Array<DateInterval>>();
-  const [timeslots, setTimeslots] = useState<Array<Array<TimeSlot>>>();
-  const [allowedUsers, setAllowedUsers] = useState<Array<User>>();
+  const [dateIntervals, setDateIntervals] = useState<Array<DateInterval>>([]);
+  const [timeslots, setTimeslots] = useState<Array<Array<TimeSlot>>>([[]]);
+  const [allowedUsers, setAllowedUsers] = useState<Array<User>>([]);
 
   const [isOwner, setIsOwner] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -251,56 +251,52 @@ function TripPlannerPage(props: Props) {
       });
   }
 
-  useEffect(() => {
-    if (!trip) return;
-    fetchDateIntervals(trip.id);
-    fetchTimeslots(trip.id);
-  }, [setDateIntervals, setTimeslots]);
-
   return (
     loading && (
       <>
-        <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
-        <TripEditPermissionDisplayComponent
-          jwt={jwt}
-          allowedUsers={allowedUsers as Array<User>}
-          setAllowedUsers={setAllowedUsers}
-          trip={trip as Trip}
-          isOwner={isOwner}
-          editable={editable}
-          socket={socket}
-        />
-        {isOwner && editable && (
-          <TripEditPermissionGrantComponent
-            jwt={jwt}
-            trip={trip as Trip}
-            allowedUsers={allowedUsers as Array<User>}
-            setAllowedUsers={setAllowedUsers}
-            username={username}
-            socket={socket}
-          />
-        )}
+        <div className="border border-black">
+          <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
+        </div>
         <div className="d-flex flex-row">
           <div>
+            <TripEditPermissionDisplayComponent
+              jwt={jwt}
+              allowedUsers={allowedUsers}
+              setAllowedUsers={setAllowedUsers}
+              trip={trip as Trip}
+              isOwner={isOwner}
+              editable={editable}
+              socket={socket}
+            />
+            {isOwner && editable && (
+              <TripEditPermissionGrantComponent
+                jwt={jwt}
+                trip={trip as Trip}
+                allowedUsers={allowedUsers}
+                setAllowedUsers={setAllowedUsers}
+                username={username}
+                socket={socket}
+              />
+            )}
             <TripDataDisplayComponent
               jwt={jwt}
               trip={trip as Trip}
               username={username}
-              dateIntervals={dateIntervals as Array<DateInterval>}
+              dateIntervals={dateIntervals}
               setDateIntervals={setDateIntervals}
-              timeslots={timeslots as Array<Array<TimeSlot>>}
+              timeslots={timeslots}
               setTimeslots={setTimeslots}
               editable={editable}
               socket={socket}
             />
           </div>
-          <div>
+          <div className="border border-black">
             <MapComponent
               jwt={jwt}
               username={username}
               trip={trip as Trip}
-              dateIntervals={dateIntervals as Array<DateInterval>}
-              timeslots={timeslots as Array<Array<TimeSlot>>}
+              dateIntervals={dateIntervals}
+              timeslots={timeslots}
               socket={socket}
             />
           </div>

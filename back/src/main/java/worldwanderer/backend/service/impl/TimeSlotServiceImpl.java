@@ -20,8 +20,11 @@ public class TimeSlotServiceImpl implements TimeSlotService {
     @Override
     public TimeSlot createTimeSlot(TimeSlotData timeSlotData, DateInterval dateInterval) {
 
-        LocalTime startTime = LocalTime.parse(timeSlotData.getStartTime());
-        LocalTime endTime = LocalTime.parse(timeSlotData.getEndTime());
+        LocalTime startTime = null, endTime = null;
+        if(timeSlotData.getStartTime() != null && !timeSlotData.getStartTime().isEmpty())
+            startTime = LocalTime.parse(timeSlotData.getStartTime());
+        if(timeSlotData.getEndTime() != null && !timeSlotData.getEndTime().isEmpty())
+            endTime = LocalTime.parse(timeSlotData.getEndTime());
 
         TimeSlot timeSlot = TimeSlot
                 .builder()
@@ -41,8 +44,8 @@ public class TimeSlotServiceImpl implements TimeSlotService {
         return TimeSlotData.builder()
                 .name(timeSlot.getName())
                 .notes(timeSlot.getNotes())
-                .startTime(timeSlot.getStartTime().toString())
-                .endTime(timeSlot.getEndTime().toString())
+                .startTime(timeSlot.getStartTime() != null ? timeSlot.getStartTime().toString() : null)
+                .endTime(timeSlot.getEndTime() != null ? timeSlot.getEndTime().toString() : null)
                 .lat(timeSlot.getLat())
                 .lng(timeSlot.getLng())
                 .id(timeSlot.getId())

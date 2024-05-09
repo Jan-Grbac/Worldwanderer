@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Cookies from "universal-cookie";
 import HomePage from "./pages/HomePage";
