@@ -2,26 +2,31 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DateIntervalDisplayComponent from "./DateIntervalDisplayComponent";
 import DateIntervalCreateComponent from "../create/DateIntervalCreateComponent";
+import { Socket } from "socket.io-client";
 
 interface Props {
   jwt: string;
   trip: any;
+  username: string;
   dateIntervals: any;
   setDateIntervals: Function;
   timeslots: any;
   setTimeslots: Function;
   editable: boolean;
+  socket: Socket | undefined;
 }
 
 function TripDataDisplayComponent(props: Props) {
   const {
     jwt,
     trip,
+    username,
     dateIntervals,
     setDateIntervals,
     timeslots,
     setTimeslots,
     editable,
+    socket,
   } = { ...props };
 
   return (
@@ -37,8 +42,10 @@ function TripDataDisplayComponent(props: Props) {
         <DateIntervalCreateComponent
           jwt={jwt}
           tripId={trip.id}
+          username={username}
           dateIntervals={dateIntervals}
           setDateIntervals={setDateIntervals}
+          socket={socket}
         />
       )}
       {dateIntervals.map(function (dateInterval: any, index: number) {
@@ -46,6 +53,7 @@ function TripDataDisplayComponent(props: Props) {
           <DateIntervalDisplayComponent
             key={dateInterval.id as string}
             jwt={jwt}
+            username={username}
             dateInterval={dateInterval}
             dateIntervals={dateIntervals}
             timeslots={timeslots}
@@ -53,6 +61,7 @@ function TripDataDisplayComponent(props: Props) {
             setTimeslots={setTimeslots}
             tripId={trip.id}
             editable={editable}
+            socket={socket}
           />
         );
       })}

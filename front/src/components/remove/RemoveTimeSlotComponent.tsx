@@ -1,15 +1,18 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { Socket } from "socket.io-client";
 
 interface Props {
   jwt: string;
+  username: string;
   timeslotId: string;
   timeslots: any;
   tripId: string;
+  socket: Socket | undefined;
 }
 
 function RemoveTimeSlotComponent(props: Props) {
-  const { jwt, timeslotId, timeslots, tripId } = {
+  const { jwt, username, timeslotId, timeslots, tripId, socket } = {
     ...props,
   };
 
@@ -36,6 +39,10 @@ function RemoveTimeSlotComponent(props: Props) {
     fetch(`/api/core/timeslot/deleteTimeslot/${timeslotId}`, fetchData);
 
     navigate("/edittrip/" + tripId);
+
+    if (socket) {
+      socket.emit("UPDATE", tripId + ":" + username + ":DELETED_TIMESLOT");
+    }
   }
 
   return (

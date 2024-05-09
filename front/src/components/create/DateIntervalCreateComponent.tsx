@@ -1,15 +1,20 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Socket } from "socket.io-client";
 
 interface Props {
   jwt: string;
   tripId: string;
+  username: string;
   dateIntervals: Array<any>;
   setDateIntervals: Function;
+  socket: Socket | undefined;
 }
 
 function DateIntervalCreateComponent(props: Props) {
-  const { jwt, tripId, dateIntervals, setDateIntervals } = { ...props };
+  const { jwt, tripId, username, dateIntervals, setDateIntervals, socket } = {
+    ...props,
+  };
   const [newDateInterval, setNewDateInterval] = useState({
     startDate: undefined,
     endDate: undefined,
@@ -53,13 +58,21 @@ function DateIntervalCreateComponent(props: Props) {
         }
       })
       .then((data) => {
-        let newDateIntervals = { ...dateIntervals };
-        newDateIntervals = newDateIntervals.concat(data);
+        let newDateIntervals = [...dateIntervals];
+        newDateIntervals.push(data);
+
         setDateIntervals(newDateIntervals);
         setNewDateInterval({
           startDate: undefined,
           endDate: undefined,
         });
+
+        if (socket) {
+          socket.emit(
+            "UPDATE",
+            tripId + ":" + username + ":ADDED_DATE_INTERVAL"
+          );
+        }
       });
   }
 

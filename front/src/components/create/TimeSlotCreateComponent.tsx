@@ -1,22 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Socket } from "socket.io-client";
 
 interface Props {
   jwt: string;
+  username: string;
   dateIntervalId: string;
   timeslots: any;
   dateIntervalTimeslots: any;
   setTimeslots: Function;
   tripId: string;
+  socket: Socket | undefined;
 }
 
 function TimeSlotCreateComponent(props: Props) {
   const {
     jwt,
+    username,
     dateIntervalId,
     timeslots,
     dateIntervalTimeslots,
     setTimeslots,
+    tripId,
+    socket,
   } = {
     ...props,
   };
@@ -91,6 +97,10 @@ function TimeSlotCreateComponent(props: Props) {
           endTime: undefined,
         });
         document.querySelector("input")?.setAttribute("value", null as any);
+
+        if (socket) {
+          socket.emit("UPDATE", tripId + ":" + username + ":ADDED_TIMESLOT");
+        }
       });
   }
 

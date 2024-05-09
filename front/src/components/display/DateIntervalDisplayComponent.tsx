@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import RemoveDateIntervalComponent from "../remove/RemoveDateIntervalComponent";
 import TimeSlotCreateComponent from "../create/TimeSlotCreateComponent";
 import TimeSlotDisplayComponent from "./TimeSlotDisplayComponent";
+import { Socket } from "socket.io-client";
 
 interface Props {
   jwt: string;
+  username: string;
   dateInterval: any;
   dateIntervals: any;
   timeslots: any;
@@ -13,11 +15,13 @@ interface Props {
   setTimeslots: Function;
   tripId: string;
   editable: boolean;
+  socket: Socket | undefined;
 }
 
 function DateIntervalDisplayComponent(props: Props) {
   const {
     jwt,
+    username,
     dateInterval,
     dateIntervals,
     timeslots,
@@ -25,6 +29,7 @@ function DateIntervalDisplayComponent(props: Props) {
     setTimeslots,
     tripId,
     editable,
+    socket,
   } = { ...props };
 
   function formatDate(date: string) {
@@ -47,20 +52,24 @@ function DateIntervalDisplayComponent(props: Props) {
         {editable && (
           <RemoveDateIntervalComponent
             jwt={jwt}
+            username={username}
             dateIntervalId={dateInterval.id}
             dateIntervals={dateIntervals}
             tripId={tripId}
+            socket={socket}
           />
         )}
       </div>
       {editable && (
         <TimeSlotCreateComponent
           jwt={jwt}
+          username={username}
           dateIntervalId={dateInterval.id}
           timeslots={timeslots}
           dateIntervalTimeslots={dateIntervalTimeslots}
           setTimeslots={setTimeslots}
           tripId={tripId}
+          socket={socket}
         />
       )}
       {dateIntervalTimeslots.map(function (timeslot: any) {
@@ -68,10 +77,12 @@ function DateIntervalDisplayComponent(props: Props) {
           <TimeSlotDisplayComponent
             key={timeslot.id as string}
             jwt={jwt}
+            username={username}
             timeslot={timeslot}
             timeslots={dateIntervalTimeslots}
             tripId={tripId}
             editable={editable}
+            socket={socket}
           />
         );
       })}

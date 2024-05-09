@@ -51,6 +51,22 @@ public class SocketIO {
                         System.out.println(revokedUser + "'s edit privileges on trip: " + trip + " were revoked");
                         client.sendEvent("REVOKED_EDIT_PRIVILEGE", revokedUser);
                         break;
+                    case "ADDED_DATE_INTERVAL":
+                        System.out.println(user + " added a new date interval.");
+                        client.sendEvent("ADDED_DATE_INTERVAL", user);
+                        break;
+                    case "DELETED_DATE_INTERVAL":
+                        System.out.println(user + " deleted a new date interval.");
+                        client.sendEvent("DELETED_DATE_INTERVAL", user);
+                        break;
+                    case "ADDED_TIMESLOT":
+                        System.out.println(user + " added a new time slot");
+                        client.sendEvent("ADDED_TIMESLOT", user);
+                        break;
+                    case "DELETED_TIMESLOT":
+                        System.out.println(user + " deleted a new time slot");
+                        client.sendEvent("DELETED_TIMESLOT", user);
+                        break;
                 }
             }
         }

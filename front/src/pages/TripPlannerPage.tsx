@@ -179,6 +179,22 @@ function TripPlannerPage(props: Props) {
       fetchAllowedUsers(trip.id);
     }
   }
+  function dateIntervalAdded(data: string) {
+    alert(data + " added a date interval.");
+    fetchDateIntervals(trip.id);
+  }
+  function dateIntervalDeleted(data: string) {
+    alert(data + " deleted a date interval.");
+    fetchDateIntervals(trip.id);
+  }
+  function timeslotAdded(data: string) {
+    alert(data + " added a timeslot.");
+    fetchTimeslots(trip.id);
+  }
+  function timeslotDeleted(data: string) {
+    alert(data + " deleted a timeslot.");
+    fetchTimeslots(trip.id);
+  }
 
   useEffect(() => {
     if (canConnect) {
@@ -191,17 +207,25 @@ function TripPlannerPage(props: Props) {
 
       s.on("GRANTED_EDIT_PRIVILEGE", userGrantedEditPrivilege);
       s.on("REVOKED_EDIT_PRIVILEGE", userRevokedEditPrivilege);
+      s.on("ADDED_DATE_INTERVAL", dateIntervalAdded);
+      s.on("DELETED_DATE_INTERVAL", dateIntervalDeleted);
+      s.on("ADDED_TIMESLOT", timeslotAdded);
+      s.on("DELETED_TIMESLOT", timeslotDeleted);
 
       return () => {
         s.off("GRANTED_EDIT_PRIVILEGE");
         s.off("REVOKED_EDIT_PRIVILEGE");
+        s.off("ADDED_DATE_INTERVAL", dateIntervalAdded);
+        s.off("DELETED_DATE_INTERVAL", dateIntervalDeleted);
+        s.off("ADDED_TIMESLOT", timeslotAdded);
+        s.off("DELETED_TIMESLOT", timeslotDeleted);
 
         s.disconnect();
       };
     } else {
       return;
     }
-  }, [trip, canConnect]);
+  }, [canConnect]);
 
   function copyTrip() {
     const fetchData = {
@@ -253,11 +277,13 @@ function TripPlannerPage(props: Props) {
             <TripDataDisplayComponent
               jwt={jwt}
               trip={trip}
+              username={username}
               dateIntervals={dateIntervals}
               setDateIntervals={setDateIntervals}
               timeslots={timeslots}
               setTimeslots={setTimeslots}
               editable={editable}
+              socket={socket}
             />
           </div>
           <div>
