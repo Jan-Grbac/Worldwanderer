@@ -1,6 +1,7 @@
 package worldwanderer.backend.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import worldwanderer.backend.dto.DateIntervalData;
@@ -43,6 +44,12 @@ public class DateIntervalController {
     @DeleteMapping("/deleteDateInterval/{dateIntervalId}")
     public ResponseEntity<Void> deleteDateInterval(@PathVariable String dateIntervalId) {
         dateIntervalService.deleteDateInterval(Long.parseLong(dateIntervalId));
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/updateDateInterval")
+    public ResponseEntity<Void> updateDateInterval(@RequestBody DateIntervalData dateIntervalData) {
+        dateIntervalService.updateDateInterval(dateIntervalData);
         return ResponseEntity.ok().build();
     }
 }

@@ -12,4 +12,5 @@ public interface DateIntervalService {
     DateIntervalData transformDateIntervalIntoDateIntervalData(DateInterval dateInterval);
     DateInterval getDateIntervalForId(long id);
     List<DateInterval> getDateIntervalsForTrip(Trip trip);
+    void updateDateInterval(DateIntervalData dateInterval);
 }

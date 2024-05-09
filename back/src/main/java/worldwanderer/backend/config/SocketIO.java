@@ -67,6 +67,12 @@ public class SocketIO {
                         System.out.println(user + " deleted a new time slot");
                         client.sendEvent("DELETED_TIMESLOT", user);
                         break;
+                    case "TRIP_PARAMS_UPDATED":
+                        client.sendEvent("TRIP_PARAMS_UPDATED", user);
+                        break;
+                    case "DATE_INTERVAL_UPDATED":
+                        client.sendEvent("DATE_INTERVAL_UPDATED", user);
+                        break;
                 }
             }
         }

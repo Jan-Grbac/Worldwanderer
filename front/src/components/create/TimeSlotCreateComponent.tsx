@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
-import $ from "jquery";
 
 interface Props {
   jwt: string;
@@ -29,7 +28,7 @@ function TimeSlotCreateComponent(props: Props) {
 
   const [timeslot, setTimeslot] = useState<TimeSlot>();
   const [searchBox, setSearchBox] = useState<google.maps.places.Autocomplete>();
-  const [googleMapsLoaded, setGoogleMapsLoaded] = useState(false);
+  const [loadAfter, setLoadAfter] = useState<boolean>(false);
 
   const options = {
     fields: ["formatted_address", "geometry", "name"],
@@ -37,13 +36,13 @@ function TimeSlotCreateComponent(props: Props) {
   };
 
   useEffect(() => {
-    if (window.google) {
-      setGoogleMapsLoaded(true);
-    }
-  }, [window.google]);
+    setTimeout(() => {
+      setLoadAfter(true);
+    }, 200);
+  });
 
   useEffect(() => {
-    if (googleMapsLoaded && typeof google !== "undefined") {
+    if (typeof google !== "undefined") {
       setSearchBox(
         new google.maps.places.Autocomplete(
           document.getElementById(
@@ -53,7 +52,7 @@ function TimeSlotCreateComponent(props: Props) {
         )
       );
     }
-  }, [googleMapsLoaded]);
+  }, [window.google, loadAfter]);
 
   useEffect(() => {
     if (searchBox) {
@@ -149,8 +148,6 @@ function TimeSlotCreateComponent(props: Props) {
 
         setTimeslots(newTimeslots);
         setTimeslot({} as TimeSlot);
-
-        $("input").val();
 
         if (socket) {
           socket.emit("UPDATE", tripId + ":" + username + ":ADDED_TIMESLOT");

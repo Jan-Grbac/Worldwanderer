@@ -118,4 +118,10 @@ public class TripController {
         List<Trip> trips = tripService.getHighestRatedTrips(5);
         return ResponseEntity.ok(new ArrayList<>(trips));
     }
+
+    @PostMapping("/updateTrip")
+    public ResponseEntity<Void> updateTrip(@RequestBody TripData tripData) {
+        tripService.updateTrip(tripData);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -56,39 +56,9 @@ function TripPlannerPage(props: Props) {
           });
         }
 
+        fetchTrip(tripId);
+
         fetchAllowedUsers(tripId);
-
-        fetch(`/api/core/trip/getTrip/${tripId}`, {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          method: "GET",
-        })
-          .then((response) => {
-            if (response.ok) {
-              return response.json();
-            }
-          })
-          .then((data) => {
-            const newTrip = { ...trip } as Trip;
-
-            newTrip.id = data.id;
-            newTrip.name = data.name;
-            newTrip.description = data.description;
-            newTrip.ownerUsername = data.ownerUsername;
-
-            if (username === data.ownerUsername) {
-              setIsOwner(true);
-            }
-            setTrip(newTrip);
-
-            if (editable) {
-              setCanConnect(true);
-            }
-          });
-
         fetchDateIntervals(tripId);
         fetchTimeslots(tripId);
       }
@@ -155,6 +125,39 @@ function TripPlannerPage(props: Props) {
       });
   }
 
+  function fetchTrip(tripId: string) {
+    fetch(`/api/core/trip/getTrip/${tripId}`, {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "GET",
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        const newTrip = { ...trip } as Trip;
+
+        newTrip.id = data.id;
+        newTrip.name = data.name;
+        newTrip.description = data.description;
+        newTrip.ownerUsername = data.ownerUsername;
+
+        if (username === data.ownerUsername) {
+          setIsOwner(true);
+        }
+        setTrip(newTrip);
+
+        if (editable) {
+          setCanConnect(true);
+        }
+      });
+  }
+
   useEffect(() => {
     if (jwt && username && trip && dateIntervals && timeslots && allowedUsers) {
       setLoading(true);
@@ -186,6 +189,11 @@ function TripPlannerPage(props: Props) {
     alert(data + " deleted a date interval.");
     fetchDateIntervals(trip.id);
   }
+  function dateIntervalUpdated(data: string) {
+    if (!trip) return;
+    alert(data + " updated a date interval.");
+    fetchDateIntervals(trip.id);
+  }
   function timeslotAdded(data: string) {
     if (!trip) return;
     alert(data + " added a timeslot.");
@@ -195,6 +203,10 @@ function TripPlannerPage(props: Props) {
     if (!trip) return;
     alert(data + " deleted a timeslot.");
     fetchTimeslots(trip.id);
+  }
+  function tripParamsUpdated(data: string) {
+    if (!trip) return;
+    alert(data + " edited trip parameters.");
   }
 
   useEffect(() => {
@@ -212,14 +224,18 @@ function TripPlannerPage(props: Props) {
       s.on("DELETED_DATE_INTERVAL", dateIntervalDeleted);
       s.on("ADDED_TIMESLOT", timeslotAdded);
       s.on("DELETED_TIMESLOT", timeslotDeleted);
+      s.on("TRIP_PARAMS_UPDATED", tripParamsUpdated);
+      s.on("DATE_INTERVAL_UPDATED", dateIntervalUpdated);
 
       return () => {
         s.off("GRANTED_EDIT_PRIVILEGE");
         s.off("REVOKED_EDIT_PRIVILEGE");
-        s.off("ADDED_DATE_INTERVAL", dateIntervalAdded);
-        s.off("DELETED_DATE_INTERVAL", dateIntervalDeleted);
-        s.off("ADDED_TIMESLOT", timeslotAdded);
-        s.off("DELETED_TIMESLOT", timeslotDeleted);
+        s.off("ADDED_DATE_INTERVAL");
+        s.off("DELETED_DATE_INTERVAL");
+        s.off("ADDED_TIMESLOT");
+        s.off("DELETED_TIMESLOT");
+        s.off("TRIP_PARAMS_UPDATED");
+        s.off("DATE_INTERVAL_UPDATED");
 
         s.disconnect();
       };

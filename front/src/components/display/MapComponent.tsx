@@ -36,13 +36,7 @@ const MapComponent = (props: Props) => {
   };
 
   const [markers, setMarkers] = useState<Array<BasicMarkerInfo>>();
-
-  useEffect(() => {
-    console.log(jwt);
-  }, [props]);
-
   const mapRef = useRef<any>(null);
-  const [loading, setLoading] = useState<boolean>(false);
 
   const defaultProps = {
     center: {
@@ -60,43 +54,36 @@ const MapComponent = (props: Props) => {
     maps: MapContextProps["maps"];
   }) {
     mapRef.current = map;
-
-    setLoading(true);
   }
 
   useEffect(() => {
-    if (loading) {
-      console.log("loaded");
-    }
-  }, [loading]);
-
-  useEffect(() => {
-    let newMarkers = Array<BasicMarkerInfo>();
+    let newMarkers = new Array<BasicMarkerInfo>();
     if (dateIntervals && timeslots) {
       for (let i = 0; i < dateIntervals.length; i++) {
-        for (let j = 0; j < timeslots[i].length; j++) {
-          let timeslot = timeslots[i][j];
+        if (i < timeslots.length) {
+          for (let j = 0; j < timeslots[i].length; j++) {
+            let timeslot = timeslots[i][j];
 
-          let startDateFormatted = formatDate(dateIntervals[i].startDate);
-          let endDateFormatted = formatDate(dateIntervals[i].endDate);
+            let startDateFormatted = formatDate(dateIntervals[i].startDate);
+            let endDateFormatted = formatDate(dateIntervals[i].endDate);
 
-          let newMarker = {
-            lat: timeslot.lat,
-            lng: timeslot.lng,
-            text:
-              startDateFormatted +
-              " - " +
-              endDateFormatted +
-              "\n" +
-              timeslot.name,
-          };
+            let newMarker = {
+              lat: timeslot.lat,
+              lng: timeslot.lng,
+              text:
+                startDateFormatted +
+                " - " +
+                endDateFormatted +
+                "\n" +
+                timeslot.name,
+            };
 
-          newMarkers.push(newMarker);
+            newMarkers.push(newMarker);
+          }
         }
       }
+      setMarkers(newMarkers);
     }
-
-    setMarkers(newMarkers);
   }, [dateIntervals, timeslots]);
 
   function formatDate(date: string) {

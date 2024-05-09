@@ -42,14 +42,112 @@ function DateIntervalDisplayComponent(props: Props) {
     return newDate;
   }
 
+  function dateSubstring(date: string) {
+    console.log(date.substring(0, 10));
+    return date.substring(0, 10);
+  }
+
+  function allowDateEditing() {
+    console.log(dateInterval.startDate);
+    console.log(dateInterval.endDate);
+    document.getElementById("date-view")?.classList.add("d-none");
+    document.getElementById("date-edit")?.classList.remove("d-none");
+  }
+
+  function finishDateEditing(event: any) {
+    if (event.currentTarget.contains(event.relatedTarget)) {
+      return;
+    }
+
+    document.getElementById("date-view")?.classList.remove("d-none");
+    document.getElementById("date-edit")?.classList.add("d-none");
+
+    const fetchData = {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify(dateInterval),
+    };
+    fetch(`/api/core/dateInterval/updateDateInterval`, fetchData)
+      .then((response) => {
+        if (response.ok) {
+          return;
+        }
+      })
+      .then(() => {
+        if (socket) {
+          socket.emit(
+            "UPDATE",
+            tripId + ":" + username + ":DATE_INTERVAL_UPDATED"
+          );
+        }
+      });
+  }
+
+  function handleEnterKeyPress(event: any) {
+    if (event.key === "Enter") {
+      event.target.blur();
+    }
+  }
+
+  function dateChanged(param: string, value: any) {
+    let newDateIntervals = [...dateIntervals];
+
+    for (let i = 0; i < dateIntervals.length; i++) {
+      if (dateInterval === dateIntervals[i]) {
+        if (param === "startDate") {
+          dateInterval.startDate = value;
+        }
+        if (param === "endDate") {
+          dateInterval.endDate = value;
+        }
+        newDateIntervals[i] = dateInterval;
+        break;
+      }
+    }
+
+    setDateIntervals(newDateIntervals);
+  }
+
   return (
     <>
       <div className="border border-black">
         <div className="d-flex flex-row">
-          <p>
-            Start date: {formatDate(dateInterval.startDate)} <br />
-            End date: {formatDate(dateInterval.endDate)}
-          </p>
+          <div id="date-view" onDoubleClick={allowDateEditing}>
+            {dateInterval.startDate === dateInterval.endDate && (
+              <>Date: {formatDate(dateInterval.startDate)}</>
+            )}
+            {dateInterval.startDate !== dateInterval.endDate && (
+              <>
+                Dates: {formatDate(dateInterval.startDate)} -{" "}
+                {formatDate(dateInterval.endDate)}
+              </>
+            )}
+          </div>
+          <div
+            id="date-edit"
+            className="d-none"
+            onKeyDown={handleEnterKeyPress}
+            onBlur={finishDateEditing}
+            contentEditable="true"
+            suppressContentEditableWarning={true}
+          >
+            <input
+              type="date"
+              name="startDate"
+              defaultValue={dateSubstring(dateInterval.startDate)}
+              onChange={(event) => dateChanged("startDate", event.target.value)}
+            />
+            <input
+              type="date"
+              name="endDate"
+              defaultValue={dateSubstring(dateInterval.endDate)}
+              onChange={(event) => dateChanged("startDate", event.target.value)}
+            />
+          </div>
           {editable && (
             <RemoveDateIntervalComponent
               jwt={jwt}

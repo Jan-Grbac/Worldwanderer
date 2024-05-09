@@ -50,4 +50,12 @@ public class DateIntervalServiceImpl implements DateIntervalService {
     public List<DateInterval> getDateIntervalsForTrip(Trip trip) {
         return dateIntervalRepository.findAllByTrip(trip);
     }
+
+    @Override
+    public void updateDateInterval(DateIntervalData dateInterval) {
+        DateInterval dateIntervalOld = dateIntervalRepository.getReferenceById(dateInterval.getId());
+        dateIntervalOld.setStartDate(dateInterval.getStartDate());
+        dateIntervalOld.setEndDate(dateInterval.getEndDate());
+        dateIntervalRepository.save(dateIntervalOld);
+    }
 }

@@ -39,6 +39,10 @@ function DateIntervalCreateComponent(props: Props) {
       alert("End date must be selected!");
       return;
     }
+    if (newDateInterval.startDate > newDateInterval.endDate) {
+      alert("End date must be after start date.");
+      return;
+    }
 
     const fetchData = {
       headers: {

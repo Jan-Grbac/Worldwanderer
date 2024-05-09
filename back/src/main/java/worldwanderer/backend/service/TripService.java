@@ -19,4 +19,5 @@ public interface TripService {
     void giveTripAccess(Trip trip, User user);
     void revokeTripAccess(Trip trip, User user);
     List<Trip> getSharedTripsForUser(User user);
+    void updateTrip(TripData trip);
 }

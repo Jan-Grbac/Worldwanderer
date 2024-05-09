@@ -117,4 +117,12 @@ public class TripServiceImpl implements TripService {
         }
         return sharedTrips;
     }
+
+    @Override
+    public void updateTrip(TripData trip) {
+        Trip tripOld = tripRepository.getReferenceById(trip.getId());
+        tripOld.setName(trip.getName());
+        tripOld.setDescription(trip.getDescription());
+        tripRepository.save(tripOld);
+    }
 }
