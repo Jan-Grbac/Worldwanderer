@@ -8,14 +8,12 @@ interface Props {
 
 function LoginComponent(props: Props) {
   const { setJwt, setUsername } = { ...props };
-  const [user, setUser] = useState({
-    username: "",
-    password: "",
-  });
+  const [user, setUser] = useState<LoginInfo>();
   const navigate = useNavigate();
 
   function handleInputChange(param: string, value: any) {
-    let newUser = { ...user };
+    let newUser = { ...user } as LoginInfo;
+
     if (param === "username") {
       newUser[param] = value;
       setUser(newUser);
@@ -27,6 +25,8 @@ function LoginComponent(props: Props) {
   }
 
   function handleLoginButtonClick() {
+    if (!user) return;
+
     if (user.username === "") {
       alert("Username cannot be empty!");
       return;
@@ -71,7 +71,7 @@ function LoginComponent(props: Props) {
         Username:
         <input
           type="text"
-          value={user.username}
+          value={user?.username}
           onChange={(event) =>
             handleInputChange("username", event.target.value)
           }
@@ -81,13 +81,16 @@ function LoginComponent(props: Props) {
         Password:
         <input
           type="password"
-          value={user.password}
+          value={user?.password}
           onChange={(event) =>
             handleInputChange("password", event.target.value)
           }
         ></input>
       </div>
-      <button onClick={handleLoginButtonClick}>Login</button>
+      <div className="d-flex flex-row">
+        <button onClick={handleLoginButtonClick}>Login</button>
+        <button onClick={cancel}>Cancel</button>
+      </div>
     </div>
   );
 }

@@ -1,25 +1,22 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface Props {
   jwt: string;
   username: string;
-  trips: Array<any>;
+  trips: Array<Trip>;
   setTrips: Function;
 }
 
 function CreateTripComponent(props: Props) {
   const { jwt, username, trips, setTrips } = { ...props };
 
-  const [newTrip, setNewTrip] = useState({
-    name: "",
-    description: "",
-  });
+  const [newTrip, setNewTrip] = useState<Trip>();
 
   const navigate = useNavigate();
 
   function handleInputChange(param: string, value: any) {
-    let newTripChanged = { ...newTrip };
+    let newTripChanged = { ...newTrip } as Trip;
     if (param === "name") {
       newTripChanged[param] = value;
       setNewTrip(newTripChanged);
@@ -31,6 +28,8 @@ function CreateTripComponent(props: Props) {
   }
 
   function handleNewTripCreation() {
+    if (!newTrip) return;
+
     if (newTrip.name === "") {
       alert("Name cannot be empty!");
       return;
@@ -58,10 +57,12 @@ function CreateTripComponent(props: Props) {
       .then((data) => {
         let newTrips = trips.concat(data);
         setTrips(newTrips);
-        setNewTrip({
-          name: "",
-          description: "",
-        });
+        setNewTrip(undefined);
+        (document.getElementById("name-input-trip") as HTMLInputElement).value =
+          "";
+        (
+          document.getElementById("description-input-trip") as HTMLInputElement
+        ).value = "";
         navigate("/trips");
       });
   }
@@ -73,16 +74,18 @@ function CreateTripComponent(props: Props) {
         <div className="p-2">
           Trip name:
           <input
+            id="name-input-trip"
             type="text"
-            value={newTrip.name}
+            value={newTrip?.name}
             onChange={(event) => handleInputChange("name", event.target.value)}
           ></input>
         </div>
         <div className="p-2">
           Trip description:
           <input
+            id="description-input-trip"
             type="text"
-            value={newTrip.description}
+            value={newTrip?.description}
             onChange={(event) =>
               handleInputChange("description", event.target.value)
             }

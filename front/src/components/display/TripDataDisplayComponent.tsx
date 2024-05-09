@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import DateIntervalDisplayComponent from "./DateIntervalDisplayComponent";
 import DateIntervalCreateComponent from "../create/DateIntervalCreateComponent";
 import { Socket } from "socket.io-client";
+import { useEffect, useState } from "react";
 
 interface Props {
   jwt: string;
-  trip: any;
+  trip: Trip;
   username: string;
-  dateIntervals: any;
+  dateIntervals: Array<DateInterval>;
   setDateIntervals: Function;
-  timeslots: any;
+  timeslots: Array<Array<TimeSlot>>;
   setTimeslots: Function;
   editable: boolean;
   socket: Socket | undefined;
@@ -29,43 +28,77 @@ function TripDataDisplayComponent(props: Props) {
     socket,
   } = { ...props };
 
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (
+      jwt &&
+      trip &&
+      username &&
+      dateIntervals &&
+      setDateIntervals &&
+      timeslots &&
+      setTimeslots &&
+      editable &&
+      socket
+    ) {
+      setLoading(true);
+    }
+  }, [
+    jwt,
+    trip,
+    username,
+    dateIntervals,
+    setDateIntervals,
+    timeslots,
+    setTimeslots,
+    editable,
+    socket,
+  ]);
+
   return (
-    <>
-      <div>
-        Trip name: {trip.name}
-        <br />
-        Trip description: {trip.description}
-        <br />
-        Created by: {trip.ownerUsername}
-      </div>
-      {editable && (
-        <DateIntervalCreateComponent
-          jwt={jwt}
-          tripId={trip.id}
-          username={username}
-          dateIntervals={dateIntervals}
-          setDateIntervals={setDateIntervals}
-          socket={socket}
-        />
-      )}
-      {dateIntervals.map(function (dateInterval: any, index: number) {
-        return (
-          <DateIntervalDisplayComponent
-            key={dateInterval.id as string}
+    loading && (
+      <>
+        <div>
+          Trip name: {trip.name}
+          <br />
+          Trip description: {trip.description}
+          <br />
+          Created by: {trip.ownerUsername}
+        </div>
+        {editable && (
+          <DateIntervalCreateComponent
             jwt={jwt}
-            username={username}
-            dateInterval={dateInterval}
-            dateIntervals={dateIntervals}
-            timeslots={timeslots}
-            dateIntervalTimeslots={timeslots[index]}
-            setTimeslots={setTimeslots}
             tripId={trip.id}
-            editable={editable}
+            username={username}
+            dateIntervals={dateIntervals}
+            setDateIntervals={setDateIntervals}
             socket={socket}
           />
-        );
-      })}
-    </>
+        )}
+        {dateIntervals.map(function (
+          dateInterval: DateInterval,
+          index: number
+        ) {
+          return (
+            <DateIntervalDisplayComponent
+              key={dateInterval.id as string}
+              jwt={jwt}
+              username={username}
+              dateInterval={dateInterval}
+              dateIntervals={dateIntervals}
+              setDateIntervals={setDateIntervals}
+              timeslots={timeslots}
+              setTimeslots={setTimeslots}
+              dateIntervalTimeslots={timeslots[index]}
+              tripId={trip.id}
+              editable={editable}
+              socket={socket}
+            />
+          );
+        })}
+      </>
+    )
   );
 }
 

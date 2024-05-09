@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import worldwanderer.backend.dto.UserData;
 import worldwanderer.backend.entity.User;
 import worldwanderer.backend.repository.UserRepository;
 import worldwanderer.backend.service.UserService;
@@ -28,6 +29,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByUsername(String username) {
         return userRepository.findByUsername(username).orElse(null);
+    }
+
+    @Override
+    public UserData transformIntoUserData(User user) {
+        return UserData.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .role(user.getRole().name())
+                .build();
     }
 
 }

@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { Socket } from "socket.io-client";
 
 interface Props {
   jwt: string;
   username: string;
   dateIntervalId: string;
-  timeslots: any;
-  dateIntervalTimeslots: any;
+  timeslots: Array<Array<TimeSlot>>;
+  dateIntervalTimeslots: Array<TimeSlot>;
   setTimeslots: Function;
   tripId: string;
   socket: Socket | undefined;
@@ -19,22 +18,18 @@ function TimeSlotCreateComponent(props: Props) {
     username,
     dateIntervalId,
     timeslots,
-    dateIntervalTimeslots,
     setTimeslots,
+    dateIntervalTimeslots,
     tripId,
     socket,
   } = {
     ...props,
   };
 
-  const [timeslot, setTimeslot] = useState({
-    id: "",
-    startTime: undefined,
-    endTime: undefined,
-  });
+  const [timeslot, setTimeslot] = useState<TimeSlot>();
 
   function handleInputChange(param: string, value: any) {
-    let newTimeslot = { ...timeslot };
+    let newTimeslot = { ...timeslot } as TimeSlot;
     if (param === "startTime") {
       newTimeslot[param] = value;
       setTimeslot(newTimeslot);
@@ -46,6 +41,8 @@ function TimeSlotCreateComponent(props: Props) {
   }
 
   function handleSubmit() {
+    if (!timeslot) return;
+
     if (timeslot.startTime === undefined) {
       alert("Start time cannot be undefined.");
       return;
@@ -74,8 +71,8 @@ function TimeSlotCreateComponent(props: Props) {
         }
       })
       .then((data) => {
-        let newTimeslots = [...timeslots];
-        let newDateIntervalTimeslots = [...dateIntervalTimeslots];
+        let newTimeslots = [...timeslots] as Array<Array<TimeSlot>>;
+        let newDateIntervalTimeslots = dateIntervalTimeslots as Array<TimeSlot>;
 
         newDateIntervalTimeslots.push(data);
 
@@ -83,7 +80,10 @@ function TimeSlotCreateComponent(props: Props) {
           newTimeslots.push(newDateIntervalTimeslots);
         } else {
           for (let i = 0; i < timeslots.length; i++) {
-            if (timeslots[i] === dateIntervalTimeslots) {
+            if (
+              JSON.stringify(timeslots[i]) ===
+              JSON.stringify(dateIntervalTimeslots)
+            ) {
               newTimeslots[i] = newDateIntervalTimeslots;
               break;
             }
@@ -91,12 +91,7 @@ function TimeSlotCreateComponent(props: Props) {
         }
 
         setTimeslots(newTimeslots);
-        setTimeslot({
-          id: "",
-          startTime: undefined,
-          endTime: undefined,
-        });
-        document.querySelector("input")?.setAttribute("value", null as any);
+        setTimeslot(undefined);
 
         if (socket) {
           socket.emit("UPDATE", tripId + ":" + username + ":ADDED_TIMESLOT");
@@ -109,13 +104,13 @@ function TimeSlotCreateComponent(props: Props) {
       Start time:
       <input
         type="time"
-        value={timeslot.startTime}
+        value={timeslot?.startTime}
         onChange={(event) => handleInputChange("startTime", event.target.value)}
       ></input>
       End time:
       <input
         type="time"
-        value={timeslot.endTime}
+        value={timeslot?.endTime}
         onChange={(event) => handleInputChange("endTime", event.target.value)}
       ></input>
       <button onClick={handleSubmit}>Add new timeslot</button>

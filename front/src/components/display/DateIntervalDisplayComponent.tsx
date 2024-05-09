@@ -1,5 +1,3 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import RemoveDateIntervalComponent from "../remove/RemoveDateIntervalComponent";
 import TimeSlotCreateComponent from "../create/TimeSlotCreateComponent";
 import TimeSlotDisplayComponent from "./TimeSlotDisplayComponent";
@@ -8,10 +6,11 @@ import { Socket } from "socket.io-client";
 interface Props {
   jwt: string;
   username: string;
-  dateInterval: any;
-  dateIntervals: any;
-  timeslots: any;
-  dateIntervalTimeslots: any;
+  dateInterval: DateInterval;
+  dateIntervals: Array<DateInterval>;
+  setDateIntervals: Function;
+  timeslots: Array<Array<TimeSlot>>;
+  dateIntervalTimeslots: Array<TimeSlot>;
   setTimeslots: Function;
   tripId: string;
   editable: boolean;
@@ -24,9 +23,10 @@ function DateIntervalDisplayComponent(props: Props) {
     username,
     dateInterval,
     dateIntervals,
+    setDateIntervals,
     timeslots,
-    dateIntervalTimeslots,
     setTimeslots,
+    dateIntervalTimeslots,
     tripId,
     editable,
     socket,
@@ -55,6 +55,7 @@ function DateIntervalDisplayComponent(props: Props) {
             username={username}
             dateIntervalId={dateInterval.id}
             dateIntervals={dateIntervals}
+            setDateIntervals={setDateIntervals}
             tripId={tripId}
             socket={socket}
           />
@@ -66,20 +67,21 @@ function DateIntervalDisplayComponent(props: Props) {
           username={username}
           dateIntervalId={dateInterval.id}
           timeslots={timeslots}
-          dateIntervalTimeslots={dateIntervalTimeslots}
           setTimeslots={setTimeslots}
+          dateIntervalTimeslots={dateIntervalTimeslots}
           tripId={tripId}
           socket={socket}
         />
       )}
-      {dateIntervalTimeslots.map(function (timeslot: any) {
+      {dateIntervalTimeslots?.map(function (timeslot: TimeSlot) {
         return (
           <TimeSlotDisplayComponent
             key={timeslot.id as string}
             jwt={jwt}
             username={username}
             timeslot={timeslot}
-            timeslots={dateIntervalTimeslots}
+            timeslots={timeslots}
+            setTimeslots={setTimeslots}
             tripId={tripId}
             editable={editable}
             socket={socket}

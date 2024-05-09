@@ -2,15 +2,14 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 interface Props {
-  trip: any;
+  trip: Trip;
 }
 
 function TripPublicDisplayComponent(props: Props) {
   const { trip } = { ...props };
-
   const navigate = useNavigate();
 
-  function viewTrip(tripId: number) {
+  function viewTrip(tripId: string) {
     navigate("/viewtrip/" + tripId);
   }
 

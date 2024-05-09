@@ -1,19 +1,28 @@
-import React, { useEffect } from "react";
 import RemoveTimeSlotComponent from "../remove/RemoveTimeSlotComponent";
 import { Socket } from "socket.io-client";
 
 interface Props {
   jwt: string;
   username: string;
-  timeslot: any;
-  timeslots: any;
+  timeslot: TimeSlot;
+  timeslots: Array<Array<TimeSlot>>;
+  setTimeslots: Function;
   tripId: string;
   editable: boolean;
   socket: Socket | undefined;
 }
 
 function TimeSlotDisplayComponent(props: Props) {
-  const { jwt, username, timeslot, timeslots, tripId, editable, socket } = {
+  const {
+    jwt,
+    username,
+    timeslot,
+    timeslots,
+    setTimeslots,
+    tripId,
+    editable,
+    socket,
+  } = {
     ...props,
   };
 
@@ -28,6 +37,7 @@ function TimeSlotDisplayComponent(props: Props) {
           username={username}
           timeslotId={timeslot.id}
           timeslots={timeslots}
+          setTimeslots={setTimeslots}
           tripId={tripId}
           socket={socket}
         />

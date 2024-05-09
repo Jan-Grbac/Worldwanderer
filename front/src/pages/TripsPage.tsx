@@ -12,11 +12,11 @@ interface Props {
 
 function TripsPage(props: Props) {
   const { jwt, jwtIsValid, username } = { ...props };
-  const [ownedTrips, setOwnedTrips] = useState(new Array());
-  const [sharedTrips, setSharedTrips] = useState(new Array());
+  const [ownedTrips, setOwnedTrips] = useState<Array<Trip>>();
+  const [sharedTrips, setSharedTrips] = useState<Array<Trip>>();
   const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (jwt && username) {
@@ -58,9 +58,14 @@ function TripsPage(props: Props) {
             setSharedTrips(data);
           });
       }
-      setLoading(true);
     }
   }, [jwt, username]);
+
+  useEffect(() => {
+    if (ownedTrips && sharedTrips) {
+      setLoading(true);
+    }
+  }, [ownedTrips, sharedTrips]);
 
   return (
     loading && (
@@ -69,14 +74,14 @@ function TripsPage(props: Props) {
           <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
           <TripListDisplayComponent
             jwt={jwt}
-            ownedTrips={ownedTrips}
+            ownedTrips={ownedTrips as Array<Trip>}
             setOwnedTrips={setOwnedTrips}
-            sharedTrips={sharedTrips}
+            sharedTrips={sharedTrips as Array<Trip>}
           />
           <TripCreateComponent
             jwt={jwt}
             username={username}
-            trips={ownedTrips}
+            trips={ownedTrips as Array<Trip>}
             setTrips={setOwnedTrips}
           />
         </div>

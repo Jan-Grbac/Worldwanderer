@@ -4,9 +4,9 @@ import { Socket } from "socket.io-client";
 
 interface Props {
   jwt: string;
-  trip: any;
+  trip: Trip;
   username: string;
-  allowedUsers: any;
+  allowedUsers: Array<User>;
   setAllowedUsers: Function;
   socket: Socket | undefined;
 }
@@ -39,7 +39,6 @@ function TripEditPermissionRemoveComponent(props: Props) {
       .then((response) => {
         if (response.ok) {
         } else {
-          alert("wtf???");
           return;
         }
       })

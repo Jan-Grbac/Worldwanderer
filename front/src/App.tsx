@@ -12,12 +12,12 @@ import LogoutPage from "./pages/LogoutPage";
 
 function App() {
   let cookies = new Cookies();
-  const [username, setUsername] = useState("");
-  const [jwt, setJwt] = useState(
+  const [username, setUsername] = useState<string>();
+  const [jwt, setJwt] = useState<string>(
     cookies.get("jwt") !== undefined ? cookies.get("jwt") : ""
   );
-  const [jwtIsValid, setJwtIsValid] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [jwtIsValid, setJwtIsValid] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (jwt !== "") {
@@ -69,7 +69,7 @@ function App() {
                 <HomePage
                   jwt={jwt}
                   jwtIsValid={jwtIsValid}
-                  username={username}
+                  username={username as string}
                 />
               }
             />
@@ -99,7 +99,7 @@ function App() {
                 <TripsPage
                   jwt={jwt}
                   jwtIsValid={jwtIsValid}
-                  username={username}
+                  username={username as string}
                 />
               }
             />
@@ -110,7 +110,7 @@ function App() {
                   editable={true}
                   jwt={jwt}
                   jwtIsValid={jwtIsValid}
-                  username={username}
+                  username={username as string}
                 />
               }
             />
@@ -121,7 +121,7 @@ function App() {
                   editable={false}
                   jwt={jwt}
                   jwtIsValid={jwtIsValid}
-                  username={username}
+                  username={username as string}
                 />
               }
             />

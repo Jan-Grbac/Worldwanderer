@@ -98,4 +98,18 @@
         </addUniqueConstraint>
     </changeSet>
 
+    <changeSet id="addLatAndLngToTimeslot" author="me">
+        <addColumn tableName="timeslot">
+            <column name="lat" type="double" />
+            <column name="lng" type="double" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="addNameNotesToTimeslot" author="me">
+        <addColumn tableName="timeslot">
+            <column name="name" type="VARCHAR(255)" />
+            <column name="notes" type="VARCHAR(1024)" />
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

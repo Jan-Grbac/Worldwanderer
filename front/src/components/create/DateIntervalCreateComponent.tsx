@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { Socket } from "socket.io-client";
 
 interface Props {
   jwt: string;
   tripId: string;
   username: string;
-  dateIntervals: Array<any>;
+  dateIntervals: Array<DateInterval>;
   setDateIntervals: Function;
   socket: Socket | undefined;
 }
@@ -15,13 +14,10 @@ function DateIntervalCreateComponent(props: Props) {
   const { jwt, tripId, username, dateIntervals, setDateIntervals, socket } = {
     ...props,
   };
-  const [newDateInterval, setNewDateInterval] = useState({
-    startDate: undefined,
-    endDate: undefined,
-  });
+  const [newDateInterval, setNewDateInterval] = useState<DateInterval>();
 
   function handleInputChange(param: string, value: any) {
-    let newDateIntervalChanged = { ...newDateInterval };
+    let newDateIntervalChanged = { ...newDateInterval } as DateInterval;
     if (param === "startDate") {
       newDateIntervalChanged[param] = value;
       setNewDateInterval(newDateIntervalChanged);
@@ -33,6 +29,8 @@ function DateIntervalCreateComponent(props: Props) {
   }
 
   function handleNewDateIntervalCreation() {
+    if (!newDateInterval) return;
+
     if (newDateInterval.startDate === undefined) {
       alert("Start date must be selected!");
       return;
@@ -58,14 +56,12 @@ function DateIntervalCreateComponent(props: Props) {
         }
       })
       .then((data) => {
-        let newDateIntervals = [...dateIntervals];
+        let newDateIntervals = [...dateIntervals] as Array<DateInterval>;
+
         newDateIntervals.push(data);
 
         setDateIntervals(newDateIntervals);
-        setNewDateInterval({
-          startDate: undefined,
-          endDate: undefined,
-        });
+        setNewDateInterval(undefined);
 
         if (socket) {
           socket.emit(

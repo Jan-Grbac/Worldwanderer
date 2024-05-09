@@ -23,8 +23,14 @@ public class TimeSlot {
     @JsonBackReference
     private DateInterval interval;
 
+    private String name;
+    private String notes;
+
     private LocalTime startTime;
     private LocalTime endTime;
+
+    private Double lat;
+    private Double lng;
 
     public TimeSlot() {
 

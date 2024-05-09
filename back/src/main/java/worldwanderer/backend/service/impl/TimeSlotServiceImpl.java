@@ -25,8 +25,12 @@ public class TimeSlotServiceImpl implements TimeSlotService {
 
         TimeSlot timeSlot = TimeSlot
                 .builder()
+                .name(timeSlotData.getName())
+                .notes(timeSlotData.getNotes())
                 .startTime(startTime)
                 .endTime(endTime)
+                .lat(timeSlotData.getLat())
+                .lng(timeSlotData.getLng())
                 .interval(dateInterval).build();
 
         return timeSlotRepository.save(timeSlot);
@@ -35,8 +39,12 @@ public class TimeSlotServiceImpl implements TimeSlotService {
     @Override
     public TimeSlotData transformTimeSlotIntoTimeSlotData(TimeSlot timeSlot) {
         return TimeSlotData.builder()
+                .name(timeSlot.getName())
+                .notes(timeSlot.getNotes())
                 .startTime(timeSlot.getStartTime().toString())
                 .endTime(timeSlot.getEndTime().toString())
+                .lat(timeSlot.getLat())
+                .lng(timeSlot.getLng())
                 .id(timeSlot.getId())
                 .build();
     }

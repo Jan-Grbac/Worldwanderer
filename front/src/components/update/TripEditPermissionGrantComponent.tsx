@@ -4,8 +4,8 @@ import { Socket } from "socket.io-client";
 
 interface Props {
   jwt: string;
-  trip: any;
-  allowedUsers: any;
+  trip: Trip;
+  allowedUsers: Array<User>;
   setAllowedUsers: Function;
   username: string;
   socket: Socket | undefined;
@@ -16,7 +16,7 @@ function TripEditPermissionGrantComponent(props: Props) {
     ...props,
   };
 
-  const [grantUsername, setGrantUsername] = useState("");
+  const [grantUsername, setGrantUsername] = useState<string>("");
   const navigate = useNavigate();
 
   async function grantPermission() {

@@ -1,25 +1,30 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
 import { Socket } from "socket.io-client";
 
 interface Props {
   jwt: string;
   username: string;
   dateIntervalId: string;
-  dateIntervals: any;
+  dateIntervals: Array<DateInterval>;
+  setDateIntervals: Function;
   tripId: string;
   socket: Socket | undefined;
 }
 
 function RemoveDateIntervalComponent(props: Props) {
-  const { jwt, username, dateIntervalId, dateIntervals, tripId, socket } = {
+  const {
+    jwt,
+    username,
+    dateIntervalId,
+    dateIntervals,
+    setDateIntervals,
+    tripId,
+    socket,
+  } = {
     ...props,
   };
 
-  const navigate = useNavigate();
-
   function removeDateInterval() {
-    let newDateIntervals = dateIntervals;
+    let newDateIntervals = [...dateIntervals] as Array<DateInterval>;
 
     for (let i = 0; i < dateIntervals.length; i++) {
       if (dateIntervals[i].id === dateIntervalId) {
@@ -41,7 +46,7 @@ function RemoveDateIntervalComponent(props: Props) {
       fetchData
     );
 
-    navigate("/edittrip/" + tripId);
+    setDateIntervals(newDateIntervals);
 
     if (socket) {
       socket.emit("UPDATE", tripId + ":" + username + ":DELETED_DATE_INTERVAL");

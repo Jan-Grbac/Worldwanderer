@@ -5,9 +5,9 @@ import { Socket } from "socket.io-client";
 
 interface Props {
   jwt: string;
-  allowedUsers: any;
+  allowedUsers: Array<User>;
   setAllowedUsers: Function;
-  trip: any;
+  trip: Trip;
   isOwner: boolean;
   editable: boolean;
   socket: Socket | undefined;
@@ -30,7 +30,7 @@ function TripEditPermissionDisplayComponent(props: Props) {
     <>
       <div>
         Allowed users:
-        {allowedUsers.map(function (user: any) {
+        {allowedUsers.map(function (user: User) {
           return (
             <>
               <div>

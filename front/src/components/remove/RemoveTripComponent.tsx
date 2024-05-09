@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 interface Props {
   jwt: string;
   tripId: string;
-  trips: any;
+  trips: Array<Trip>;
   setTrips: Function;
 }
 

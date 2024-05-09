@@ -11,8 +11,8 @@ interface Props {
 function HomePage(props: Props) {
   const { jwt, jwtIsValid, username } = { ...props };
 
-  const [loading, setLoading] = useState(false);
-  const [highestRatedTrips, setHighestRatedTrips] = useState(new Array());
+  const [loading, setLoading] = useState<boolean>(false);
+  const [highestRatedTrips, setHighestRatedTrips] = useState<Array<Trip>>();
 
   useEffect(() => {
     fetch(`/api/core/trip/getHighestRatedTrips`, {
@@ -29,10 +29,14 @@ function HomePage(props: Props) {
       })
       .then((data) => {
         setHighestRatedTrips(data);
-        setLoading(true);
-        console.log(data);
       });
-  }, [jwt, jwtIsValid, username]);
+  }, []);
+
+  useEffect(() => {
+    if (highestRatedTrips) {
+      setLoading(true);
+    }
+  }, [highestRatedTrips]);
 
   return (
     loading && (
@@ -41,7 +45,7 @@ function HomePage(props: Props) {
         <p>Hello there!</p>
         <p>Logged in: {username}</p>
         <div className="d-flex flex-row">
-          {highestRatedTrips.map((trip: any) => {
+          {highestRatedTrips?.map((trip: any) => {
             return <TripPublicDisplayComponent trip={trip} />;
           })}
         </div>

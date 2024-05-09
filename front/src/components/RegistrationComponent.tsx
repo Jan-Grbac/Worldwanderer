@@ -9,15 +9,11 @@ interface Props {
 
 function RegistrationComponent(props: Props) {
   const { setJwt, setUsername } = { ...props };
-  const [user, setUser] = useState({
-    email: "",
-    username: "",
-    password: "",
-  });
+  const [user, setUser] = useState<SignUpInfo>();
   const navigate = useNavigate();
 
   function handleInputChange(param: string, value: any) {
-    let newUser = { ...user };
+    let newUser = { ...user } as SignUpInfo;
     if (param === "email") {
       newUser[param] = value;
       setUser(newUser);
@@ -38,6 +34,8 @@ function RegistrationComponent(props: Props) {
   }
 
   function handleRegisterButtonClick() {
+    if (!user) return;
+
     if (!isValidEmail(user.email)) {
       alert("Wrong email format!");
       return;
@@ -83,7 +81,7 @@ function RegistrationComponent(props: Props) {
         <input
           type="email"
           placeholder="john.doe@email.com"
-          value={user.email}
+          value={user?.email}
           onChange={(event) => handleInputChange("email", event.target.value)}
         ></input>
       </div>
@@ -91,7 +89,7 @@ function RegistrationComponent(props: Props) {
         Username:
         <input
           type="text"
-          value={user.username}
+          value={user?.username}
           onChange={(event) =>
             handleInputChange("username", event.target.value)
           }
@@ -101,7 +99,7 @@ function RegistrationComponent(props: Props) {
         Password:
         <input
           type="password"
-          value={user.password}
+          value={user?.password}
           onChange={(event) =>
             handleInputChange("password", event.target.value)
           }

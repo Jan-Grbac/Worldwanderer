@@ -9,12 +9,9 @@ import lombok.RequiredArgsConstructor;
 @Data
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class TimeSlotData {
+public class UserData {
     private Long id;
-    private String name;
-    private String notes;
-    private String startTime;
-    private String endTime;
-    private Double lat;
-    private Double lng;
+    private String username;
+    private String email;
+    private String role;
 }

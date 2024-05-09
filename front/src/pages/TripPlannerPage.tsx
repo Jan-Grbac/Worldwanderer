@@ -18,19 +18,14 @@ interface Props {
 
 function TripPlannerPage(props: Props) {
   const { jwt, jwtIsValid, username, editable } = { ...props };
-  const [trip, setTrip] = useState({
-    id: "",
-    name: "",
-    description: "",
-    ownerUsername: "",
-  });
-  const [dateIntervals, setDateIntervals] = useState<Array<any>>();
-  const [timeslots, setTimeslots] = useState<Array<Array<any>>>();
-  const [allowedUsers, setAllowedUsers] = useState<Array<any>>();
+  const [trip, setTrip] = useState<Trip>();
+  const [dateIntervals, setDateIntervals] = useState<Array<DateInterval>>();
+  const [timeslots, setTimeslots] = useState<Array<Array<TimeSlot>>>();
+  const [allowedUsers, setAllowedUsers] = useState<Array<User>>();
 
-  const [isOwner, setIsOwner] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [canConnect, setCanConnect] = useState(false);
+  const [isOwner, setIsOwner] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [canConnect, setCanConnect] = useState<boolean>(false);
 
   const [socket, setSocket] = useState<Socket>();
 
@@ -77,7 +72,7 @@ function TripPlannerPage(props: Props) {
             }
           })
           .then((data) => {
-            const newTrip = trip;
+            const newTrip = { ...trip } as Trip;
 
             newTrip.id = data.id;
             newTrip.name = data.name;
@@ -167,6 +162,7 @@ function TripPlannerPage(props: Props) {
   }, [jwt, username, trip, dateIntervals, timeslots, allowedUsers]);
 
   function userGrantedEditPrivilege(data: string) {
+    if (!trip) return;
     alert("User " + data + " was granted edit privilege.");
     fetchAllowedUsers(trip.id);
   }
@@ -175,29 +171,34 @@ function TripPlannerPage(props: Props) {
       alert("Your edit privileges were revoked.");
       navigate("/home");
     } else {
+      if (!trip) return;
       alert("User " + data + "'s edit privilege was revoked.");
       fetchAllowedUsers(trip.id);
     }
   }
   function dateIntervalAdded(data: string) {
+    if (!trip) return;
     alert(data + " added a date interval.");
     fetchDateIntervals(trip.id);
   }
   function dateIntervalDeleted(data: string) {
+    if (!trip) return;
     alert(data + " deleted a date interval.");
     fetchDateIntervals(trip.id);
   }
   function timeslotAdded(data: string) {
+    if (!trip) return;
     alert(data + " added a timeslot.");
     fetchTimeslots(trip.id);
   }
   function timeslotDeleted(data: string) {
+    if (!trip) return;
     alert(data + " deleted a timeslot.");
     fetchTimeslots(trip.id);
   }
 
   useEffect(() => {
-    if (canConnect) {
+    if (canConnect && trip) {
       const s = io("http://localhost:8081", {
         reconnection: true,
         query: { trip: trip.id },
@@ -225,9 +226,10 @@ function TripPlannerPage(props: Props) {
     } else {
       return;
     }
-  }, [canConnect]);
+  }, [canConnect, trip]);
 
   function copyTrip() {
+    if (!trip) return;
     const fetchData = {
       headers: {
         Authorization: `Bearer ${jwt}`,
@@ -249,15 +251,21 @@ function TripPlannerPage(props: Props) {
       });
   }
 
+  useEffect(() => {
+    if (!trip) return;
+    fetchDateIntervals(trip.id);
+    fetchTimeslots(trip.id);
+  }, [setDateIntervals, setTimeslots]);
+
   return (
     loading && (
       <>
         <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
         <TripEditPermissionDisplayComponent
           jwt={jwt}
-          allowedUsers={allowedUsers}
+          allowedUsers={allowedUsers as Array<User>}
           setAllowedUsers={setAllowedUsers}
-          trip={trip}
+          trip={trip as Trip}
           isOwner={isOwner}
           editable={editable}
           socket={socket}
@@ -265,8 +273,8 @@ function TripPlannerPage(props: Props) {
         {isOwner && editable && (
           <TripEditPermissionGrantComponent
             jwt={jwt}
-            trip={trip}
-            allowedUsers={allowedUsers}
+            trip={trip as Trip}
+            allowedUsers={allowedUsers as Array<User>}
             setAllowedUsers={setAllowedUsers}
             username={username}
             socket={socket}
@@ -276,18 +284,25 @@ function TripPlannerPage(props: Props) {
           <div>
             <TripDataDisplayComponent
               jwt={jwt}
-              trip={trip}
+              trip={trip as Trip}
               username={username}
-              dateIntervals={dateIntervals}
+              dateIntervals={dateIntervals as Array<DateInterval>}
               setDateIntervals={setDateIntervals}
-              timeslots={timeslots}
+              timeslots={timeslots as Array<Array<TimeSlot>>}
               setTimeslots={setTimeslots}
               editable={editable}
               socket={socket}
             />
           </div>
           <div>
-            <MapComponent />
+            <MapComponent
+              jwt={jwt}
+              username={username}
+              trip={trip as Trip}
+              dateIntervals={dateIntervals as Array<DateInterval>}
+              timeslots={timeslots as Array<Array<TimeSlot>>}
+              socket={socket}
+            />
           </div>
           {!editable && <button onClick={copyTrip}>Copy and edit</button>}
         </div>
