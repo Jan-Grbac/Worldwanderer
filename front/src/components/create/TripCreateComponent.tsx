@@ -82,14 +82,14 @@ function CreateTripComponent(props: Props) {
         </div>
         <div className="p-2">
           Trip description:
-          <input
+          <textarea
             id="description-input-trip"
-            type="text"
+            rows={5}
             value={newTrip?.description}
             onChange={(event) =>
               handleInputChange("description", event.target.value)
             }
-          ></input>
+          ></textarea>
         </div>
         <button onClick={handleNewTripCreation}>Create new trip</button>
       </div>

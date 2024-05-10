@@ -67,6 +67,17 @@ function DateIntervalCreateComponent(props: Props) {
         setDateIntervals(newDateIntervals);
         setNewDateInterval({} as DateInterval);
 
+        (
+          document.getElementById(
+            `dateinterval-startdate-input`
+          ) as HTMLInputElement
+        ).value = "mm/dd/yyyy";
+        (
+          document.getElementById(
+            `dateinterval-enddate-input`
+          ) as HTMLInputElement
+        ).value = "mm/dd/yyyy";
+
         if (socket) {
           socket.emit(
             "UPDATE",
@@ -83,6 +94,7 @@ function DateIntervalCreateComponent(props: Props) {
         <div className="p-2">
           Start date:
           <input
+            id="dateinterval-startdate-input"
             type="date"
             onChange={(event) =>
               handleInputChange("startDate", event.target.value)
@@ -92,6 +104,7 @@ function DateIntervalCreateComponent(props: Props) {
         <div className="p-2">
           End date:
           <input
+            id="dateinterval-enddate-input"
             type="date"
             onChange={(event) =>
               handleInputChange("endDate", event.target.value)

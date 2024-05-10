@@ -297,6 +297,7 @@ function TripPlannerPage(props: Props) {
             <TripDataDisplayComponent
               jwt={jwt}
               trip={trip as Trip}
+              setTrip={setTrip}
               username={username}
               dateIntervals={dateIntervals}
               setDateIntervals={setDateIntervals}
@@ -316,7 +317,14 @@ function TripPlannerPage(props: Props) {
               socket={socket}
             />
           </div>
-          {!editable && <button onClick={copyTrip}>Copy and edit</button>}
+          {!editable && !isOwner && (
+            <button onClick={copyTrip}>Copy and edit</button>
+          )}
+          {!editable && isOwner && (
+            <button onClick={() => navigate("/edittrip/" + trip?.id)}>
+              Edit your trip
+            </button>
+          )}
         </div>
       </>
     )

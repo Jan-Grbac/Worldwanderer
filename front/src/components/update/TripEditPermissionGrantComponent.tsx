@@ -20,7 +20,7 @@ function TripEditPermissionGrantComponent(props: Props) {
   const navigate = useNavigate();
 
   async function grantPermission() {
-    let newAllowedUsers = allowedUsers;
+    let newAllowedUsers = [...allowedUsers];
 
     let fetchData = {
       headers: {
@@ -70,7 +70,13 @@ function TripEditPermissionGrantComponent(props: Props) {
               newAllowedUsers.push(data);
             }
             setAllowedUsers(newAllowedUsers);
-            navigate("/edittrip/" + trip.id);
+
+            (
+              document.getElementById(
+                `grant-edit-privilege-username-input`
+              ) as HTMLInputElement
+            ).value = "";
+
             if (socket) {
               socket.emit(
                 "UPDATE",
@@ -98,6 +104,7 @@ function TripEditPermissionGrantComponent(props: Props) {
       <div className="p-2 border border-black">
         Username:
         <input
+          id="grant-edit-privilege-username-input"
           type="text"
           value={grantUsername}
           onChange={(event) =>

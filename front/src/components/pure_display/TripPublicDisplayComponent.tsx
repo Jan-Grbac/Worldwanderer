@@ -15,7 +15,7 @@ function TripPublicDisplayComponent(props: Props) {
 
   return (
     <div
-      className="border border-blackw6nn"
+      className="border border-black"
       onClick={() => {
         viewTrip(trip.id);
       }}
@@ -23,6 +23,8 @@ function TripPublicDisplayComponent(props: Props) {
       <p>{trip.name}</p>
       <p>{trip.description}</p>
       <p>{trip.rating}</p>
+
+      <p>Made by: {trip.ownerUsername}</p>
     </div>
   );
 }

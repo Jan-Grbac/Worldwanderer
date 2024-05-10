@@ -114,9 +114,13 @@ public class TripController {
     }
 
     @GetMapping("/getHighestRatedTrips")
-    public ResponseEntity<List<Trip>> getHighestRatedTrips() {
+    public ResponseEntity<List<TripData>> getHighestRatedTrips() {
         List<Trip> trips = tripService.getHighestRatedTrips(5);
-        return ResponseEntity.ok(new ArrayList<>(trips));
+        List<TripData> tripDataList = new LinkedList<>();
+        for(Trip trip : trips) {
+            tripDataList.add(tripService.transformTripIntoTripData(trip));
+        }
+        return ResponseEntity.ok(tripDataList);
     }
 
     @PostMapping("/updateTrip")

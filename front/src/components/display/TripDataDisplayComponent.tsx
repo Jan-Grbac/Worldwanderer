@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 interface Props {
   jwt: string;
   trip: Trip;
+  setTrip: Function;
   username: string;
   dateIntervals: Array<DateInterval>;
   setDateIntervals: Function;
@@ -19,6 +20,7 @@ function TripDataDisplayComponent(props: Props) {
   const {
     jwt,
     trip,
+    setTrip,
     username,
     dateIntervals,
     setDateIntervals,
@@ -31,7 +33,7 @@ function TripDataDisplayComponent(props: Props) {
   function handleTripChanged() {
     let newTrip = { ...trip };
     newTrip.name = (
-      document.getElementById("trip-name-textarea") as HTMLInputElement
+      document.getElementById("trip-name-input") as HTMLInputElement
     ).value;
     newTrip.description = (
       document.getElementById("trip-description-textarea") as HTMLInputElement
@@ -62,6 +64,11 @@ function TripDataDisplayComponent(props: Props) {
           );
         }
       });
+
+    setTrip(newTrip);
+
+    document.getElementById("trip-params-view")?.classList.remove("d-none");
+    document.getElementById("trip-params-edit")?.classList.add("d-none");
   }
 
   function handleEnterKeyPress(event: any) {
@@ -70,32 +77,42 @@ function TripDataDisplayComponent(props: Props) {
     }
   }
 
+  function allowTripParamEditing() {
+    document.getElementById("trip-params-view")?.classList.add("d-none");
+    document.getElementById("trip-params-edit")?.classList.remove("d-none");
+  }
+
   return (
     <>
       <div className="border border-black">
-        Trip name:
-        <textarea
-          id="trip-name-textarea"
-          contentEditable="true"
-          rows={1}
-          onKeyDownCapture={handleEnterKeyPress}
-          onBlur={handleTripChanged}
-          suppressContentEditableWarning={true}
-        >
-          {trip.name}
-        </textarea>
-        <br />
-        Trip description:
-        <textarea
-          id="trip-description-textarea"
-          contentEditable="true"
-          rows={1}
-          onKeyDownCapture={handleEnterKeyPress}
-          onBlur={handleTripChanged}
-          suppressContentEditableWarning={true}
-        >
-          {trip.description}
-        </textarea>
+        <div id="trip-params-view" onDoubleClick={allowTripParamEditing}>
+          Trip name: {trip.name}
+          <br />
+          Trip description: {trip.description}
+        </div>
+        <div id="trip-params-edit" className="d-none">
+          Trip name:
+          <input
+            type="text"
+            id="trip-name-input"
+            contentEditable="true"
+            defaultValue={trip.name}
+            onKeyDownCapture={handleEnterKeyPress}
+            onBlur={handleTripChanged}
+            suppressContentEditableWarning={true}
+          ></input>
+          <br />
+          Trip description:
+          <textarea
+            id="trip-description-textarea"
+            contentEditable="true"
+            rows={3}
+            defaultValue={trip.description}
+            onKeyDownCapture={handleEnterKeyPress}
+            onBlur={handleTripChanged}
+            suppressContentEditableWarning={true}
+          ></textarea>
+        </div>
         <br />
         Created by: {trip.ownerUsername}
       </div>
