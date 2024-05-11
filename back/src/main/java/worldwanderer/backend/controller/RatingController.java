@@ -39,11 +39,16 @@ public class RatingController {
         Trip trip = tripService.getTripForId(Long.parseLong(tripId));
         User user = userService.getUserByUsername(ratingData.getUsername());
         Rating rating = ratingService.createRating(ratingData, user, trip);
+        tripService.updateTripRating(trip, rating);
         return ResponseEntity.ok(ratingService.transformRatingIntoRatingData(rating));
     }
 
     @DeleteMapping("/deleteRating/{ratingId}")
     public ResponseEntity<Void> deleteRating(@PathVariable("ratingId") String ratingId) {
+        Rating rating = ratingService.getRatingForId(Long.parseLong(ratingId));
+        Trip trip = rating.getTrip();
+        rating.setGrade(-rating.getGrade());
+        tripService.updateTripRating(trip, rating);
         ratingService.deleteRating(Long.parseLong(ratingId));
         return ResponseEntity.ok().build();
     }

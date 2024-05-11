@@ -24,6 +24,11 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
+    public Rating getRatingForId(long id) {
+        return ratingRepository.findById(id).orElse(null);
+    }
+
+    @Override
     public Rating createRating(RatingData ratingData, User user, Trip trip) {
         Rating rating = Rating.builder()
                 .user(user)

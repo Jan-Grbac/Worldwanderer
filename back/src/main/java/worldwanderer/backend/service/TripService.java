@@ -1,6 +1,7 @@
 package worldwanderer.backend.service;
 
 import worldwanderer.backend.dto.TripData;
+import worldwanderer.backend.entity.Rating;
 import worldwanderer.backend.entity.Trip;
 import worldwanderer.backend.entity.User;
 
@@ -23,4 +24,5 @@ public interface TripService {
     void updateTrip(TripData trip);
     void publishTrip(long id);
     List<Trip> getPublishedTripsForUser(User user);
+    void updateTripRating(Trip trip, Rating rating);
 }

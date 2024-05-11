@@ -14,7 +14,13 @@ function RateTripComponent(props: Props) {
     ...props,
   };
 
-  const [rating, setRating] = useState<Rating>();
+  const [rating, setRating] = useState<Rating>({
+    id: "",
+    username: username,
+    grade: 1,
+    comment: "",
+    ratingDate: "",
+  });
 
   function handleInputChange(param: string, value: any) {
     let newRating = { ...rating } as Rating;

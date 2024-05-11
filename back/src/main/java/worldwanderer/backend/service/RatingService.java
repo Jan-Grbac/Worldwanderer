@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface RatingService {
     List<Rating> getRatingsForTrip(Trip trip);
+    Rating getRatingForId(long id);
     Rating createRating(RatingData ratingData, User user, Trip trip);
     RatingData transformRatingIntoRatingData(Rating rating);
     void deleteRating(long id);

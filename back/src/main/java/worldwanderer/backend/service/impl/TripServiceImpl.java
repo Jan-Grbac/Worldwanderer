@@ -5,6 +5,7 @@ import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import worldwanderer.backend.dto.TripData;
+import worldwanderer.backend.entity.Rating;
 import worldwanderer.backend.entity.Trip;
 import worldwanderer.backend.entity.TripAccess;
 import worldwanderer.backend.entity.User;
@@ -167,5 +168,16 @@ public class TripServiceImpl implements TripService {
             }
         }
         return publishedTrips;
+    }
+
+    @Override
+    public void updateTripRating(Trip trip, Rating rating) {
+        if(trip.getRating() == 0) {
+            trip.setRating((float) rating.getGrade());
+        }
+        else {
+            trip.setRating(((float) rating.getGrade() + trip.getRating()) / 2);
+        }
+        tripRepository.save(trip);
     }
 }
