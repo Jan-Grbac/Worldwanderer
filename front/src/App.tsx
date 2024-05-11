@@ -9,6 +9,7 @@ import { JwtHeader, jwtDecode } from "jwt-decode";
 import TripsPage from "./pages/TripsPage";
 import TripPlannerPage from "./pages/TripPlannerPage";
 import LogoutPage from "./pages/LogoutPage";
+import UserProfilePage from "./pages/UserProfilePage";
 
 function App() {
   let cookies = new Cookies();
@@ -67,6 +68,16 @@ function App() {
               path="/home"
               element={
                 <HomePage
+                  jwt={jwt}
+                  jwtIsValid={jwtIsValid}
+                  username={username as string}
+                />
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <UserProfilePage
                   jwt={jwt}
                   jwtIsValid={jwtIsValid}
                   username={username as string}

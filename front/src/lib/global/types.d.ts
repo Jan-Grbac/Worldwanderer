@@ -46,10 +46,12 @@ declare global {
     }
 
     type Rating = {
+        id: string,
+        username: string,
         grade: number,
         comment: string,
         ratingDate: string,
     }
 }
 
-export { User, LoginInfo, SignUpInfo, Trip, DateInterval, TimeSlot }
+export { User, LoginInfo, SignUpInfo, Trip, DateInterval, TimeSlot, Rating }

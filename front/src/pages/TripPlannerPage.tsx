@@ -10,6 +10,7 @@ import TripEditPermissionGrantComponent from "../components/update/TripEditPermi
 import TripEditPermissionDisplayComponent from "../components/display/TripEditPermissionDisplayComponent";
 import AttractionDisplayComponent from "../components/display/AttractionDisplayComponent";
 import RateTripComponent from "../components/update/RateTripComponent";
+import RatingDisplayComponent from "../components/display/RatingDisplayComponent";
 
 interface Props {
   jwt: string;
@@ -23,11 +24,13 @@ function TripPlannerPage(props: Props) {
   const [dateIntervals, setDateIntervals] = useState<Array<DateInterval>>([]);
   const [timeslots, setTimeslots] = useState<Array<Array<TimeSlot>>>([[]]);
   const [allowedUsers, setAllowedUsers] = useState<Array<User>>([]);
+  const [ratings, setRatings] = useState<Array<Rating>>([]);
 
   const [editable, setEditable] = useState<boolean>(false);
 
   const [isOwner, setIsOwner] = useState<boolean>(false);
   const [isAllowedUser, setIsAllowedUser] = useState<boolean>(false);
+  const [hasAlreadyRated, setHasAlreadyRated] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [canConnect, setCanConnect] = useState<boolean>(false);
@@ -49,14 +52,20 @@ function TripPlannerPage(props: Props) {
       } else {
         const tripId = window.location.href.split("/")[4];
 
-        checkTripAccess(tripId);
         fetchTrip(tripId);
         fetchAllowedUsers(tripId);
         fetchDateIntervals(tripId);
         fetchTimeslots(tripId);
+        fetchRatings(tripId);
       }
     }
   }, [jwt, username]);
+
+  useEffect(() => {
+    const tripId = window.location.href.split("/")[4];
+
+    if (editable) checkTripAccess(tripId);
+  }, [editable]);
 
   function checkTripAccess(tripId: string) {
     fetch(`/api/core/trip/checkTripAccess/${username}/${tripId}`, {
@@ -177,11 +186,44 @@ function TripPlannerPage(props: Props) {
       });
   }
 
+  function fetchRatings(tripId: string) {
+    const fetchData = {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "GET",
+    };
+    fetch(`/api/core/rating/getRatingsForTrip/${tripId}`, fetchData)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        setRatings(data);
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].username === username) {
+            setHasAlreadyRated(true);
+          }
+        }
+      });
+  }
+
   useEffect(() => {
-    if (jwt && username && trip && dateIntervals && timeslots && allowedUsers) {
+    if (
+      jwt &&
+      username &&
+      trip &&
+      dateIntervals &&
+      timeslots &&
+      allowedUsers &&
+      ratings
+    ) {
       setLoading(true);
     }
-  }, [jwt, username, trip, dateIntervals, timeslots, allowedUsers]);
+  }, [jwt, username, trip, dateIntervals, timeslots, allowedUsers, ratings]);
 
   function userGrantedEditPrivilege(data: string) {
     if (!trip) return;
@@ -413,9 +455,34 @@ function TripPlannerPage(props: Props) {
           )}
         </div>
         <div>
-          {!editable && trip?.published && !isAllowedUser && (
-            <RateTripComponent jwt={jwt} username={username} trip={trip} />
-          )}
+          {!editable &&
+            trip?.published &&
+            !isAllowedUser &&
+            !hasAlreadyRated && (
+              <RateTripComponent
+                jwt={jwt}
+                username={username}
+                trip={trip}
+                ratings={ratings}
+                setRatings={setRatings}
+                setHasAlreadyRated={setHasAlreadyRated}
+              />
+            )}
+          {!editable &&
+            trip?.published &&
+            ratings &&
+            ratings.map(function (rating: Rating) {
+              return (
+                <RatingDisplayComponent
+                  jwt={jwt}
+                  username={username}
+                  rating={rating}
+                  ratings={ratings}
+                  setRatings={setRatings}
+                  setHasAlreadyRated={setHasAlreadyRated}
+                />
+              );
+            })}
         </div>
       </>
     )
