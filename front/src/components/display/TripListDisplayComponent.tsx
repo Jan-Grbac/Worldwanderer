@@ -7,23 +7,38 @@ interface Props {
   ownedTrips: Array<Trip>;
   setOwnedTrips: Function;
   sharedTrips: Array<Trip>;
+  publishedTrips: Array<Trip>;
+  setPublishedTrips: Function;
 }
 
 function TripListDisplayComponent(props: Props) {
-  const { jwt, ownedTrips, setOwnedTrips, sharedTrips } = { ...props };
+  const {
+    jwt,
+    ownedTrips,
+    setOwnedTrips,
+    sharedTrips,
+    publishedTrips,
+    setPublishedTrips,
+  } = {
+    ...props,
+  };
   const navigate = useNavigate();
 
-  function handleOnTripClick(id: string) {
+  function handleOnTripClickEdit(id: string) {
     navigate("/edittrip/" + id);
+  }
+
+  function handleOnTripClickView(id: string) {
+    navigate("/viewtrip/" + id);
   }
 
   return (
     <>
-      Your trips:
+      Active trips:
       {ownedTrips.map(function (trip: Trip) {
         return (
           <div key={trip.id}>
-            <button onClick={(event) => handleOnTripClick(trip.id)}>
+            <button onClick={(event) => handleOnTripClickEdit(trip.id)}>
               {trip.name} {trip.description}
             </button>
             <RemoveTripComponent
@@ -36,11 +51,28 @@ function TripListDisplayComponent(props: Props) {
         );
       })}
       <br />
+      Published trips:
+      {publishedTrips.map(function (trip: Trip) {
+        return (
+          <div key={trip.id}>
+            <button onClick={(event) => handleOnTripClickView(trip.id)}>
+              {trip.name} {trip.description}
+            </button>
+            <RemoveTripComponent
+              jwt={jwt}
+              tripId={trip.id}
+              trips={publishedTrips}
+              setTrips={setPublishedTrips}
+            />
+          </div>
+        );
+      })}
+      <br />
       Shared with you:
       {sharedTrips.map(function (trip: Trip) {
         return (
           <div key={trip.id}>
-            <button onClick={(event) => handleOnTripClick(trip.id)}>
+            <button onClick={(event) => handleOnTripClickEdit(trip.id)}>
               {trip.name} {trip.description}
             </button>
           </div>

@@ -1,3 +1,4 @@
+import GoogleMap from "google-maps-react-markers";
 import { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 
@@ -26,7 +27,7 @@ function TimeSlotCreateComponent(props: Props) {
     ...props,
   };
 
-  const [timeslot, setTimeslot] = useState<TimeSlot>();
+  const [timeslot, setTimeslot] = useState<TimeSlot>(Object);
   const [searchBox, setSearchBox] = useState<google.maps.places.Autocomplete>();
   const [loadAfter, setLoadAfter] = useState<boolean>(false);
 
@@ -101,12 +102,33 @@ function TimeSlotCreateComponent(props: Props) {
     if (!timeslot) return;
 
     if (timeslot.name === undefined) {
-      alert("Name cannot be empty.");
-      return;
+      let hiddenNameInput = document.getElementById(
+        "timeslot-name-input-hidden-" + dateIntervalId
+      ) as HTMLInputElement;
+      if (hiddenNameInput.value === "") {
+        alert("Name cannot be empty.");
+        return;
+      } else {
+        timeslot["name"] = hiddenNameInput.value;
+        hiddenNameInput.value = "";
+      }
     }
     if (timeslot.lat === undefined || timeslot.lng === undefined) {
-      alert("You must select a place.");
-      return;
+      let hiddenLatInput = document.getElementById(
+        "timeslot-lat-input-hidden-" + dateIntervalId
+      ) as HTMLInputElement;
+      let hiddenLngInput = document.getElementById(
+        "timeslot-lng-input-hidden-" + dateIntervalId
+      ) as HTMLInputElement;
+      if (hiddenLatInput.value === "" || hiddenLngInput.value === "") {
+        alert("You must select a place.");
+        return;
+      } else {
+        timeslot["lat"] = Number(hiddenLatInput.value);
+        timeslot["lng"] = Number(hiddenLngInput.value);
+        hiddenLatInput.value = "";
+        hiddenLngInput.value = "";
+      }
     }
 
     const fetchData = {
@@ -160,18 +182,24 @@ function TimeSlotCreateComponent(props: Props) {
           ) as HTMLInputElement
         ).value = "";
         (
-          document.getElementById(`timeslot-name-input`) as HTMLInputElement
-        ).value = "";
-        (
-          document.getElementById(`timeslot-notes-input`) as HTMLInputElement
+          document.getElementById(
+            `timeslot-name-input-` + dateIntervalId
+          ) as HTMLInputElement
         ).value = "";
         (
           document.getElementById(
-            `timeslot-starttime-input`
+            `timeslot-notes-input-` + dateIntervalId
+          ) as HTMLInputElement
+        ).value = "";
+        (
+          document.getElementById(
+            `timeslot-starttime-input-` + dateIntervalId
           ) as HTMLInputElement
         ).value = "--:-- --";
         (
-          document.getElementById(`timeslot-endtime-input`) as HTMLInputElement
+          document.getElementById(
+            `timeslot-endtime-input-` + dateIntervalId
+          ) as HTMLInputElement
         ).value = "--:-- --";
 
         if (socket) {
@@ -186,9 +214,24 @@ function TimeSlotCreateComponent(props: Props) {
         <div>
           Destination:
           <input id={`searchBox-${dateIntervalId}`} />
+          <input
+            type="text"
+            className="d-none"
+            id={`timeslot-name-input-hidden-${dateIntervalId}`}
+          />
+          <input
+            type="text"
+            className="d-none"
+            id={`timeslot-lat-input-hidden-${dateIntervalId}`}
+          />
+          <input
+            type="text"
+            className="d-none"
+            id={`timeslot-lng-input-hidden-${dateIntervalId}`}
+          />
           Name:
           <input
-            id="timeslot-name-input"
+            id={`timeslot-name-input-${dateIntervalId}`}
             type="text"
             value={timeslot?.name}
             onChange={(event) => handleInputChange("name", event.target.value)}
@@ -196,7 +239,7 @@ function TimeSlotCreateComponent(props: Props) {
           <br />
           Notes:
           <input
-            id="timeslot-notes-input"
+            id={`timeslot-notes-input-${dateIntervalId}`}
             type="text"
             value={timeslot?.notes}
             onChange={(event) => handleInputChange("notes", event.target.value)}
@@ -204,7 +247,7 @@ function TimeSlotCreateComponent(props: Props) {
           <br />
           Start time:
           <input
-            id="timeslot-starttime-input"
+            id={`timeslot-starttime-input-${dateIntervalId}`}
             type="time"
             value={timeslot?.startTime}
             onChange={(event) =>
@@ -213,7 +256,7 @@ function TimeSlotCreateComponent(props: Props) {
           ></input>
           End time:
           <input
-            id="timeslot-endtime-input"
+            id={`timeslot-endtime-input-${dateIntervalId}`}
             type="time"
             value={timeslot?.endTime}
             onChange={(event) =>

@@ -17,4 +17,5 @@ public class TimeSlotData {
     private String endTime;
     private Double lat;
     private Double lng;
+    private String dateIntervalId;
 }

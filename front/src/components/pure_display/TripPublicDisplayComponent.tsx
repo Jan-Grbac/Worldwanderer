@@ -25,6 +25,7 @@ function TripPublicDisplayComponent(props: Props) {
       <p>{trip.rating}</p>
 
       <p>Made by: {trip.ownerUsername}</p>
+      <p>Published on: {trip.publishedDate}</p>
     </div>
   );
 }

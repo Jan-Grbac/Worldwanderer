@@ -14,6 +14,8 @@ interface Props {
   setTimeslots: Function;
   editable: boolean;
   socket: Socket | undefined;
+  selectedTimeslot: TimeSlot;
+  setSelectedTimeslot: Function;
 }
 
 function TripDataDisplayComponent(props: Props) {
@@ -28,6 +30,8 @@ function TripDataDisplayComponent(props: Props) {
     setTimeslots,
     editable,
     socket,
+    selectedTimeslot,
+    setSelectedTimeslot,
   } = { ...props };
 
   function handleTripChanged() {
@@ -126,25 +130,34 @@ function TripDataDisplayComponent(props: Props) {
           socket={socket}
         />
       )}
-      {dateIntervals &&
-        dateIntervals.map(function (dateInterval: DateInterval, index: number) {
-          return (
-            <DateIntervalDisplayComponent
-              key={dateInterval.id as string}
-              jwt={jwt}
-              username={username}
-              dateInterval={dateInterval}
-              dateIntervals={dateIntervals}
-              setDateIntervals={setDateIntervals}
-              timeslots={timeslots}
-              setTimeslots={setTimeslots}
-              dateIntervalTimeslots={timeslots[index]}
-              tripId={trip.id}
-              editable={editable}
-              socket={socket}
-            />
-          );
-        })}
+      <ul>
+        {dateIntervals &&
+          dateIntervals.map(function (
+            dateInterval: DateInterval,
+            index: number
+          ) {
+            return (
+              <li>
+                <DateIntervalDisplayComponent
+                  key={dateInterval.id as string}
+                  jwt={jwt}
+                  username={username}
+                  dateInterval={dateInterval}
+                  dateIntervals={dateIntervals}
+                  setDateIntervals={setDateIntervals}
+                  timeslots={timeslots}
+                  setTimeslots={setTimeslots}
+                  dateIntervalTimeslots={timeslots[index]}
+                  tripId={trip.id}
+                  editable={editable}
+                  socket={socket}
+                  selectedTimeslot={selectedTimeslot}
+                  setSelectedTimeslot={setSelectedTimeslot}
+                />
+              </li>
+            );
+          })}
+      </ul>
     </>
   );
 }

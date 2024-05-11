@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -15,18 +16,16 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @Table(name="interval")
-public class DateInterval {
+public class DateInterval implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
     @JoinColumn(name="trip_id")
-    @JsonBackReference
     private Trip trip;
 
-    @OneToMany(mappedBy = "interval", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JsonManagedReference
+    @OneToMany(mappedBy = "interval", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TimeSlot> timeslots;
 
     private Date startDate;

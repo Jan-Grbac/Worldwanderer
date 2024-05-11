@@ -14,6 +14,8 @@ function TripsPage(props: Props) {
   const { jwt, jwtIsValid, username } = { ...props };
   const [ownedTrips, setOwnedTrips] = useState<Array<Trip>>();
   const [sharedTrips, setSharedTrips] = useState<Array<Trip>>();
+  const [publishedTrips, setPublishedTrips] = useState<Array<Trip>>();
+
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -24,7 +26,7 @@ function TripsPage(props: Props) {
         navigate("/home");
         console.log("You need to be logged in to view your trips!");
       } else {
-        fetch(`/api/core/trip/getTrips/${username}`, {
+        fetch(`/api/core/trip/getActiveTrips/${username}`, {
           headers: {
             Authorization: `Bearer ${jwt}`,
             Accept: "application/json",
@@ -57,15 +59,32 @@ function TripsPage(props: Props) {
           .then((data) => {
             setSharedTrips(data);
           });
+
+        fetch(`/api/core/trip/getPublishedTrips/${username}`, {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          method: "GET",
+        })
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+          })
+          .then((data) => {
+            setPublishedTrips(data);
+          });
       }
     }
   }, [jwt, username]);
 
   useEffect(() => {
-    if (ownedTrips && sharedTrips) {
+    if (ownedTrips && sharedTrips && publishedTrips) {
       setLoading(true);
     }
-  }, [ownedTrips, sharedTrips]);
+  }, [ownedTrips, sharedTrips, publishedTrips]);
 
   return (
     loading && (
@@ -77,6 +96,8 @@ function TripsPage(props: Props) {
             ownedTrips={ownedTrips as Array<Trip>}
             setOwnedTrips={setOwnedTrips}
             sharedTrips={sharedTrips as Array<Trip>}
+            publishedTrips={publishedTrips as Array<Trip>}
+            setPublishedTrips={setPublishedTrips}
           />
           <TripCreateComponent
             jwt={jwt}

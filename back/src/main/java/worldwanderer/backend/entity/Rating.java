@@ -1,22 +1,21 @@
 package worldwanderer.backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
-@Table(name="tripaccess")
-public class TripAccess implements Serializable {
-
+@Table(name="rating")
+public class Rating implements Serializable {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -27,7 +26,9 @@ public class TripAccess implements Serializable {
     @JoinColumn(name="trip_id")
     private Trip trip;
 
-    public TripAccess() {
+    private int grade;
+    private String comment;
+    private Date ratingDate;
 
-    }
+    public Rating() {}
 }

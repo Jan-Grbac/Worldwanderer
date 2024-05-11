@@ -10,7 +10,6 @@ import worldwanderer.backend.entity.User;
 import worldwanderer.backend.service.TripService;
 import worldwanderer.backend.service.UserService;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -51,10 +50,33 @@ public class TripController {
         return ResponseEntity.ok(tripDataList);
     }
 
+    @GetMapping("/getActiveTrips/{username}")
+    public ResponseEntity<List<TripData>> getActiveTripsForUsername(@PathVariable String username) {
+        User user = userService.getUserByUsername(username);
+        List<Trip> trips = tripService.getActiveTripsForUser(user);
+        List<TripData> tripDataList = new LinkedList<>();
+        for(Trip trip: trips) {
+            TripData tripData = tripService.transformTripIntoTripData(trip);
+            tripDataList.add(tripData);
+        }
+        return ResponseEntity.ok(tripDataList);
+    }
+
     @GetMapping("/getSharedTrips/{username}")
     public ResponseEntity<List<TripData>> getSharedTripsForUsername(@PathVariable String username) {
         User user = userService.getUserByUsername(username);
         List<Trip> trips = tripService.getSharedTripsForUser(user);
+        List<TripData> tripDataList = new LinkedList<>();
+        for(Trip trip: trips) {
+            tripDataList.add(tripService.transformTripIntoTripData(trip));
+        }
+        return ResponseEntity.ok(tripDataList);
+    }
+
+    @GetMapping("/getPublishedTrips/{username}")
+    public ResponseEntity<List<TripData>> getPublishedTripsForUsername(@PathVariable String username) {
+        User user = userService.getUserByUsername(username);
+        List<Trip> trips = tripService.getPublishedTripsForUser(user);
         List<TripData> tripDataList = new LinkedList<>();
         for(Trip trip: trips) {
             tripDataList.add(tripService.transformTripIntoTripData(trip));
@@ -126,6 +148,12 @@ public class TripController {
     @PostMapping("/updateTrip")
     public ResponseEntity<Void> updateTrip(@RequestBody TripData tripData) {
         tripService.updateTrip(tripData);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/publishTrip/{tripId}")
+    public ResponseEntity<Void> publishTrip(@PathVariable String tripId) {
+        tripService.publishTrip(Long.parseLong(tripId));
         return ResponseEntity.ok().build();
     }
 }

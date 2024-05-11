@@ -61,8 +61,11 @@ function RemoveDateIntervalComponent(props: Props) {
       fetchData
     );
 
+    console.log("Data after removing:");
     setDateIntervals(newDateIntervals);
+    console.log(newDateIntervals);
     setTimeslots(newTimeslots);
+    console.log(newTimeslots);
 
     if (socket) {
       socket.emit("UPDATE", tripId + ":" + username + ":DELETED_DATE_INTERVAL");

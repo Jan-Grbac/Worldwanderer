@@ -14,4 +14,5 @@ public class DateIntervalData {
     private Long id;
     private Date startDate;
     private Date endDate;
+    private String tripId;
 }

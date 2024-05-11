@@ -107,7 +107,6 @@ function App() {
               path="/edittrip/:id"
               element={
                 <TripPlannerPage
-                  editable={true}
                   jwt={jwt}
                   jwtIsValid={jwtIsValid}
                   username={username as string}
@@ -118,7 +117,6 @@ function App() {
               path="/viewtrip/:id"
               element={
                 <TripPlannerPage
-                  editable={false}
                   jwt={jwt}
                   jwtIsValid={jwtIsValid}
                   username={username as string}

@@ -117,4 +117,18 @@
         <dropNotNullConstraint tableName="timeslot" columnName="end_time" />
     </changeSet>
 
+    <changeSet id="addPublishedColumnToTrip" author="me">
+        <addColumn tableName="trip">
+            <column name="published" type="boolean" defaultValue="false" >
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="addPublishingDate" author="me">
+        <addColumn tableName="trip">
+            <column name="published_date" type="date" />
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

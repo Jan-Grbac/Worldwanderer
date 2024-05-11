@@ -49,6 +49,7 @@ public class TimeSlotServiceImpl implements TimeSlotService {
                 .lat(timeSlot.getLat())
                 .lng(timeSlot.getLng())
                 .id(timeSlot.getId())
+                .dateIntervalId(timeSlot.getInterval().getId().toString())
                 .build();
     }
 

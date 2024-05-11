@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Date;
+
 @Builder
 @Data
 @RequiredArgsConstructor
@@ -15,4 +17,6 @@ public class TripData {
     private String description;
     private String ownerUsername;
     private float rating;
+    private boolean published;
+    private Date publishedDate;
 }

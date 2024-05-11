@@ -1,6 +1,7 @@
 package worldwanderer.backend.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import worldwanderer.backend.dto.TripData;
@@ -12,6 +13,8 @@ import worldwanderer.backend.repository.TripRepository;
 import worldwanderer.backend.service.TripService;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -27,6 +30,7 @@ public class TripServiceImpl implements TripService {
                 .name(tripRequest.getName())
                 .description(tripRequest.getDescription())
                 .rating(0)
+                .published(false)
                 .user(user)
                 .build();
 
@@ -35,13 +39,18 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public Trip createTripCopy(Trip trip, User user) {
-        Trip tripCopy = Trip.builder()
+        Trip newTrip = Trip.builder()
+                .id(trip.getId())
+                .user(user)
+                .intervals(trip.getIntervals())
+                .tripAccesses(new LinkedList<>())
                 .name(trip.getName())
                 .description(trip.getDescription())
-                .user(user)
+                .rating(0)
+                .published(false)
                 .build();
-
-        return tripRepository.save(tripCopy);
+        Trip newTripCopy = SerializationUtils.clone(newTrip);
+        return tripRepository.save(newTripCopy);
     }
 
     @Override
@@ -57,6 +66,8 @@ public class TripServiceImpl implements TripService {
                 .rating(trip.getRating())
                 .ownerUsername(trip.getUser().getUsername())
                 .id(trip.getId())
+                .published(trip.isPublished())
+                .publishedDate(trip.getPublishedDate())
                 .build();
     }
 
@@ -71,8 +82,20 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
+    public List<Trip> getActiveTripsForUser(User user) {
+        List<Trip> allOwnedTrips = tripRepository.findAllByUser(user);
+        List<Trip> activeTrips = new ArrayList<>();
+        for(Trip trip : allOwnedTrips) {
+            if(!trip.isPublished()) {
+                activeTrips.add(trip);
+            }
+        }
+        return activeTrips;
+    }
+
+    @Override
     public List<Trip> getHighestRatedTrips(int limit) {
-        Page<Trip> page = tripRepository.findAll(PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "rating")));
+        Page<Trip> page = tripRepository.findByPublishedTrueOrderByRatingDesc(PageRequest.of(0, limit));
         return page.getContent();
     }
 
@@ -124,5 +147,25 @@ public class TripServiceImpl implements TripService {
         tripOld.setName(trip.getName());
         tripOld.setDescription(trip.getDescription());
         tripRepository.save(tripOld);
+    }
+
+    @Override
+    public void publishTrip(long id) {
+        Trip trip = tripRepository.getReferenceById(id);
+        trip.setPublished(true);
+        trip.setPublishedDate(new Date());
+        tripRepository.save(trip);
+    }
+
+    @Override
+    public List<Trip> getPublishedTripsForUser(User user) {
+        List<Trip> allOwnedTrips = tripRepository.findAllByUser(user);
+        List<Trip> publishedTrips = new ArrayList<>();
+        for(Trip trip : allOwnedTrips) {
+            if(trip.isPublished()) {
+                publishedTrips.add(trip);
+            }
+        }
+        return publishedTrips;
     }
 }

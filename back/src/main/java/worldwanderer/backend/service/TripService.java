@@ -13,6 +13,7 @@ public interface TripService {
     TripData transformTripIntoTripData(Trip trip);
     Trip getTripForId(long id);
     List<Trip> getTripsForUser(User user);
+    List<Trip> getActiveTripsForUser(User user);
     List<Trip> getHighestRatedTrips(int limit);
     boolean checkTripAccess(Trip trip, User user);
     List<User> getAllowedUsers(Trip trip);
@@ -20,4 +21,6 @@ public interface TripService {
     void revokeTripAccess(Trip trip, User user);
     List<Trip> getSharedTripsForUser(User user);
     void updateTrip(TripData trip);
+    void publishTrip(long id);
+    List<Trip> getPublishedTripsForUser(User user);
 }

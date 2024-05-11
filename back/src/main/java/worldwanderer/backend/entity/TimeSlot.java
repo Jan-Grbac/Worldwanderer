@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalTime;
 
 @Entity
@@ -13,14 +14,13 @@ import java.time.LocalTime;
 @Builder
 @AllArgsConstructor
 @Table(name="timeslot")
-public class TimeSlot {
+public class TimeSlot implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
     @JoinColumn(name="interval_id")
-    @JsonBackReference
     private DateInterval interval;
 
     private String name;

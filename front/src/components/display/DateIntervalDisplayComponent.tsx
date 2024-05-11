@@ -15,6 +15,8 @@ interface Props {
   tripId: string;
   editable: boolean;
   socket: Socket | undefined;
+  selectedTimeslot: TimeSlot;
+  setSelectedTimeslot: Function;
 }
 
 function DateIntervalDisplayComponent(props: Props) {
@@ -30,6 +32,8 @@ function DateIntervalDisplayComponent(props: Props) {
     tripId,
     editable,
     socket,
+    selectedTimeslot,
+    setSelectedTimeslot,
   } = { ...props };
 
   function formatDate(date: string) {
@@ -112,6 +116,26 @@ function DateIntervalDisplayComponent(props: Props) {
     setDateIntervals(newDateIntervals);
   }
 
+  function handleTimeslotClicked(timeslot: TimeSlot) {
+    if (selectedTimeslot) {
+      let oldSelected = document.getElementById(
+        "timeslot-" + selectedTimeslot.id
+      );
+      if (oldSelected) {
+        oldSelected.classList.remove("border");
+        oldSelected.classList.remove("border-red");
+      }
+    }
+
+    let newSelected = document.getElementById(
+      "timeslot-" + timeslot.id
+    ) as HTMLElement;
+    newSelected.classList.add("border");
+    newSelected.classList.add("border-red");
+
+    setSelectedTimeslot(timeslot);
+  }
+
   return (
     <>
       <div className="border border-black">
@@ -174,22 +198,29 @@ function DateIntervalDisplayComponent(props: Props) {
             socket={socket}
           />
         )}
-        {dateIntervalTimeslots &&
-          dateIntervalTimeslots.map(function (timeslot: TimeSlot) {
-            return (
-              <TimeSlotDisplayComponent
-                key={timeslot.id as string}
-                jwt={jwt}
-                username={username}
-                timeslot={timeslot}
-                timeslots={timeslots}
-                setTimeslots={setTimeslots}
-                tripId={tripId}
-                editable={editable}
-                socket={socket}
-              />
-            );
-          })}
+        <ul>
+          {dateIntervalTimeslots &&
+            dateIntervalTimeslots.map(function (timeslot: TimeSlot) {
+              return (
+                <li
+                  id={`timeslot-${timeslot.id}`}
+                  onClick={() => handleTimeslotClicked(timeslot)}
+                >
+                  <TimeSlotDisplayComponent
+                    key={timeslot.id as string}
+                    jwt={jwt}
+                    username={username}
+                    timeslot={timeslot}
+                    timeslots={timeslots}
+                    setTimeslots={setTimeslots}
+                    tripId={tripId}
+                    editable={editable}
+                    socket={socket}
+                  />
+                </li>
+              );
+            })}
+        </ul>
       </div>
     </>
   );

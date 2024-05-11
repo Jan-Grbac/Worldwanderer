@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import GoogleMap, {
   LatLngBounds,
   MapContextProps,
+  MapMouseEvent,
 } from "google-maps-react-markers";
 import { Socket } from "socket.io-client";
 
@@ -12,31 +13,47 @@ interface Props {
   dateIntervals: Array<DateInterval>;
   timeslots: Array<Array<TimeSlot>>;
   socket: Socket | undefined;
+  selectedTimeslot: TimeSlot;
+  setSuggestedAttractions: Function;
 }
 
 interface BasicMarkerInfo {
   lat: number;
   lng: number;
   text: string;
+  color: string;
 }
 
 const BasicMarker = ({
   lat,
   lng,
   text,
+  color,
 }: {
   lat: number;
   lng: number;
   text: string;
-}) => <div>{`${text}`}</div>;
+  color: string;
+}) => <div style={{ color }}>{`${text}`}</div>;
 
 const MapComponent = (props: Props) => {
-  const { jwt, username, trip, dateIntervals, timeslots, socket } = {
+  const {
+    jwt,
+    username,
+    trip,
+    dateIntervals,
+    timeslots,
+    socket,
+    selectedTimeslot,
+    setSuggestedAttractions,
+  } = {
     ...props,
   };
 
   const [markers, setMarkers] = useState<Array<BasicMarkerInfo>>();
-  const mapRef = useRef<any>(null);
+  const [service, setService] = useState<google.maps.places.PlacesService>();
+  const [geocoder, setGeocoder] = useState<google.maps.Geocoder>();
+  const [map, setMap] = useState<google.maps.Map>();
 
   const defaultProps = {
     center: {
@@ -53,8 +70,68 @@ const MapComponent = (props: Props) => {
     map: MapContextProps["map"];
     maps: MapContextProps["maps"];
   }) {
-    mapRef.current = map;
+    setMap(map);
+    setService(new google.maps.places.PlacesService(map));
+    setGeocoder(new google.maps.Geocoder());
   }
+
+  useEffect(() => {
+    if (map && geocoder) {
+      let listener = map.addListener("click", (event: MapMouseEvent) => {
+        let lat = event.latLng?.lat();
+        let lng = event.latLng?.lng();
+
+        if (lat && lng) {
+          geocoder.geocode(
+            {
+              location: new google.maps.LatLng(lat, lng),
+            },
+            (results, status) => {
+              if (status === google.maps.GeocoderStatus.OK && results) {
+                console.log(results);
+                if (selectedTimeslot) {
+                  let result = results[0];
+                  console.log(result.formatted_address);
+                  console.log(selectedTimeslot);
+                  (
+                    document.getElementById(
+                      "searchBox-" + selectedTimeslot.dateIntervalId
+                    ) as HTMLInputElement
+                  ).value = result.formatted_address;
+                  (
+                    document.getElementById(
+                      "timeslot-name-input-" + selectedTimeslot.dateIntervalId
+                    ) as HTMLInputElement
+                  ).value = result.formatted_address;
+                  (
+                    document.getElementById(
+                      "timeslot-name-input-hidden-" +
+                        selectedTimeslot.dateIntervalId
+                    ) as HTMLInputElement
+                  ).value = result.formatted_address;
+                  (
+                    document.getElementById(
+                      "timeslot-lat-input-hidden-" +
+                        selectedTimeslot.dateIntervalId
+                    ) as HTMLInputElement
+                  ).value = String(result.geometry.location.lat());
+                  (
+                    document.getElementById(
+                      "timeslot-lng-input-hidden-" +
+                        selectedTimeslot.dateIntervalId
+                    ) as HTMLInputElement
+                  ).value = String(result.geometry.location.lng());
+                }
+              }
+            }
+          );
+        }
+      });
+      return () => {
+        listener.remove();
+      };
+    }
+  }, [map, geocoder, selectedTimeslot]);
 
   useEffect(() => {
     let newMarkers = new Array<BasicMarkerInfo>();
@@ -76,7 +153,14 @@ const MapComponent = (props: Props) => {
                 endDateFormatted +
                 "\n" +
                 timeslot.name,
-            };
+            } as BasicMarkerInfo;
+
+            if (selectedTimeslot && timeslot.id === selectedTimeslot.id) {
+              console.log("Selected timeslot: " + selectedTimeslot.id);
+              newMarker.color = "red";
+            }
+
+            console.log(newMarker);
 
             newMarkers.push(newMarker);
           }
@@ -84,7 +168,28 @@ const MapComponent = (props: Props) => {
       }
       setMarkers(newMarkers);
     }
-  }, [dateIntervals, timeslots]);
+  }, [dateIntervals, timeslots, selectedTimeslot]);
+
+  useEffect(() => {
+    if (selectedTimeslot) {
+      let placeSearchRequest = {
+        location: new google.maps.LatLng(
+          selectedTimeslot.lat,
+          selectedTimeslot.lng
+        ),
+        radius: 40000,
+        type: "tourist_attraction",
+      };
+      console.log(selectedTimeslot);
+      service?.nearbySearch(placeSearchRequest, (results, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK)
+          if (results) {
+            results.splice(5);
+            setSuggestedAttractions(results);
+          }
+      });
+    }
+  }, [selectedTimeslot]);
 
   function formatDate(date: string) {
     let year = date.substring(0, 4);
@@ -113,6 +218,7 @@ const MapComponent = (props: Props) => {
                   lat={marker.lat}
                   lng={marker.lng}
                   text={marker.text}
+                  color={marker.color}
                 />
               );
             })}

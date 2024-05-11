@@ -38,6 +38,7 @@ public class DateIntervalServiceImpl implements DateIntervalService {
                 .startDate(dateInterval.getStartDate())
                 .endDate(dateInterval.getEndDate())
                 .id(dateInterval.getId())
+                .tripId(dateInterval.getTrip().getId().toString())
                 .build();
     }
 

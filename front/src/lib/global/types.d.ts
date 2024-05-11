@@ -23,12 +23,15 @@ declare global {
         name: string,
         description: string,
         rating: number,
+        published: boolean,
+        publishedDate: string;
     }
 
     type DateInterval = {
         id: string,
         startDate: string,
         endDate: string,
+        tripId: string,
     }
 
     type TimeSlot = {
@@ -39,6 +42,13 @@ declare global {
         endTime: string,
         lat: number,
         lng: number,
+        dateIntervalId: string,
+    }
+
+    type Rating = {
+        grade: number,
+        comment: string,
+        ratingDate: string,
     }
 }
 
