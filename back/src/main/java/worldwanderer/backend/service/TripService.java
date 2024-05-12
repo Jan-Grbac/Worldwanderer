@@ -8,6 +8,7 @@ import worldwanderer.backend.entity.User;
 import java.util.List;
 
 public interface TripService {
+    void store(Trip trip);
     Trip createTrip(TripData tripRequest, User user);
     Trip createTripCopy(Trip trip, User user);
     void deleteTrip(long id);
@@ -24,5 +25,5 @@ public interface TripService {
     void updateTrip(TripData trip);
     void publishTrip(long id);
     List<Trip> getPublishedTripsForUser(User user);
-    void updateTripRating(Trip trip, Rating rating);
+    void updateTripRating(Trip trip);
 }

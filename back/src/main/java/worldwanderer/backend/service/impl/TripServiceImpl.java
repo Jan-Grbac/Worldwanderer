@@ -26,6 +26,11 @@ public class TripServiceImpl implements TripService {
     private final TripAccessRepository tripAccessRepository;
 
     @Override
+    public void store(Trip trip) {
+        tripRepository.save(trip);
+    }
+
+    @Override
     public Trip createTrip(TripData tripRequest, User user) {
         Trip trip = Trip.builder()
                 .name(tripRequest.getName())
@@ -171,13 +176,9 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public void updateTripRating(Trip trip, Rating rating) {
-        if(trip.getRating() == 0) {
-            trip.setRating((float) rating.getGrade());
-        }
-        else {
-            trip.setRating(((float) rating.getGrade() + trip.getRating()) / 2);
-        }
+    public void updateTripRating(Trip trip) {
+        float newAverage = (float) trip.getRatings().stream().mapToDouble(Rating::getGrade).average().orElse(0);
+        trip.setRating(newAverage);
         tripRepository.save(trip);
     }
 }
