@@ -11,6 +11,7 @@ import TripEditPermissionDisplayComponent from "../components/display/TripEditPe
 import AttractionDisplayComponent from "../components/display/AttractionDisplayComponent";
 import RateTripComponent from "../components/update/RateTripComponent";
 import RatingDisplayComponent from "../components/display/RatingDisplayComponent";
+import HotelDisplayComponent from "../components/display/HotelDisplayComponent";
 
 interface Props {
   jwt: string;
@@ -36,9 +37,14 @@ function TripPlannerPage(props: Props) {
   const [canConnect, setCanConnect] = useState<boolean>(false);
 
   const [selectedTimeslot, setSelectedTimeslot] = useState<TimeSlot>();
+  const [selectedDateInterval, setSelectedDateInterval] =
+    useState<DateInterval>();
   const [suggestedAttractions, setSuggestedAttractions] = useState<
     Array<google.maps.places.PlaceResult>
   >([]);
+  const [hotels, setHotels] = useState<Array<google.maps.places.PlaceResult>>(
+    []
+  );
 
   const [socket, setSocket] = useState<Socket>();
 
@@ -409,6 +415,8 @@ function TripPlannerPage(props: Props) {
               socket={socket}
               selectedTimeslot={selectedTimeslot as TimeSlot}
               setSelectedTimeslot={setSelectedTimeslot}
+              selectedDateInterval={selectedDateInterval as DateInterval}
+              setSelectedDateInterval={setSelectedDateInterval}
             />
           </div>
           <div className="border border-black">
@@ -421,8 +429,10 @@ function TripPlannerPage(props: Props) {
               socket={socket}
               selectedTimeslot={selectedTimeslot as TimeSlot}
               setSuggestedAttractions={setSuggestedAttractions}
+              setHotels={setHotels}
             />
             <div className="d-flex flex-row">
+              <p>Places to visit near {selectedTimeslot?.name}:</p>
               {editable &&
                 suggestedAttractions &&
                 suggestedAttractions.map(function (
@@ -432,6 +442,21 @@ function TripPlannerPage(props: Props) {
                     <AttractionDisplayComponent
                       attraction={attraction}
                       selectedTimeslot={selectedTimeslot as TimeSlot}
+                    />
+                  );
+                })}
+            </div>
+            <div className="d-flex flex-row">
+              <p>Accomodation near {selectedTimeslot?.name}:</p>
+              {editable &&
+                hotels &&
+                hotels.map(function (hotel: google.maps.places.PlaceResult) {
+                  return (
+                    <HotelDisplayComponent
+                      hotel={hotel}
+                      selectedDateInterval={
+                        selectedDateInterval as DateInterval
+                      }
                     />
                   );
                 })}

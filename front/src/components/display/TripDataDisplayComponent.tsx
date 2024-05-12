@@ -16,6 +16,8 @@ interface Props {
   socket: Socket | undefined;
   selectedTimeslot: TimeSlot;
   setSelectedTimeslot: Function;
+  selectedDateInterval: DateInterval;
+  setSelectedDateInterval: Function;
 }
 
 function TripDataDisplayComponent(props: Props) {
@@ -32,6 +34,8 @@ function TripDataDisplayComponent(props: Props) {
     socket,
     selectedTimeslot,
     setSelectedTimeslot,
+    selectedDateInterval,
+    setSelectedDateInterval,
   } = { ...props };
 
   function handleTripChanged() {
@@ -86,6 +90,11 @@ function TripDataDisplayComponent(props: Props) {
     document.getElementById("trip-params-edit")?.classList.remove("d-none");
   }
 
+  function handleDateIntervalClicked(dateInterval: DateInterval) {
+    setSelectedDateInterval({ ...dateInterval });
+    console.log("Selected date interval: " + dateInterval);
+  }
+
   return (
     <>
       <div className="border border-black">
@@ -137,7 +146,10 @@ function TripDataDisplayComponent(props: Props) {
             index: number
           ) {
             return (
-              <li>
+              <li
+                id={`dateinterval-${dateInterval.id}`}
+                onClick={() => handleDateIntervalClicked(dateInterval)}
+              >
                 <DateIntervalDisplayComponent
                   key={dateInterval.id as string}
                   jwt={jwt}

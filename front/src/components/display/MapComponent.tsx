@@ -15,6 +15,7 @@ interface Props {
   socket: Socket | undefined;
   selectedTimeslot: TimeSlot;
   setSuggestedAttractions: Function;
+  setHotels: Function;
 }
 
 interface BasicMarkerInfo {
@@ -46,6 +47,7 @@ const MapComponent = (props: Props) => {
     socket,
     selectedTimeslot,
     setSuggestedAttractions,
+    setHotels,
   } = {
     ...props,
   };
@@ -180,12 +182,27 @@ const MapComponent = (props: Props) => {
         radius: 40000,
         type: "tourist_attraction",
       };
-      console.log(selectedTimeslot);
       service?.nearbySearch(placeSearchRequest, (results, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK)
           if (results) {
             results.splice(5);
             setSuggestedAttractions(results);
+          }
+      });
+
+      placeSearchRequest = {
+        location: new google.maps.LatLng(
+          selectedTimeslot.lat,
+          selectedTimeslot.lng
+        ),
+        radius: 5000,
+        type: "lodging",
+      };
+      service?.nearbySearch(placeSearchRequest, (results, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK)
+          if (results) {
+            results.splice(5);
+            setHotels(results);
           }
       });
     }
