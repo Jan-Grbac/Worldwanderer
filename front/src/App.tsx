@@ -79,6 +79,7 @@ function App() {
               element={
                 <UserProfilePage
                   jwt={jwt}
+                  setJwt={setJwt}
                   jwtIsValid={jwtIsValid}
                   username={username as string}
                 />
