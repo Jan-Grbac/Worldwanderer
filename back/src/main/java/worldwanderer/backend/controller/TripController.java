@@ -5,11 +5,13 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import worldwanderer.backend.dto.TripData;
+import worldwanderer.backend.dto.UserData;
 import worldwanderer.backend.entity.Trip;
 import worldwanderer.backend.entity.User;
 import worldwanderer.backend.service.TripService;
 import worldwanderer.backend.service.UserService;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -98,10 +100,14 @@ public class TripController {
     }
 
     @GetMapping("/getAllowedUsers/{tripId}")
-    public ResponseEntity<List<User>> getAllowedUsers(@PathVariable String tripId) {
+    public ResponseEntity<List<UserData>> getAllowedUsers(@PathVariable String tripId) {
         Trip trip = tripService.getTripForId(Long.parseLong(tripId));
         List<User> allowedUsers = tripService.getAllowedUsers(trip);
-        return ResponseEntity.ok(allowedUsers);
+        List<UserData> userDataList = new ArrayList<>();
+        for(User user: allowedUsers) {
+            userDataList.add(userService.transformIntoUserData(user));
+        }
+        return ResponseEntity.ok(userDataList);
     }
 
     @PostMapping("/checkTripAccess/{username}/{tripId}")

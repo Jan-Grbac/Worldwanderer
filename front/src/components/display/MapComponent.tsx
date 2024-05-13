@@ -55,6 +55,10 @@ const MapComponent = (props: Props) => {
   const [markers, setMarkers] = useState<Array<BasicMarkerInfo>>();
   const [service, setService] = useState<google.maps.places.PlacesService>();
   const [geocoder, setGeocoder] = useState<google.maps.Geocoder>();
+  const [directionsService, setDirectionsService] =
+    useState<google.maps.DirectionsService>();
+  const [directionsRenderer, setDirectionsRenderer] =
+    useState<google.maps.DirectionsRenderer>();
   const [map, setMap] = useState<google.maps.Map>();
 
   const defaultProps = {
@@ -75,6 +79,11 @@ const MapComponent = (props: Props) => {
     setMap(map);
     setService(new google.maps.places.PlacesService(map));
     setGeocoder(new google.maps.Geocoder());
+    setDirectionsService(new google.maps.DirectionsService());
+
+    let directionsRenderer = new google.maps.DirectionsRenderer();
+    directionsRenderer.setMap(map);
+    setDirectionsRenderer(directionsRenderer);
   }
 
   useEffect(() => {
@@ -207,6 +216,44 @@ const MapComponent = (props: Props) => {
       });
     }
   }, [selectedTimeslot]);
+
+  useEffect(() => {
+    if (
+      markers &&
+      markers.length >= 2 &&
+      directionsService &&
+      directionsRenderer
+    ) {
+      console.log("ready to get routes");
+      let src = new google.maps.LatLng(markers[0].lat, markers[0].lng);
+      let dest = new google.maps.LatLng(
+        markers[markers.length - 1].lat,
+        markers[markers.length - 1].lng
+      );
+      let waypoints = new Array<google.maps.DirectionsWaypoint>();
+      for (let i = 1; i < markers.length - 1; i++) {
+        waypoints.push({
+          location: new google.maps.LatLng(markers[i].lat, markers[i].lng),
+        });
+      }
+
+      directionsService.route(
+        {
+          origin: src,
+          destination: dest,
+          waypoints: waypoints,
+          provideRouteAlternatives: false,
+          travelMode: google.maps.TravelMode.DRIVING,
+          unitSystem: google.maps.UnitSystem.METRIC,
+        },
+        (result, status) => {
+          if (status === google.maps.DirectionsStatus.OK) {
+            directionsRenderer.setDirections(result);
+          }
+        }
+      );
+    }
+  }, [markers, directionsService, directionsRenderer]);
 
   function formatDate(date: string) {
     let year = date.substring(0, 4);
