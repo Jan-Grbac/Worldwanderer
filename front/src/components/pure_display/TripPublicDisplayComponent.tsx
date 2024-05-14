@@ -13,19 +13,25 @@ function TripPublicDisplayComponent(props: Props) {
     navigate("/viewtrip/" + tripId);
   }
 
+  function formatDate(date: string) {
+    let year = date.substring(0, 4);
+    let month = date.substring(5, 7);
+    let day = date.substring(8, 10);
+    return day + "/" + month + "/" + year;
+  }
+
   return (
     <div
-      className="border border-black"
+      className="tripDisplayContainer"
       onClick={() => {
         viewTrip(trip.id);
       }}
     >
-      <p>{trip.name}</p>
-      <p>{trip.description}</p>
-      <p>{trip.rating}</p>
+      <h1 className="mb-4 text-2xl font-extrabold">{trip.name}</h1>
+      <p>{trip.rating} ⭐</p>
 
       <p>Made by: {trip.ownerUsername}</p>
-      <p>Published on: {trip.publishedDate}</p>
+      <p>Published on: {formatDate(trip.publishedDate)}</p>
     </div>
   );
 }

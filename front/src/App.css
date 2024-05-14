@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    @apply font-extralight;
+}
+
+body {
+    min-height: 100vh;
+    min-width: 100%;
+    @apply bg-gradient-to-tr from-green-200 to-white;
+}
+
+h1 {
+    @apply text-2xl;
+} 
+h2 {
+    @apply text-xl;
+}
+h3 {
+    @apply text-lg;
+}
+
+.navbarButton {
+    @apply text-black;
+    @apply rounded-3xl;
+    @apply hover:font-bold;
+}
+
+.tripDisplayContainer {
+    @apply rounded-3xl;
+    @apply text-black;
+    @apply border;
+    @apply border-black;
+    @apply p-4;
+    @apply hover:shadow;
+}

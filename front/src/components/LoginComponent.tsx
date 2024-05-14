@@ -66,7 +66,7 @@ function LoginComponent(props: Props) {
   }
 
   return (
-    <div className="d-flex flex-column justify-content-center align-items-center">
+    <div className="flex flex-col">
       <div className="p-2">
         Username:
         <input
@@ -87,7 +87,7 @@ function LoginComponent(props: Props) {
           }
         ></input>
       </div>
-      <div className="d-flex flex-row">
+      <div className="flex flex-row gap-5 justify-center">
         <button onClick={handleLoginButtonClick}>Login</button>
         <button onClick={cancel}>Cancel</button>
       </div>

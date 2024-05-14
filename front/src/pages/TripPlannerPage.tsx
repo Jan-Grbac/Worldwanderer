@@ -4,7 +4,6 @@ import NavbarComponent from "../components/NavbarComponent";
 import MapComponent from "../components/display/MapComponent";
 import { useNavigate } from "react-router-dom";
 import io, { Socket } from "socket.io-client";
-import "bootstrap/dist/css/bootstrap.css";
 import TripDataDisplayComponent from "../components/display/TripDataDisplayComponent";
 import TripEditPermissionGrantComponent from "../components/update/TripEditPermissionGrantComponent";
 import TripEditPermissionDisplayComponent from "../components/display/TripEditPermissionDisplayComponent";

@@ -26,47 +26,50 @@ function NavbarComponent(props: Props) {
   function trips() {
     navigate("/trips");
   }
+  function profile() {
+    navigate("/profile");
+  }
 
   return (
     <>
-      {jwtIsValid ? (
-        <div>
-          <p>Hello {username}!</p>
-          <button
-            className="text-white rounded-3xl hover:text-cyan-400"
-            onClick={home}
-          >
-            Main page
-          </button>
-          <button
-            className="text-white rounded-3xl hover:text-cyan-400"
-            onClick={trips}
-          >
-            Your trips
-          </button>
-          <button
-            className="text-white rounded-3xl hover:text-cyan-400"
-            onClick={logout}
-          >
-            Logout
-          </button>
-        </div>
-      ) : (
-        <div>
-          <button
-            className="text-white rounded-3xl hover:text-cyan-400"
-            onClick={signup}
-          >
-            Sign up
-          </button>
-          <button
-            className="text-white rounded-3xl hover:text-cyan-400"
-            onClick={signin}
-          >
-            Sign in
-          </button>
-        </div>
-      )}
+      <nav className="flex justify-between p-4 border-0">
+        {jwtIsValid ? (
+          <>
+            <div className="flex flex-grow justify-between align-middle container">
+              <div className="flex justify-start gap-5 ml-4">
+                <button className="navbarButton" onClick={home}>
+                  Main page
+                </button>
+                <button className="navbarButton" onClick={trips}>
+                  Your trips
+                </button>
+              </div>
+              <div className="flex justify-items-end gap-5 mr-4">
+                <button className="navbarButton" onClick={profile}>
+                  Your profile
+                </button>
+                <button className="navbarButton" onClick={logout}>
+                  Logout
+                </button>
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="flex flex-grow justify-between align-middle container">
+              <div className="flex justify-start gap-5 ml-4">
+                <button className="navbarButton" onClick={signup}>
+                  Sign up
+                </button>
+                <button className="navbarButton" onClick={signin}>
+                  Sign in
+                </button>
+              </div>
+            </div>
+          </>
+        )}
+      </nav>
+      <hr />
     </>
   );
 }
