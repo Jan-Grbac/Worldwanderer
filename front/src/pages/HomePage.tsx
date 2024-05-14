@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import NavbarComponent from "../components/NavbarComponent";
 import TripPublicDisplayComponent from "../components/pure_display/TripPublicDisplayComponent";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   jwt: string;
@@ -13,6 +14,8 @@ function HomePage(props: Props) {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [highestRatedTrips, setHighestRatedTrips] = useState<Array<Trip>>();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`/api/core/trip/getHighestRatedTrips`, {
@@ -31,6 +34,34 @@ function HomePage(props: Props) {
         setHighestRatedTrips(data);
       });
   }, []);
+
+  useEffect(() => {
+    if (jwt && username) {
+      const fetchData = {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        method: "GET",
+      };
+      fetch(`/api/core/user/getUser/${username}`, fetchData)
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            alert("Wrong username info.");
+            return;
+          }
+        })
+        .then((data) => {
+          console.log(data);
+          if (data.role === "ADMIN") {
+            navigate("/admin");
+          }
+        });
+    }
+  }, [jwt, username]);
 
   useEffect(() => {
     if (highestRatedTrips) {

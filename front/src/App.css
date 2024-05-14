@@ -9,7 +9,7 @@
 body {
     min-height: 100vh;
     min-width: 100%;
-    @apply bg-gradient-to-tr from-green-200 to-white;
+    @apply bg-gradient-to-tr from-orange-500 to-white;
 }
 
 h1 {

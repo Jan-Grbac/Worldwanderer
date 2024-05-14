@@ -154,4 +154,11 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="1" author="yourname">
+        <sql>
+            INSERT INTO users (email, username, password, role) VALUES
+                ('admin@gmail.com', 'admin', '$2a$10$VuRaPbWjH518CLXtvVSn7eUk.Vc4njFmhSBTj9BNaNWIZTd6yoaxe', 0);
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>

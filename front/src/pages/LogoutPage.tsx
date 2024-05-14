@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
+import NavbarComponent from "../components/NavbarComponent";
 
 interface Props {
   setJwt: Function;
@@ -25,11 +26,19 @@ function LogoutPage(props: Props) {
   }
 
   return (
-    <>
-      <p>Do you want to logout?</p>
-      <button onClick={handleLogoutConfirm}>Yes</button>
-      <button onClick={handleLogoutCancel}>No</button>
-    </>
+    <div className="flex flex-row justify-center mt-20 align-middle">
+      <div className="formContainer">
+        <strong className="mb-4">Are you sure you want to logout?</strong>
+        <div className="flex flex-row gap-20 justify-center">
+          <button className="confirmButton" onClick={handleLogoutConfirm}>
+            Yes
+          </button>
+          <button className="declineButton" onClick={handleLogoutCancel}>
+            No
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 

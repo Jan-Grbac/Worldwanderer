@@ -69,7 +69,7 @@ function NavbarComponent(props: Props) {
           </>
         )}
       </nav>
-      <hr />
+      <hr style={{ borderColor: "black" }} />
     </>
   );
 }

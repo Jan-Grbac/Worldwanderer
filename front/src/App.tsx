@@ -10,6 +10,7 @@ import TripsPage from "./pages/TripsPage";
 import TripPlannerPage from "./pages/TripPlannerPage";
 import LogoutPage from "./pages/LogoutPage";
 import UserProfilePage from "./pages/UserProfilePage";
+import AdminPage from "./pages/AdminPage";
 
 function App() {
   const cookies = new Cookies();
@@ -151,6 +152,7 @@ function App() {
                 />
               }
             />
+            <Route path="/admin" element={<AdminPage />} />
           </Routes>
         </BrowserRouter>
       </>
