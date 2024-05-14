@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import "./App.css";
 import Cookies from "universal-cookie";
 import HomePage from "./pages/HomePage";
@@ -59,11 +59,22 @@ function App() {
     cookies.remove("jwt");
   }
 
+  function RootComponent() {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+      navigate("/home");
+    }, [navigate]);
+
+    return <></>;
+  }
+
   return (
     loading && (
       <>
         <BrowserRouter>
           <Routes>
+            <Route path="/" element={<RootComponent />} />
             <Route
               path="/home"
               element={

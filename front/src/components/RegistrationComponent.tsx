@@ -74,11 +74,16 @@ function RegistrationComponent(props: Props) {
       });
   }
 
+  function cancel() {
+    navigate("/home");
+  }
+
   return (
-    <div className="d-flex flex-column justify-content-center align-items-center">
+    <div className="formContainer">
       <div className="p-2">
         Email:
         <input
+          className="wordInputField pl-4"
           type="email"
           placeholder="john.doe@email.com"
           value={user?.email}
@@ -88,6 +93,7 @@ function RegistrationComponent(props: Props) {
       <div className="p-2">
         Username:
         <input
+          className="wordInputField pl-4"
           type="text"
           value={user?.username}
           onChange={(event) =>
@@ -95,9 +101,10 @@ function RegistrationComponent(props: Props) {
           }
         ></input>
       </div>
-      <div className="p-2">
+      <div className="p-2 mb-4">
         Password:
         <input
+          className="wordInputField pl-4"
           type="password"
           value={user?.password}
           onChange={(event) =>
@@ -105,7 +112,14 @@ function RegistrationComponent(props: Props) {
           }
         ></input>
       </div>
-      <button onClick={handleRegisterButtonClick}>Register</button>
+      <div className="flex flex-row gap-20 justify-center">
+        <button className="confirmButton" onClick={handleRegisterButtonClick}>
+          Register
+        </button>
+        <button className="declineButton" onClick={cancel}>
+          Cancel
+        </button>
+      </div>
     </div>
   );
 }

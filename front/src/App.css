@@ -22,10 +22,22 @@ h3 {
     @apply text-lg;
 }
 
-.navbarButton {
+.basicButton {
     @apply text-black;
     @apply rounded-3xl;
     @apply hover:font-bold;
+}
+
+.formContainer {
+    @apply flex flex-col gap-2 items-center max-w-fit bg-white p-20 border border-black rounded-3xl;
+}
+
+.confirmButton {
+    @apply basicButton font-bold border-2 border-green-600 rounded-md pl-4 pr-4 pt-2 pb-2 hover:bg-green-400 selection:bg-green-400;
+}
+
+.declineButton {
+    @apply basicButton font-bold border-2 border-red-600 rounded-md pl-4 pr-4 pt-2 pb-2 hover:bg-red-400 selection:bg-red-400;
 }
 
 .tripDisplayContainer {
@@ -35,4 +47,17 @@ h3 {
     @apply border-black;
     @apply p-4;
     @apply hover:shadow;
+}
+
+.wordInputField {
+    @apply border;
+    @apply border-black;
+    @apply border-spacing-2;
+    @apply rounded-md;
+    @apply ml-2;
+}
+
+.invalidInputBorder {
+    @apply border-red-600;
+    @apply border-4;
 }

@@ -66,10 +66,11 @@ function LoginComponent(props: Props) {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="formContainer">
       <div className="p-2">
         Username:
         <input
+          className="wordInputField pl-4"
           type="text"
           value={user?.username}
           onChange={(event) =>
@@ -77,9 +78,10 @@ function LoginComponent(props: Props) {
           }
         ></input>
       </div>
-      <div className="p-2">
+      <div className="p-2 mb-4">
         Password:
         <input
+          className="wordInputField pl-4"
           type="password"
           value={user?.password}
           onChange={(event) =>
@@ -87,9 +89,13 @@ function LoginComponent(props: Props) {
           }
         ></input>
       </div>
-      <div className="flex flex-row gap-5 justify-center">
-        <button onClick={handleLoginButtonClick}>Login</button>
-        <button onClick={cancel}>Cancel</button>
+      <div className="flex flex-row gap-20 justify-center">
+        <button className="confirmButton" onClick={handleLoginButtonClick}>
+          Login
+        </button>
+        <button className="declineButton" onClick={cancel}>
+          Cancel
+        </button>
       </div>
     </div>
   );

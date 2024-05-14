@@ -19,12 +19,14 @@ function LoginPage(props: Props) {
       navigate("/home");
       alert("You are already signed in!");
     }
-  }, []);
+  }, [jwtIsValid]);
 
   return (
     <>
       <NavbarComponent jwtIsValid={jwtIsValid} username="" />
-      <LoginComponent setJwt={setJwt} setUsername={setUsername} />
+      <div className="flex justify-center mt-20">
+        <LoginComponent setJwt={setJwt} setUsername={setUsername} />
+      </div>
     </>
   );
 }

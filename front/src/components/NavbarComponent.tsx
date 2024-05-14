@@ -32,23 +32,23 @@ function NavbarComponent(props: Props) {
 
   return (
     <>
-      <nav className="flex justify-between p-4 border-0">
+      <nav className="flex justify-between p-4 border-0 max-h-20">
         {jwtIsValid ? (
           <>
             <div className="flex flex-grow justify-between align-middle container">
               <div className="flex justify-start gap-5 ml-4">
-                <button className="navbarButton" onClick={home}>
+                <button className="basicButton" onClick={home}>
                   Main page
                 </button>
-                <button className="navbarButton" onClick={trips}>
+                <button className="basicButton" onClick={trips}>
                   Your trips
                 </button>
               </div>
               <div className="flex justify-items-end gap-5 mr-4">
-                <button className="navbarButton" onClick={profile}>
+                <button className="basicButton" onClick={profile}>
                   Your profile
                 </button>
-                <button className="navbarButton" onClick={logout}>
+                <button className="basicButton" onClick={logout}>
                   Logout
                 </button>
               </div>
@@ -58,10 +58,10 @@ function NavbarComponent(props: Props) {
           <>
             <div className="flex flex-grow justify-between align-middle container">
               <div className="flex justify-start gap-5 ml-4">
-                <button className="navbarButton" onClick={signup}>
+                <button className="basicButton" onClick={signup}>
                   Sign up
                 </button>
-                <button className="navbarButton" onClick={signin}>
+                <button className="basicButton" onClick={signin}>
                   Sign in
                 </button>
               </div>
