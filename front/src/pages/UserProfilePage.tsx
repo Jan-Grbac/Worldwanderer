@@ -56,18 +56,18 @@ function UserProfilePage(props: Props) {
   return (
     loading && (
       <>
-        <div className="border border-black">
-          <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
-        </div>
-        <div className="d-flex flex-row">
-          <UserInfoDisplayComponent user={user as User} />
-        </div>
-        <div className="d-flex flex-row">
-          <UserInfoUpdateComponent
-            jwt={jwt}
-            setJwt={setJwt}
-            user={user as User}
-          />
+        <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
+        <div className="flex flex-row mt-20 gap-20 justify-center">
+          <div>
+            <UserInfoDisplayComponent user={user as User} />
+          </div>
+          <div>
+            <UserInfoUpdateComponent
+              jwt={jwt}
+              setJwt={setJwt}
+              user={user as User}
+            />
+          </div>
         </div>
       </>
     )

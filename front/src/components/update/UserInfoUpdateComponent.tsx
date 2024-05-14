@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface Props {
@@ -125,12 +125,51 @@ function UserInfoUpdateComponent(props: Props) {
       });
   }
 
+  function clear() {
+    (document.getElementById("new-email-input") as HTMLInputElement).value = "";
+    (document.getElementById("new-username-input") as HTMLInputElement).value =
+      "";
+    (document.getElementById("new-password-input") as HTMLInputElement).value =
+      "";
+    (document.getElementById("old-password-input") as HTMLInputElement).value =
+      "";
+    setUpdatedUser({
+      email: "",
+      oldUsername: user.username,
+      username: "",
+      newPassword: "",
+      oldPassword: "",
+    });
+  }
+
+  useEffect(() => {
+    if (emailCollision) {
+      document
+        .getElementById("new-email-input")
+        ?.classList.add("invalidInputBorder");
+    } else {
+      document
+        .getElementById("new-email-input")
+        ?.classList.remove("invalidInputBorder");
+    }
+    if (usernameCollision) {
+      document
+        .getElementById("new-username-input")
+        ?.classList.add("invalidInputBorder");
+    } else {
+      document
+        .getElementById("new-username-input")
+        ?.classList.remove("invalidInputBorder");
+    }
+  }, [emailCollision, usernameCollision]);
+
   return (
     <div>
-      <div className="d-flex flex-column justify-content-center align-items-center">
+      <div className="formContainer">
         <div className="p-2">
           Update email:
           <input
+            className="wordInputField"
             id="new-email-input"
             type="email"
             value={updatedUser?.email}
@@ -141,6 +180,7 @@ function UserInfoUpdateComponent(props: Props) {
         <div className="p-2">
           Update username:
           <input
+            className="wordInputField"
             id="new-username-input"
             type="text"
             value={updatedUser?.username}
@@ -153,6 +193,7 @@ function UserInfoUpdateComponent(props: Props) {
         <div className="p-2">
           Password:
           <input
+            className="wordInputField"
             id="new-password-input"
             type="password"
             value={updatedUser?.newPassword}
@@ -161,9 +202,10 @@ function UserInfoUpdateComponent(props: Props) {
             }
           ></input>
         </div>
-        <div className="p-2">
+        <div className="p-2 mb-4">
           Old password:
           <input
+            className="wordInputField"
             id="old-password-input"
             type="password"
             value={updatedUser?.oldPassword}
@@ -172,7 +214,14 @@ function UserInfoUpdateComponent(props: Props) {
             }
           ></input>
         </div>
-        <button onClick={tryUpdate}>Update</button>
+        <div className="flex flex-row self-center gap-20 justify-center">
+          <button className="confirmButton" onClick={tryUpdate}>
+            Update
+          </button>
+          <button className="declineButton" onClick={clear}>
+            Clear
+          </button>
+        </div>
       </div>
     </div>
   );

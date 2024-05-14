@@ -419,7 +419,9 @@ function TripPlannerPage(props: Props) {
               setHotels={setHotels}
             />
             <div className="d-flex flex-row">
-              <p>Places to visit near {selectedTimeslot?.name}:</p>
+              {editable && (
+                <p>Places to visit near {selectedTimeslot?.name}:</p>
+              )}
               {editable &&
                 suggestedAttractions &&
                 suggestedAttractions.map(function (
@@ -434,7 +436,7 @@ function TripPlannerPage(props: Props) {
                 })}
             </div>
             <div className="d-flex flex-row">
-              <p>Accomodation near {selectedTimeslot?.name}:</p>
+              {editable && <p>Accomodation near {selectedTimeslot?.name}:</p>}
               {editable &&
                 hotels &&
                 hotels.map(function (hotel: google.maps.places.PlaceResult) {

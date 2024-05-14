@@ -91,20 +91,22 @@ function TripsPage(props: Props) {
       <>
         <div>
           <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
-          <TripListDisplayComponent
-            jwt={jwt}
-            ownedTrips={ownedTrips as Array<Trip>}
-            setOwnedTrips={setOwnedTrips}
-            sharedTrips={sharedTrips as Array<Trip>}
-            publishedTrips={publishedTrips as Array<Trip>}
-            setPublishedTrips={setPublishedTrips}
-          />
-          <TripCreateComponent
-            jwt={jwt}
-            username={username}
-            trips={ownedTrips as Array<Trip>}
-            setTrips={setOwnedTrips}
-          />
+          <div className="flex flex-col mt-4">
+            <TripListDisplayComponent
+              jwt={jwt}
+              ownedTrips={ownedTrips as Array<Trip>}
+              setOwnedTrips={setOwnedTrips}
+              sharedTrips={sharedTrips as Array<Trip>}
+              publishedTrips={publishedTrips as Array<Trip>}
+              setPublishedTrips={setPublishedTrips}
+            />
+            <TripCreateComponent
+              jwt={jwt}
+              username={username}
+              trips={ownedTrips as Array<Trip>}
+              setTrips={setOwnedTrips}
+            />
+          </div>
         </div>
       </>
     )

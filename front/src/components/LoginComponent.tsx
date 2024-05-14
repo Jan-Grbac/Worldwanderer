@@ -70,7 +70,7 @@ function LoginComponent(props: Props) {
       <div className="p-2">
         <strong>Username:</strong>
         <input
-          className="wordInputField pl-4"
+          className="wordInputField"
           type="text"
           value={user?.username}
           onChange={(event) =>
@@ -81,7 +81,7 @@ function LoginComponent(props: Props) {
       <div className="p-2 mb-4">
         <strong>Password:</strong>
         <input
-          className="wordInputField pl-4"
+          className="wordInputField"
           type="password"
           value={user?.password}
           onChange={(event) =>
