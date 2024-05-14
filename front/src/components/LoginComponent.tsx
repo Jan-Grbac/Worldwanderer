@@ -68,7 +68,7 @@ function LoginComponent(props: Props) {
   return (
     <div className="formContainer">
       <div className="p-2">
-        Username:
+        <strong>Username:</strong>
         <input
           className="wordInputField pl-4"
           type="text"
@@ -79,7 +79,7 @@ function LoginComponent(props: Props) {
         ></input>
       </div>
       <div className="p-2 mb-4">
-        Password:
+        <strong>Password:</strong>
         <input
           className="wordInputField pl-4"
           type="password"

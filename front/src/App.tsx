@@ -12,7 +12,7 @@ import LogoutPage from "./pages/LogoutPage";
 import UserProfilePage from "./pages/UserProfilePage";
 
 function App() {
-  let cookies = new Cookies();
+  const cookies = new Cookies();
   const [username, setUsername] = useState<string>();
   const [jwt, setJwt] = useState<string>(
     cookies.get("jwt") !== undefined ? cookies.get("jwt") : ""
@@ -51,17 +51,10 @@ function App() {
         });
     }
     setLoading(true);
-  });
-
-  function doLogout() {
-    setJwt("");
-    cookies = new Cookies();
-    cookies.remove("jwt");
-  }
+  }, [jwt]);
 
   function RootComponent() {
     const navigate = useNavigate();
-
     useEffect(() => {
       navigate("/home");
     }, [navigate]);
@@ -133,6 +126,7 @@ function App() {
                   jwt={jwt}
                   jwtIsValid={jwtIsValid}
                   username={username as string}
+                  editable={true}
                 />
               }
             />
@@ -143,12 +137,19 @@ function App() {
                   jwt={jwt}
                   jwtIsValid={jwtIsValid}
                   username={username as string}
+                  editable={false}
                 />
               }
             />
             <Route
               path="/logout"
-              element={<LogoutPage doLogout={doLogout} />}
+              element={
+                <LogoutPage
+                  setJwt={setJwt}
+                  setLoading={setLoading}
+                  cookies={cookies}
+                />
+              }
             />
           </Routes>
         </BrowserRouter>

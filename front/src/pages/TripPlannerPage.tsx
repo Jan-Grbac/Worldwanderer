@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useReducer, useState } from "react";
-import { Status, Wrapper } from "@googlemaps/react-wrapper";
 import NavbarComponent from "../components/NavbarComponent";
 import MapComponent from "../components/display/MapComponent";
 import { useNavigate } from "react-router-dom";
@@ -16,17 +15,16 @@ interface Props {
   jwt: string;
   jwtIsValid: boolean;
   username: string;
+  editable: boolean;
 }
 
 function TripPlannerPage(props: Props) {
-  const { jwt, jwtIsValid, username } = { ...props };
+  const { jwt, jwtIsValid, username, editable } = { ...props };
   const [trip, setTrip] = useState<Trip>();
   const [dateIntervals, setDateIntervals] = useState<Array<DateInterval>>([]);
   const [timeslots, setTimeslots] = useState<Array<Array<TimeSlot>>>([[]]);
   const [allowedUsers, setAllowedUsers] = useState<Array<User>>([]);
   const [ratings, setRatings] = useState<Array<Rating>>([]);
-
-  const [editable, setEditable] = useState<boolean>(false);
 
   const [isOwner, setIsOwner] = useState<boolean>(false);
   const [isAllowedUser, setIsAllowedUser] = useState<boolean>(false);
@@ -50,27 +48,20 @@ function TripPlannerPage(props: Props) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (jwt && username) {
-      if (!jwtIsValid) {
-        navigate("/home");
-        console.log("You need to be logged in to edit a trip!");
-      } else {
-        const tripId = window.location.href.split("/")[4];
+    if (!jwtIsValid && editable) {
+      navigate("/home");
+      alert("You need to be logged in to edit a trip!");
+    } else {
+      const tripId = window.location.href.split("/")[4];
 
-        fetchTrip(tripId);
-        fetchAllowedUsers(tripId);
-        fetchDateIntervals(tripId);
-        fetchTimeslots(tripId);
-        fetchRatings(tripId);
-      }
+      fetchTrip(tripId);
+      fetchAllowedUsers(tripId);
+      fetchDateIntervals(tripId);
+      fetchTimeslots(tripId);
+      fetchRatings(tripId);
+      if (editable) checkTripAccess(tripId);
     }
   }, [jwt, username]);
-
-  useEffect(() => {
-    const tripId = window.location.href.split("/")[4];
-
-    if (editable) checkTripAccess(tripId);
-  }, [editable]);
 
   function checkTripAccess(tripId: string) {
     fetch(`/api/core/trip/checkTripAccess/${username}/${tripId}`, {
@@ -183,11 +174,9 @@ function TripPlannerPage(props: Props) {
           setIsOwner(true);
         }
         if (!data.published) {
-          setEditable(true);
           setCanConnect(true);
         }
         setTrip(newTrip);
-        console.log(newTrip);
       });
   }
 
@@ -366,7 +355,6 @@ function TripPlannerPage(props: Props) {
     newTrip.published = true;
 
     setTrip(newTrip);
-    setEditable(false);
   }
 
   return (

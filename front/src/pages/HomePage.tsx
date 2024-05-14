@@ -34,7 +34,6 @@ function HomePage(props: Props) {
 
   useEffect(() => {
     if (highestRatedTrips) {
-      console.log(highestRatedTrips);
       setLoading(true);
     }
   }, [highestRatedTrips]);

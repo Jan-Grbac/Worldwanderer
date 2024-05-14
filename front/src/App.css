@@ -29,7 +29,7 @@ h3 {
 }
 
 .formContainer {
-    @apply flex flex-col gap-2 items-center max-w-fit bg-white p-20 border border-black rounded-3xl;
+    @apply flex flex-col gap-2 items-center max-w-fit bg-white p-20 border-2 border-black rounded-3xl;
 }
 
 .confirmButton {
