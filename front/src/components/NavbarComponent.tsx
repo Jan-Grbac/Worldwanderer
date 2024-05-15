@@ -38,18 +38,18 @@ function NavbarComponent(props: Props) {
             <div className="flex flex-grow justify-between align-middle container">
               <div className="flex justify-start gap-5 ml-4">
                 <button className="basicButton" onClick={home}>
-                  Main page
+                  <h2>Main page</h2>
                 </button>
                 <button className="basicButton" onClick={trips}>
-                  Your trips
+                  <h2>Your trips</h2>
                 </button>
               </div>
               <div className="flex justify-items-end gap-5 mr-4">
                 <button className="basicButton" onClick={profile}>
-                  Your profile
+                  <h2>Your profile</h2>
                 </button>
                 <button className="basicButton" onClick={logout}>
-                  Logout
+                  <h2>Logout</h2>
                 </button>
               </div>
             </div>
@@ -59,10 +59,10 @@ function NavbarComponent(props: Props) {
             <div className="flex flex-grow justify-between align-middle container">
               <div className="flex justify-start gap-5 ml-4">
                 <button className="basicButton" onClick={signup}>
-                  Sign up
+                  <h2>Sign up</h2>
                 </button>
                 <button className="basicButton" onClick={signin}>
-                  Sign in
+                  <h2>Sign in</h2>
                 </button>
               </div>
             </div>

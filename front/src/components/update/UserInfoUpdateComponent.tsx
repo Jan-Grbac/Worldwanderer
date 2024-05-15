@@ -133,6 +133,12 @@ function UserInfoUpdateComponent(props: Props) {
       "";
     (document.getElementById("old-password-input") as HTMLInputElement).value =
       "";
+    document
+      .getElementById("new-email-input")
+      ?.classList.remove("invalidInputBorder");
+    document
+      .getElementById("new-username-input")
+      ?.classList.remove("invalidInputBorder");
     setUpdatedUser({
       email: "",
       oldUsername: user.username,

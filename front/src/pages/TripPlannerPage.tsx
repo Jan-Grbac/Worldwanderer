@@ -451,8 +451,13 @@ function TripPlannerPage(props: Props) {
                 })}
             </div>
           </div>
-          {!editable && trip?.published && (
+          {!editable && jwtIsValid && trip?.published && (
             <button onClick={copyTrip}>Copy published trip and edit</button>
+          )}
+          {!editable && !jwtIsValid && trip?.published && (
+            <button onClick={() => navigate("/signin")}>
+              Sign in to copy trip
+            </button>
           )}
           {!editable && isOwner && !trip?.published && (
             <button onClick={() => navigate("/edittrip/" + trip?.id)}>

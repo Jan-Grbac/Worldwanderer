@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TripListDisplayComponent from "../components/display/TripListDisplayComponent";
-import TripCreateComponent from "../components/create/TripCreateComponent";
 import NavbarComponent from "../components/NavbarComponent";
 
 interface Props {
@@ -21,64 +20,69 @@ function TripsPage(props: Props) {
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (jwt && username) {
-      if (!jwtIsValid) {
-        navigate("/home");
-        console.log("You need to be logged in to view your trips!");
-      } else {
-        fetch(`/api/core/trip/getActiveTrips/${username}`, {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          method: "GET",
-        })
-          .then((response) => {
-            if (response.ok) {
-              return response.json();
-            }
-          })
-          .then((data) => {
-            setOwnedTrips(data);
-          });
-
-        fetch(`/api/core/trip/getSharedTrips/${username}`, {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          method: "GET",
-        })
-          .then((response) => {
-            if (response.ok) {
-              return response.json();
-            }
-          })
-          .then((data) => {
-            setSharedTrips(data);
-          });
-
-        fetch(`/api/core/trip/getPublishedTrips/${username}`, {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          method: "GET",
-        })
-          .then((response) => {
-            if (response.ok) {
-              return response.json();
-            }
-          })
-          .then((data) => {
-            setPublishedTrips(data);
-          });
-      }
+    if (
+      jwt != undefined &&
+      jwtIsValid != undefined &&
+      username != undefined &&
+      !jwtIsValid
+    ) {
+      navigate("/home");
+      alert("You need to be logged in to view your trips!");
+      return;
     }
-  }, [jwt, username]);
+    if (jwt && username) {
+      fetch(`/api/core/trip/getActiveTrips/${username}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        method: "GET",
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+        })
+        .then((data) => {
+          setOwnedTrips(data);
+        });
+
+      fetch(`/api/core/trip/getSharedTrips/${username}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        method: "GET",
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+        })
+        .then((data) => {
+          setSharedTrips(data);
+        });
+
+      fetch(`/api/core/trip/getPublishedTrips/${username}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        method: "GET",
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+        })
+        .then((data) => {
+          setPublishedTrips(data);
+        });
+    }
+  }, [jwt, jwtIsValid, username]);
 
   useEffect(() => {
     if (ownedTrips && sharedTrips && publishedTrips) {
@@ -89,24 +93,17 @@ function TripsPage(props: Props) {
   return (
     loading && (
       <>
-        <div>
-          <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
-          <div className="flex flex-col mt-4">
-            <TripListDisplayComponent
-              jwt={jwt}
-              ownedTrips={ownedTrips as Array<Trip>}
-              setOwnedTrips={setOwnedTrips}
-              sharedTrips={sharedTrips as Array<Trip>}
-              publishedTrips={publishedTrips as Array<Trip>}
-              setPublishedTrips={setPublishedTrips}
-            />
-            <TripCreateComponent
-              jwt={jwt}
-              username={username}
-              trips={ownedTrips as Array<Trip>}
-              setTrips={setOwnedTrips}
-            />
-          </div>
+        <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
+        <div className="flex flex-col ml-4 mt-4">
+          <TripListDisplayComponent
+            jwt={jwt}
+            username={username}
+            ownedTrips={ownedTrips as Array<Trip>}
+            setOwnedTrips={setOwnedTrips}
+            sharedTrips={sharedTrips as Array<Trip>}
+            publishedTrips={publishedTrips as Array<Trip>}
+            setPublishedTrips={setPublishedTrips}
+          />
         </div>
       </>
     )

@@ -112,7 +112,7 @@ function RegistrationComponent(props: Props) {
           }
         ></input>
       </div>
-      <div className="flex flex-row gap-20 justify-center">
+      <div className="flex flex-row gap-20 justify-center self-center">
         <button className="confirmButton" onClick={handleRegisterButtonClick}>
           Register
         </button>

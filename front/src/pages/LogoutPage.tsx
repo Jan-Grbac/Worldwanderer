@@ -5,16 +5,18 @@ import NavbarComponent from "../components/NavbarComponent";
 
 interface Props {
   setJwt: Function;
+  setJwtIsValid: Function;
   setLoading: Function;
   cookies: Cookies;
 }
 
 function LogoutPage(props: Props) {
-  const { setJwt, setLoading, cookies } = { ...props };
+  const { setJwt, setJwtIsValid, setLoading, cookies } = { ...props };
   const navigate = useNavigate();
 
   function handleLogoutConfirm() {
     setJwt("");
+    setJwtIsValid(false);
     setLoading(false);
     cookies.remove("jwt");
     navigate("/home");
@@ -28,8 +30,10 @@ function LogoutPage(props: Props) {
   return (
     <div className="flex flex-row justify-center mt-20 align-middle">
       <div className="formContainer">
-        <strong className="mb-4">Are you sure you want to logout?</strong>
-        <div className="flex flex-row gap-20 justify-center">
+        <strong className="mb-4 self-center">
+          Are you sure you want to logout?
+        </strong>
+        <div className="flex flex-row gap-20 justify-center self-center">
           <button className="confirmButton" onClick={handleLogoutConfirm}>
             Yes
           </button>

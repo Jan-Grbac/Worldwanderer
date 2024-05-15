@@ -147,6 +147,7 @@ function App() {
               element={
                 <LogoutPage
                   setJwt={setJwt}
+                  setJwtIsValid={setJwtIsValid}
                   setLoading={setLoading}
                   cookies={cookies}
                 />

@@ -73,10 +73,10 @@ function HomePage(props: Props) {
     loading && (
       <>
         <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
-        <h1 className="ml-4 mt-2 p-4 text-5xl italic underline">
+        <h1 className="ml-4 mt-2 p-4 text-7xl italic underline">
           Featured trips
         </h1>
-        <div className="grid grid-cols-5 m-4 gap-5">
+        <div className="grid grid-cols-5 m-4 pl-4 pr-4 gap-5">
           {highestRatedTrips?.map((trip: any) => {
             return <TripPublicDisplayComponent trip={trip} />;
           })}

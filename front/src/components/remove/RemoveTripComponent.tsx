@@ -34,9 +34,9 @@ function RemoveTripComponent(props: Props) {
   }
 
   return (
-    <>
-      <button onClick={removeTrip}>X</button>
-    </>
+    <button className="self-end w-max" onClick={removeTrip}>
+      🗑️
+    </button>
   );
 }
 
