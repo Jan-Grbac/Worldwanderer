@@ -3,66 +3,66 @@
 @tailwind utilities;
 
 * {
-    @apply font-extralight;
+  @apply font-extralight;
 }
 
 body {
-    min-height: 100vh;
-    min-width: 100%;
-    @apply bg-white;
+  min-height: 100vh;
+  min-width: 100%;
+  @apply bg-white;
 }
 
 h1 {
-    @apply text-2xl;
-} 
+  @apply text-2xl;
+}
 h2 {
-    @apply text-xl;
+  @apply text-xl;
 }
 h3 {
-    @apply text-lg;
+  @apply text-lg;
 }
 
 .basicButton {
-    @apply text-black;
-    @apply rounded-xl;
-    @apply hover:font-bold;
+  @apply text-black;
+  @apply rounded-xl;
+  @apply hover:font-bold;
 }
 
 .formContainer {
-    @apply flex flex-col gap-2 items-end max-w-fit bg-white pl-10 pr-10 pt-6 pb-6 border-2 border-black rounded-3xl;
+  @apply flex flex-col gap-2 items-end max-w-fit bg-white pl-10 pr-10 pt-6 pb-6 border-2 border-black rounded-3xl;
 }
 
 .confirmButton {
-    @apply basicButton font-bold border-2 border-green-600 rounded-md pl-8 pr-8 pt-2 pb-2 hover:bg-green-400 selection:bg-green-400;
+  @apply basicButton font-bold border-2 border-green-600 rounded-md pl-8 pr-8 pt-2 pb-2 hover:bg-green-400 selection:bg-green-400;
 }
 
 .declineButton {
-    @apply basicButton font-bold border-2 border-red-600 rounded-md pl-8 pr-8 pt-2 pb-2 hover:bg-red-400 selection:bg-red-400;
+  @apply basicButton font-bold border-2 border-red-600 rounded-md pl-8 pr-8 pt-2 pb-2 hover:bg-red-400 selection:bg-red-400;
 }
 
 .tripDisplayContainer {
-    @apply rounded-3xl;
-    @apply text-black;
-    @apply border;
-    @apply border-black;
-    @apply p-4;
-    @apply hover:shadow;
+  @apply rounded-3xl;
+  @apply text-black;
+  @apply border;
+  @apply border-black;
+  @apply p-4;
+  @apply hover:shadow;
 }
 
 .tripListEntry {
-    @apply hover:cursor-pointer min-w-max w-1/2 text-wrap ml-6 p-4 mt-4 flex flex-row justify-end border-2 border-black rounded-md;
+  @apply hover:cursor-pointer min-w-max w-1/2 text-wrap ml-6 p-4 mt-4 flex flex-row justify-end border-2 border-black rounded-md;
 }
 
 .wordInputField {
-    @apply border;
-    @apply border-black;
-    @apply border-spacing-2;
-    @apply rounded-md;
-    @apply ml-2;
-    @apply pl-2;
+  @apply border;
+  @apply border-black;
+  @apply border-spacing-2;
+  @apply rounded-md;
+  @apply ml-2;
+  @apply pl-2;
 }
 
 .invalidInputBorder {
-    @apply border-red-600;
-    @apply border-4;
+  @apply border-red-600;
+  @apply border-4;
 }
