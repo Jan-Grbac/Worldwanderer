@@ -12,14 +12,14 @@ public class SocketIOConfig {
     @Value("${server.address}")
     private String host;
 
-    @Value("${server.port}")
+    @Value("${socket.io.port}")
     private Integer port;
 
     @Bean
     public SocketIOServer socketIOServer() {
         com.corundumstudio.socketio.Configuration config = new com.corundumstudio.socketio.Configuration();
         config.setHostname(host);
-        config.setPort(port + 1);
+        config.setPort(port);
         SocketConfig sockConfig = new SocketConfig();
         sockConfig.setReuseAddress(true);
         config.setSocketConfig(sockConfig);
