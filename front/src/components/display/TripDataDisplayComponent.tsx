@@ -41,10 +41,10 @@ function TripDataDisplayComponent(props: Props) {
   function handleTripChanged() {
     let newTrip = { ...trip };
     newTrip.name = (
-      document.getElementById("trip-name-input") as HTMLInputElement
+      document.getElementById("trip-name-edit") as HTMLInputElement
     ).value;
     newTrip.description = (
-      document.getElementById("trip-description-textarea") as HTMLInputElement
+      document.getElementById("trip-description-edit") as HTMLInputElement
     ).value;
 
     const fetchData = {
@@ -75,8 +75,13 @@ function TripDataDisplayComponent(props: Props) {
 
     setTrip(newTrip);
 
-    document.getElementById("trip-params-view")?.classList.remove("d-none");
-    document.getElementById("trip-params-edit")?.classList.add("d-none");
+    document.getElementById("trip-name-edit")?.classList.add("hidden");
+    document.getElementById("trip-description-edit")?.classList.add("hidden");
+
+    document.getElementById("trip-name-view")?.classList.remove("hidden");
+    document
+      .getElementById("trip-description-view")
+      ?.classList.remove("hidden");
   }
 
   function handleEnterKeyPress(event: any) {
@@ -85,9 +90,17 @@ function TripDataDisplayComponent(props: Props) {
     }
   }
 
-  function allowTripParamEditing() {
-    document.getElementById("trip-params-view")?.classList.add("d-none");
-    document.getElementById("trip-params-edit")?.classList.remove("d-none");
+  function allowNameEditing() {
+    document.getElementById("trip-name-view")?.classList.add("hidden");
+    document.getElementById("trip-name-edit")?.classList.remove("hidden");
+    document.getElementById("trip-name-edit")?.focus();
+  }
+  function allowDescriptionEditing() {
+    document.getElementById("trip-description-view")?.classList.add("hidden");
+    document
+      .getElementById("trip-description-edit")
+      ?.classList.remove("hidden");
+    document.getElementById("trip-description-edit")?.focus();
   }
 
   function handleDateIntervalClicked(dateInterval: DateInterval) {
@@ -97,27 +110,37 @@ function TripDataDisplayComponent(props: Props) {
 
   return (
     <>
-      <div className="border border-black">
-        <div id="trip-params-view" onDoubleClick={allowTripParamEditing}>
-          Trip name: {trip.name}
-          <br />
-          Trip description: {trip.description}
-        </div>
-        <div id="trip-params-edit" className="d-none">
-          Trip name:
+      <div className="border border-black p-4">
+        <div className="flex flex-col">
+          <h2 className="font-bold italic">Trip name</h2>
+          <div
+            id="trip-name-view"
+            className="hover:bg-gray-100 rounded-md"
+            onDoubleClick={allowNameEditing}
+          >
+            {trip.name}
+          </div>
           <input
             type="text"
-            id="trip-name-input"
+            id="trip-name-edit"
+            className="hidden"
             contentEditable="true"
             defaultValue={trip.name}
             onKeyDownCapture={handleEnterKeyPress}
             onBlur={handleTripChanged}
             suppressContentEditableWarning={true}
           ></input>
-          <br />
-          Trip description:
+          <h2 className="font-bold italic">Trip description</h2>
+          <div
+            id="trip-description-view"
+            className="hover:bg-gray-100 rounded-md"
+            onDoubleClick={allowDescriptionEditing}
+          >
+            {trip.description}
+          </div>
           <textarea
-            id="trip-description-textarea"
+            id="trip-description-edit"
+            className="hidden"
             contentEditable="true"
             rows={3}
             defaultValue={trip.description}

@@ -28,7 +28,7 @@ function TripEditPermissionDisplayComponent(props: Props) {
 
   return (
     <>
-      <div className="m-4">
+      <div>
         <i>Editors:</i>
         {allowedUsers.map(function (user: User) {
           return (

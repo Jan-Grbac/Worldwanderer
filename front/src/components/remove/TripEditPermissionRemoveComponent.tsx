@@ -63,7 +63,7 @@ function TripEditPermissionRemoveComponent(props: Props) {
 
   return (
     <>
-      <button onClick={revokePermission}>X</button>
+      <button onClick={revokePermission}>🗑️</button>
     </>
   );
 }

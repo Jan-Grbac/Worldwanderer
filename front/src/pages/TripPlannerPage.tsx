@@ -48,7 +48,11 @@ function TripPlannerPage(props: Props) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (jwtIsValid && editable && jwt) {
+    if (
+      jwtIsValid !== undefined &&
+      jwt !== undefined &&
+      editable !== undefined
+    ) {
       if (!jwtIsValid && editable) {
         navigate("/home");
         alert("You need to be logged in to edit a trip!");
@@ -359,6 +363,15 @@ function TripPlannerPage(props: Props) {
     setTrip(newTrip);
   }
 
+  function showPublishWarning() {
+    let warning = document.getElementById("publish-warning");
+    if (warning?.classList.contains("hidden")) {
+      warning.classList.remove("hidden");
+    } else {
+      warning?.classList.add("hidden");
+    }
+  }
+
   return (
     loading && (
       <>
@@ -369,25 +382,6 @@ function TripPlannerPage(props: Props) {
               <div>
                 Published by {trip.ownerUsername} on: {trip.publishedDate}
               </div>
-            )}
-            <TripEditPermissionDisplayComponent
-              jwt={jwt}
-              allowedUsers={allowedUsers}
-              setAllowedUsers={setAllowedUsers}
-              trip={trip as Trip}
-              isOwner={isOwner}
-              editable={editable}
-              socket={socket}
-            />
-            {isOwner && editable && (
-              <TripEditPermissionGrantComponent
-                jwt={jwt}
-                trip={trip as Trip}
-                allowedUsers={allowedUsers}
-                setAllowedUsers={setAllowedUsers}
-                username={username}
-                socket={socket}
-              />
             )}
             <TripDataDisplayComponent
               jwt={jwt}
@@ -451,27 +445,63 @@ function TripPlannerPage(props: Props) {
                 })}
             </div>
           </div>
-          {!editable && jwtIsValid && trip?.published && (
-            <button onClick={copyTrip}>Copy published trip and edit</button>
-          )}
-          {!editable && !jwtIsValid && trip?.published && (
-            <button onClick={() => navigate("/signin")}>
-              Sign in to copy trip
-            </button>
-          )}
-          {!editable && isOwner && !trip?.published && (
-            <button onClick={() => navigate("/edittrip/" + trip?.id)}>
-              Edit your trip
-            </button>
-          )}
-          {editable && isOwner && (
-            <>
-              <button onClick={handlePublish}>Publish trip.</button>
-              <p>
-                Warning: You will not be able to edit the trip after publishing.
-              </p>
-            </>
-          )}
+          <div>
+            <div className="flex flex-row mt-4 ml-4 mb-4">
+              <TripEditPermissionDisplayComponent
+                jwt={jwt}
+                allowedUsers={allowedUsers}
+                setAllowedUsers={setAllowedUsers}
+                trip={trip as Trip}
+                isOwner={isOwner}
+                editable={editable}
+                socket={socket}
+              />
+              {editable && isOwner && (
+                <div className="flex flex-grow flex-col justify-start align-middle">
+                  <button
+                    className="confirmButton self-center w-max"
+                    onMouseOver={showPublishWarning}
+                    onMouseLeave={showPublishWarning}
+                    onClick={handlePublish}
+                  >
+                    Publish trip.
+                  </button>
+                  <p
+                    id="publish-warning"
+                    className="hidden text-red-800 self-center"
+                  >
+                    Warning: You will not be able to edit the trip after
+                    publishing.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {isOwner && editable && (
+              <TripEditPermissionGrantComponent
+                jwt={jwt}
+                trip={trip as Trip}
+                allowedUsers={allowedUsers}
+                setAllowedUsers={setAllowedUsers}
+                username={username}
+                socket={socket}
+              />
+            )}
+
+            {!editable && jwtIsValid && trip?.published && (
+              <button onClick={copyTrip}>Copy published trip and edit</button>
+            )}
+            {!editable && !jwtIsValid && trip?.published && (
+              <button onClick={() => navigate("/signin")}>
+                Sign in to copy trip
+              </button>
+            )}
+            {!editable && isOwner && !trip?.published && (
+              <button onClick={() => navigate("/edittrip/" + trip?.id)}>
+                Edit your trip
+              </button>
+            )}
+          </div>
         </div>
         <div>
           {!editable &&
