@@ -48,20 +48,22 @@ function TripPlannerPage(props: Props) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!jwtIsValid && editable) {
-      navigate("/home");
-      alert("You need to be logged in to edit a trip!");
-    } else {
-      const tripId = window.location.href.split("/")[4];
+    if (jwtIsValid && editable && jwt) {
+      if (!jwtIsValid && editable) {
+        navigate("/home");
+        alert("You need to be logged in to edit a trip!");
+      } else {
+        const tripId = window.location.href.split("/")[4];
 
-      fetchTrip(tripId);
-      fetchAllowedUsers(tripId);
-      fetchDateIntervals(tripId);
-      fetchTimeslots(tripId);
-      fetchRatings(tripId);
-      if (editable) checkTripAccess(tripId);
+        fetchTrip(tripId);
+        fetchAllowedUsers(tripId);
+        fetchDateIntervals(tripId);
+        fetchTimeslots(tripId);
+        fetchRatings(tripId);
+        if (editable) checkTripAccess(tripId);
+      }
     }
-  }, [jwt, username]);
+  }, [jwt, jwtIsValid, editable]);
 
   function checkTripAccess(tripId: string) {
     fetch(`/api/core/trip/checkTripAccess/${username}/${tripId}`, {
@@ -360,15 +362,13 @@ function TripPlannerPage(props: Props) {
   return (
     loading && (
       <>
-        <div className="border border-black">
-          <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
-        </div>
-        <div className="d-flex flex-row">
+        <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
+        <div className="flex flex-row">
           <div>
             {trip?.published && (
-              <p>
+              <div>
                 Published by {trip.ownerUsername} on: {trip.publishedDate}
-              </p>
+              </div>
             )}
             <TripEditPermissionDisplayComponent
               jwt={jwt}

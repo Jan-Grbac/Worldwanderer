@@ -66,28 +66,39 @@ function CreateTripComponent(props: Props) {
   }
 
   return (
-    <div className="flex flex-col border-4 border-black rounded-md mt-4 ml-6">
-      <div className="p-2">
-        Trip name:
+    <div className="flex flex-col bg-gray-200 rounded-md rounded-tl-none ml-6 w-1/2">
+      <div className="pl-4 pt-4 flex flex-row gap-2 pr-4">
+        <strong className="pt-2">
+          <i>Trip name:</i>
+        </strong>
         <input
           id="name-input-trip"
+          className="rounded-md flex-grow p-2"
           type="text"
           value={newTrip?.name}
           onChange={(event) => handleInputChange("name", event.target.value)}
         ></input>
       </div>
-      <div className="p-2">
-        Trip description:
+      <div className="pl-4 pt-4 flex flex-row gap-2 pr-4">
+        <strong className="pt-2">
+          <i>Trip description (optional):</i>
+        </strong>
         <textarea
           id="description-input-trip"
-          rows={5}
+          className="rounded-md flex-grow p-2"
+          rows={4}
           value={newTrip?.description}
           onChange={(event) =>
             handleInputChange("description", event.target.value)
           }
         ></textarea>
       </div>
-      <button onClick={handleNewTripCreation}>Create new trip</button>
+      <button
+        className="mt-4 mb-4 confirmButton self-center"
+        onClick={handleNewTripCreation}
+      >
+        Create new trip
+      </button>
     </div>
   );
 }

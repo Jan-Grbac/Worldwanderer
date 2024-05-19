@@ -52,7 +52,7 @@ function App() {
         });
     }
     setLoading(true);
-  }, [jwt]);
+  }, []);
 
   function RootComponent() {
     const navigate = useNavigate();
