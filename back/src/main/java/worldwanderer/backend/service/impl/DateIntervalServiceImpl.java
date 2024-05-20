@@ -22,6 +22,8 @@ public class DateIntervalServiceImpl implements DateIntervalService {
                 .startDate(dateIntervalData.getStartDate())
                 .endDate(dateIntervalData.getEndDate())
                 .trip(trip)
+                .name(dateIntervalData.getName())
+                .budget(dateIntervalData.getBudget())
                 .build();
 
         return dateIntervalRepository.save(dateInterval);
@@ -37,6 +39,8 @@ public class DateIntervalServiceImpl implements DateIntervalService {
         return DateIntervalData.builder()
                 .startDate(dateInterval.getStartDate())
                 .endDate(dateInterval.getEndDate())
+                .name(dateInterval.getName())
+                .budget(dateInterval.getBudget())
                 .id(dateInterval.getId())
                 .tripId(dateInterval.getTrip().getId().toString())
                 .build();

@@ -38,6 +38,7 @@ public class TripServiceImpl implements TripService {
                 .rating(0)
                 .published(false)
                 .user(user)
+                .country(tripRequest.getCountry())
                 .build();
 
         return tripRepository.save(trip);
@@ -54,6 +55,7 @@ public class TripServiceImpl implements TripService {
                 .description(trip.getDescription())
                 .rating(0)
                 .published(false)
+                .country(trip.getCountry())
                 .build();
         Trip newTripCopy = SerializationUtils.clone(newTrip);
         return tripRepository.save(newTripCopy);
@@ -74,6 +76,7 @@ public class TripServiceImpl implements TripService {
                 .id(trip.getId())
                 .published(trip.isPublished())
                 .publishedDate(trip.getPublishedDate())
+                .country(trip.getCountry())
                 .build();
     }
 

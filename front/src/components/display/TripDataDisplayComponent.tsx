@@ -1,5 +1,6 @@
 import DateIntervalDisplayComponent from "./DateIntervalDisplayComponent";
 import DateIntervalCreateComponent from "../create/DateIntervalCreateComponent";
+import * as FlagIcons from "country-flag-icons/react/3x2";
 import { Socket } from "socket.io-client";
 import { useEffect, useState } from "react";
 
@@ -91,11 +92,13 @@ function TripDataDisplayComponent(props: Props) {
   }
 
   function allowNameEditing() {
+    if (!editable) return;
     document.getElementById("trip-name-view")?.classList.add("hidden");
     document.getElementById("trip-name-edit")?.classList.remove("hidden");
     document.getElementById("trip-name-edit")?.focus();
   }
   function allowDescriptionEditing() {
+    if (!editable) return;
     document.getElementById("trip-description-view")?.classList.add("hidden");
     document
       .getElementById("trip-description-edit")
@@ -107,6 +110,14 @@ function TripDataDisplayComponent(props: Props) {
     setSelectedDateInterval({ ...dateInterval });
     console.log("Selected date interval: " + dateInterval);
   }
+
+  const getFlagComponent = (countryCode: string) => {
+    const upperCaseCountryCode = countryCode.toUpperCase();
+    const FlagComponent = (FlagIcons as any)[upperCaseCountryCode];
+
+    // If the component exists, return it, otherwise return a fallback (like a default flag or null)
+    return FlagComponent ? <FlagComponent /> : null;
+  };
 
   return (
     <>
@@ -148,6 +159,14 @@ function TripDataDisplayComponent(props: Props) {
             onBlur={handleTripChanged}
             suppressContentEditableWarning={true}
           ></textarea>
+          {trip.country !== undefined && (
+            <>
+              <h2 className="font-bold italic">Country</h2>
+              <div id="trip-description-view" className="w-10">
+                {getFlagComponent(trip.country)}
+              </div>
+            </>
+          )}
         </div>
         <br />
         Created by: {trip.ownerUsername}

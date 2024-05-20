@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import RemoveTripComponent from "../remove/RemoveTripComponent";
 import TripCreateComponent from "../create/TripCreateComponent";
@@ -25,6 +25,7 @@ function TripListDisplayComponent(props: Props) {
   } = {
     ...props,
   };
+
   const navigate = useNavigate();
 
   function handleOnTripClickEdit(id: string) {
@@ -82,7 +83,7 @@ function TripListDisplayComponent(props: Props) {
             return (
               <>
                 <button
-                  className="flex items-center w-1/2 ml-6 justify-between p-5 font-medium rtl:text-right text-gray-500 border border-gray-200 rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3"
+                  className="flex items-center w-1/2 ml-6 mt-4 justify-between p-5 font-medium rtl:text-right text-gray-500 border border-gray-200 rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3"
                   data-accordion-target={`#accordion-open-body-${trip.id}`}
                   aria-expanded="true"
                   aria-controls={`accordion-open-body-${trip.id}`}
@@ -110,8 +111,8 @@ function TripListDisplayComponent(props: Props) {
                     <RemoveTripComponent
                       jwt={jwt}
                       tripId={trip.id}
-                      trips={publishedTrips}
-                      setTrips={setPublishedTrips}
+                      trips={ownedTrips}
+                      setTrips={setOwnedTrips}
                     />
                   </div>
                 </button>
@@ -153,7 +154,7 @@ function TripListDisplayComponent(props: Props) {
             return (
               <>
                 <button
-                  className="flex items-center w-1/2 ml-6 justify-between p-5 font-medium rtl:text-right text-gray-500 border border-gray-200 rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3"
+                  className="flex items-center w-1/2 ml-6 mb-4 justify-between p-5 font-medium rtl:text-right text-gray-500 border border-gray-200 rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3"
                   data-accordion-target={`#accordion-open-body-${trip.id}`}
                   aria-expanded="true"
                   aria-controls={`accordion-open-body-${trip.id}`}
@@ -209,7 +210,7 @@ function TripListDisplayComponent(props: Props) {
           return (
             <>
               <button
-                className="flex items-center w-1/2 ml-12 mt-4 justify-between p-5 font-medium rtl:text-right text-gray-500 border border-gray-200 rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3"
+                className="flex items-center w-1/2 ml-12 mb-4 mt-4 justify-between p-5 font-medium rtl:text-right text-gray-500 border border-gray-200 rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3"
                 data-accordion-target={`#accordion-open-body-${trip.id}`}
                 aria-expanded="true"
                 aria-controls={`accordion-open-body-${trip.id}`}
@@ -234,12 +235,6 @@ function TripListDisplayComponent(props: Props) {
                       d="M9 5 5 1 1 5"
                     />
                   </svg>
-                  <RemoveTripComponent
-                    jwt={jwt}
-                    tripId={trip.id}
-                    trips={publishedTrips}
-                    setTrips={setPublishedTrips}
-                  />
                 </div>
               </button>
               <div

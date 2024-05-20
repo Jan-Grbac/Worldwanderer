@@ -52,7 +52,7 @@ function App() {
         });
     }
     setLoading(true);
-  }, []);
+  }, [jwt]);
 
   function RootComponent() {
     const navigate = useNavigate();
@@ -66,6 +66,7 @@ function App() {
   return (
     loading && (
       <>
+        <link rel="stylesheet" href="build/css/countrySelect.css"></link>
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<RootComponent />} />

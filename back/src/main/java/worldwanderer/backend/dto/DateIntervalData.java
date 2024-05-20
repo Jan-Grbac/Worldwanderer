@@ -15,4 +15,6 @@ public class DateIntervalData {
     private Date startDate;
     private Date endDate;
     private String tripId;
+    private String name;
+    private float budget;
 }

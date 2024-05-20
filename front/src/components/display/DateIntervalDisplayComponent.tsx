@@ -2,6 +2,7 @@ import RemoveDateIntervalComponent from "../remove/RemoveDateIntervalComponent";
 import TimeSlotCreateComponent from "../create/TimeSlotCreateComponent";
 import TimeSlotDisplayComponent from "./TimeSlotDisplayComponent";
 import { Socket } from "socket.io-client";
+import { useEffect } from "react";
 
 interface Props {
   jwt: string;
@@ -46,14 +47,17 @@ function DateIntervalDisplayComponent(props: Props) {
     return newDate;
   }
 
+  useEffect(() => {
+    if (dateInterval) {
+      console.log(dateInterval.name);
+    }
+  }, [dateInterval]);
+
   function dateSubstring(date: string) {
-    console.log(date.substring(0, 10));
     return date.substring(0, 10);
   }
 
   function allowDateEditing() {
-    console.log(dateInterval.startDate);
-    console.log(dateInterval.endDate);
     document.getElementById("date-view")?.classList.add("d-none");
     document.getElementById("date-edit")?.classList.remove("d-none");
   }
@@ -140,6 +144,9 @@ function DateIntervalDisplayComponent(props: Props) {
     <>
       <div className="border border-black">
         <div className="d-flex flex-row">
+          {dateInterval.name !== null && (
+            <div id="name-view">{dateInterval.name}</div>
+          )}
           <div id="date-view" onDoubleClick={allowDateEditing}>
             {dateInterval.startDate === dateInterval.endDate && (
               <>Date: {formatDate(dateInterval.startDate)}</>
@@ -151,6 +158,7 @@ function DateIntervalDisplayComponent(props: Props) {
               </>
             )}
           </div>
+          <div id="budget-view">{dateInterval.budget}</div>
           <div
             id="date-edit"
             className="d-none"

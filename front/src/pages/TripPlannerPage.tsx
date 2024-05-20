@@ -48,11 +48,7 @@ function TripPlannerPage(props: Props) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (
-      jwtIsValid !== undefined &&
-      jwt !== undefined &&
-      editable !== undefined
-    ) {
+    if (jwtIsValid && jwt && editable !== undefined) {
       if (!jwtIsValid && editable) {
         navigate("/home");
         alert("You need to be logged in to edit a trip!");
@@ -175,6 +171,7 @@ function TripPlannerPage(props: Props) {
         newTrip.ownerUsername = data.ownerUsername;
         newTrip.published = data.published;
         newTrip.publishedDate = data.publishedDate;
+        newTrip.country = data.country;
 
         if (username === data.ownerUsername) {
           setIsOwner(true);

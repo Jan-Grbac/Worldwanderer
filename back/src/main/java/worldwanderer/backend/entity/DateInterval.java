@@ -31,6 +31,9 @@ public class DateInterval implements Serializable {
     private Date startDate;
     private Date endDate;
 
+    private String name;
+    private float budget;
+
     public DateInterval() {
 
     }

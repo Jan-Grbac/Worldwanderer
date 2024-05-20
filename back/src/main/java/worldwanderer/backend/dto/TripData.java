@@ -19,4 +19,5 @@ public class TripData {
     private float rating;
     private boolean published;
     private Date publishedDate;
+    private String country;
 }

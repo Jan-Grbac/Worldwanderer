@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @Entity
 @Data
@@ -39,6 +40,8 @@ public class Trip implements Serializable {
     private float rating;
     private boolean published;
     private Date publishedDate;
+
+    private String country;
 
     public Trip() {
 

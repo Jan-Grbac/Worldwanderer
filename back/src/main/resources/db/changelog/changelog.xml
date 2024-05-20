@@ -161,4 +161,17 @@
         </sql>
     </changeSet>
 
+    <changeSet id="2" author="me">
+        <addColumn tableName="interval">
+            <column name="name" type="varchar(255)" />
+            <column name="budget" type="float" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="3" author="me">
+        <addColumn tableName="trip">
+            <column name="country" type="varchar(10)" />
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
