@@ -1,6 +1,6 @@
 import RemoveDateIntervalComponent from "../remove/RemoveDateIntervalComponent";
 import TimeSlotCreateComponent from "../create/TimeSlotCreateComponent";
-import TimeSlotDisplayComponent from "./TimeslotDisplayComponent";
+import TimeSlotDisplayComponent from "./TimeSlotDisplayComponent";
 import { Socket } from "socket.io-client";
 
 interface Props {
