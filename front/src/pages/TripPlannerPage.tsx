@@ -410,36 +410,38 @@ function TripPlannerPage(props: Props) {
               setHotels={setHotels}
             />
             <div className="d-flex flex-row">
-              {editable && (
-                <p>Places to visit near {selectedTimeslot?.name}:</p>
+              {editable && suggestedAttractions.length !== 0 && (
+                <>
+                  <p>Places to visit near {selectedTimeslot?.name}:</p>
+                  {suggestedAttractions.map(function (
+                    attraction: google.maps.places.PlaceResult
+                  ) {
+                    return (
+                      <AttractionDisplayComponent
+                        attraction={attraction}
+                        selectedTimeslot={selectedTimeslot as TimeSlot}
+                      />
+                    );
+                  })}
+                </>
               )}
-              {editable &&
-                suggestedAttractions &&
-                suggestedAttractions.map(function (
-                  attraction: google.maps.places.PlaceResult
-                ) {
-                  return (
-                    <AttractionDisplayComponent
-                      attraction={attraction}
-                      selectedTimeslot={selectedTimeslot as TimeSlot}
-                    />
-                  );
-                })}
             </div>
             <div className="d-flex flex-row">
-              {editable && <p>Accomodation near {selectedTimeslot?.name}:</p>}
-              {editable &&
-                hotels &&
-                hotels.map(function (hotel: google.maps.places.PlaceResult) {
-                  return (
-                    <HotelDisplayComponent
-                      hotel={hotel}
-                      selectedDateInterval={
-                        selectedDateInterval as DateInterval
-                      }
-                    />
-                  );
-                })}
+              {editable && hotels.length !== 0 && (
+                <>
+                  <p>Accomodation near {selectedTimeslot?.name}:</p>
+                  {hotels.map(function (hotel: google.maps.places.PlaceResult) {
+                    return (
+                      <HotelDisplayComponent
+                        hotel={hotel}
+                        selectedDateInterval={
+                          selectedDateInterval as DateInterval
+                        }
+                      />
+                    );
+                  })}
+                </>
+              )}
             </div>
           </div>
           <div>

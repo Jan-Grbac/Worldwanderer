@@ -36,8 +36,7 @@ function DateIntervalCreateComponent(props: Props) {
       return;
     }
     if (newDateInterval.endDate === undefined) {
-      alert("End date must be selected!");
-      return;
+      newDateInterval.endDate = newDateInterval.startDate;
     }
     if (newDateInterval.startDate > newDateInterval.endDate) {
       alert("End date must be after start date.");
@@ -87,33 +86,75 @@ function DateIntervalCreateComponent(props: Props) {
       });
   }
 
+  function showCreateDiv() {
+    let div = document.getElementById("dateinterval-create-div");
+    if (div?.classList.contains("hidden")) {
+      div.classList.remove("hidden");
+    } else {
+      div?.classList.add("hidden");
+    }
+  }
+
   return (
     <>
-      <div className="border border-black">
-        Create new trip interval:
-        <div className="p-2">
-          Start date:
-          <input
-            id="dateinterval-startdate-input"
-            type="date"
-            onChange={(event) =>
-              handleInputChange("startDate", event.target.value)
-            }
-          ></input>
+      <div className="rounded-md bg-gray-200 pl-4 m-2">
+        <div className="flex flex-row justify-between">
+          <h2 className="font-bold italic">Add new trip section</h2>
+          <button className="mr-4 font-extrabold" onClick={showCreateDiv}>
+            -
+          </button>
         </div>
-        <div className="p-2">
-          End date:
-          <input
-            id="dateinterval-enddate-input"
-            type="date"
-            onChange={(event) =>
-              handleInputChange("endDate", event.target.value)
-            }
-          ></input>
+        <div id="dateinterval-create-div" className="hidden">
+          <div className="p-2">
+            Name (optional):
+            <input
+              id="dateinterval-name-input"
+              type="date"
+              onChange={(event) =>
+                handleInputChange("name", event.target.value)
+              }
+            ></input>
+          </div>
+          <div className="flex flex-row justify-start gap-2">
+            <div className="p-2">
+              Start date:
+              <input
+                id="dateinterval-startdate-input"
+                type="date"
+                onChange={(event) =>
+                  handleInputChange("startDate", event.target.value)
+                }
+              ></input>
+            </div>
+            <div className="p-2">
+              End date (optional):
+              <input
+                id="dateinterval-enddate-input"
+                type="date"
+                onChange={(event) =>
+                  handleInputChange("endDate", event.target.value)
+                }
+              ></input>
+            </div>
+          </div>
+          <div className="p-2">
+            Budget (optional):
+            <input
+              id="dateinterval-budget-input"
+              type="date"
+              onChange={(event) =>
+                handleInputChange("budget", event.target.value)
+              }
+            ></input>
+          </div>
+
+          <button
+            className="confirmButton mb-2"
+            onClick={handleNewDateIntervalCreation}
+          >
+            Add
+          </button>
         </div>
-        <button onClick={handleNewDateIntervalCreation}>
-          Add new date interval to itinerary
-        </button>
       </div>
     </>
   );

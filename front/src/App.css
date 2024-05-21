@@ -26,6 +26,7 @@ h3 {
   @apply text-black;
   @apply rounded-xl;
   @apply hover:font-bold;
+  @apply bg-white;
 }
 
 .formContainer {

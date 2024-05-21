@@ -154,7 +154,7 @@ function TripListDisplayComponent(props: Props) {
             return (
               <>
                 <button
-                  className="flex items-center w-1/2 ml-6 mb-4 justify-between p-5 font-medium rtl:text-right text-gray-500 border border-gray-200 rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3"
+                  className="flex items-center w-1/2 ml-6 justify-between p-5 font-medium rtl:text-right text-gray-500 border border-gray-200 rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3"
                   data-accordion-target={`#accordion-open-body-${trip.id}`}
                   aria-expanded="true"
                   aria-controls={`accordion-open-body-${trip.id}`}
@@ -210,7 +210,7 @@ function TripListDisplayComponent(props: Props) {
           return (
             <>
               <button
-                className="flex items-center w-1/2 ml-12 mb-4 mt-4 justify-between p-5 font-medium rtl:text-right text-gray-500 border border-gray-200 rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3"
+                className="flex items-center w-1/2 ml-12 mt-4 justify-between p-5 font-medium rtl:text-right text-gray-500 border border-gray-200 rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3"
                 data-accordion-target={`#accordion-open-body-${trip.id}`}
                 aria-expanded="true"
                 aria-controls={`accordion-open-body-${trip.id}`}

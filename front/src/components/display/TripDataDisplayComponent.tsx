@@ -114,14 +114,12 @@ function TripDataDisplayComponent(props: Props) {
   const getFlagComponent = (countryCode: string) => {
     const upperCaseCountryCode = countryCode.toUpperCase();
     const FlagComponent = (FlagIcons as any)[upperCaseCountryCode];
-
-    // If the component exists, return it, otherwise return a fallback (like a default flag or null)
     return FlagComponent ? <FlagComponent /> : null;
   };
 
   return (
     <>
-      <div className="border border-black p-4">
+      <div className="bg-gray-200 rounded-md m-2 p-4">
         <div className="flex flex-col">
           <h2 className="font-bold italic">Trip name</h2>
           <div
@@ -168,8 +166,6 @@ function TripDataDisplayComponent(props: Props) {
             </>
           )}
         </div>
-        <br />
-        Created by: {trip.ownerUsername}
       </div>
       {editable && (
         <DateIntervalCreateComponent
