@@ -101,18 +101,23 @@ function TripEditPermissionGrantComponent(props: Props) {
 
   return (
     <>
-      <div className="p-2 bg-gray-100 rounded-md ml-4 mr-4 mb-4">
-        Username:
-        <input
-          id="grant-edit-privilege-username-input"
-          className="rounded-md pl-4 pr-4 ml-4 mr-4"
-          type="text"
-          value={grantUsername}
-          onChange={(event) =>
-            handleInputChange("username", event.target.value)
-          }
-        ></input>
-        <button className="confirmButton" onClick={grantPermission}>
+      <div className="flex flex-col p-2 gap-2 bg-gray-100 rounded-md ml-4 mr-4 mb-4">
+        <div className="flex flex-row">
+          <strong>Username:</strong>
+          <input
+            id="grant-edit-privilege-username-input"
+            className="rounded-md pl-4 pr-4 flex-grow ml-2"
+            type="text"
+            value={grantUsername}
+            onChange={(event) =>
+              handleInputChange("username", event.target.value)
+            }
+          ></input>
+        </div>
+        <button
+          className="confirmButton w-max self-center"
+          onClick={grantPermission}
+        >
           Add to edit
         </button>
       </div>

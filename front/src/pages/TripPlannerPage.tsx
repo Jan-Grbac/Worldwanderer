@@ -397,7 +397,7 @@ function TripPlannerPage(props: Props) {
               setSelectedDateInterval={setSelectedDateInterval}
             />
           </div>
-          <div className="border border-black">
+          <div>
             <MapComponent
               jwt={jwt}
               username={username}
