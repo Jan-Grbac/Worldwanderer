@@ -2,7 +2,7 @@ import RemoveDateIntervalComponent from "../remove/RemoveDateIntervalComponent";
 import TimeSlotCreateComponent from "../create/TimeSlotCreateComponent";
 import TimeSlotDisplayComponent from "./TimeSlotDisplayComponent";
 import { Socket } from "socket.io-client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface Props {
   jwt: string;
@@ -46,12 +46,6 @@ function DateIntervalDisplayComponent(props: Props) {
 
     return newDate;
   }
-
-  useEffect(() => {
-    if (dateInterval) {
-      console.log(dateInterval.name);
-    }
-  }, [dateInterval]);
 
   function dateSubstring(date: string) {
     return date.substring(0, 10);
@@ -130,19 +124,20 @@ function DateIntervalDisplayComponent(props: Props) {
 
     for (let i = 0; i < dateIntervals.length; i++) {
       if (dateInterval === dateIntervals[i]) {
+        let newDateInterval = { ...dateInterval };
         if (param === "name") {
-          dateInterval.name = value;
+          newDateInterval.name = value;
         }
         if (param === "startDate") {
-          dateInterval.startDate = value;
+          newDateInterval.startDate = value;
         }
         if (param === "endDate") {
-          dateInterval.endDate = value;
+          newDateInterval.endDate = value;
         }
         if (param === "budget") {
-          dateInterval.budget = value;
+          newDateInterval.budget = value;
         }
-        newDateIntervals[i] = dateInterval;
+        newDateIntervals[i] = newDateInterval;
         break;
       }
     }
@@ -169,6 +164,7 @@ function DateIntervalDisplayComponent(props: Props) {
   }
 
   function allowNameEditing() {
+    console.log(dateInterval.name);
     let view = document.getElementById(
       "dateinterval-name-view-" + dateInterval.id
     );
@@ -195,7 +191,7 @@ function DateIntervalDisplayComponent(props: Props) {
   return (
     <>
       <div className="bg-gray-200 m-2 ml-4 p-2 pl-4 rounded-md">
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-2">
           <div className="flex flex-row pr-2">
             <div
               id={`dateinterval-name-view-${dateInterval.id}`}
@@ -274,24 +270,28 @@ function DateIntervalDisplayComponent(props: Props) {
             />
           </div>
         </div>
-        <div
-          id={`dateinterval-budget-view-${dateInterval.id}`}
-          onDoubleClick={allowBudgetEditing}
-        >
-          {dateInterval.budget}
+        <div className="flex flex-row mb-2">
+          <p>Budget: $</p>
+          <div
+            id={`dateinterval-budget-view-${dateInterval.id}`}
+            onDoubleClick={allowBudgetEditing}
+          >
+            {dateInterval.budget}
+          </div>
+          <input
+            id={`dateinterval-budget-edit-${dateInterval.id}`}
+            className=" hidden flex-grow rounded-md pl-4 pr-4"
+            defaultValue={dateInterval.budget}
+            onChange={(event) =>
+              dateIntervalChanged("budget", event.target.value)
+            }
+            onKeyDown={handleEnterKeyPress}
+            onBlur={finishDateEditing}
+            type="number"
+          ></input>
         </div>
-        <input
-          id={`dateinterval-budget-edit-${dateInterval.id}`}
-          className=" hidden flex-grow rounded-md pl-4 pr-4"
-          defaultValue={dateInterval.budget}
-          onChange={(event) =>
-            dateIntervalChanged("budget", event.target.value)
-          }
-          onKeyDown={handleEnterKeyPress}
-          onBlur={finishDateEditing}
-          type="number"
-        ></input>
-        <ul>
+
+        <ul className="flex flex-col gap-2">
           {dateIntervalTimeslots &&
             dateIntervalTimeslots.map(function (timeslot: TimeSlot) {
               return (
@@ -309,6 +309,7 @@ function DateIntervalDisplayComponent(props: Props) {
                     tripId={tripId}
                     editable={editable}
                     socket={socket}
+                    dateInterval={dateInterval}
                   />
                 </li>
               );

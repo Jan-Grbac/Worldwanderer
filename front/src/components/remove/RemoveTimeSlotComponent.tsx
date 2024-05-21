@@ -52,7 +52,9 @@ function RemoveTimeSlotComponent(props: Props) {
 
   return (
     <>
-      <button onClick={removeTimeslot}>X</button>
+      <button onClick={removeTimeslot} className="w-max mr-2">
+        🗑️
+      </button>
     </>
   );
 }

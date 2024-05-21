@@ -267,7 +267,7 @@ const MapComponent = (props: Props) => {
 
   return (
     <>
-      <div style={{ height: "100vh", width: "100vh", position: "relative" }}>
+      <div style={{ height: "100%", width: "100%", position: "relative" }}>
         <GoogleMap
           apiKey="AIzaSyACu8umhkkYq6tvxaHbP_Y_sAHRV9rCuMQ"
           defaultCenter={defaultProps.center}

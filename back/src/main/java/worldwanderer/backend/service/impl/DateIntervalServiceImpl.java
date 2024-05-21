@@ -61,6 +61,8 @@ public class DateIntervalServiceImpl implements DateIntervalService {
         DateInterval dateIntervalOld = dateIntervalRepository.getReferenceById(dateInterval.getId());
         dateIntervalOld.setStartDate(dateInterval.getStartDate());
         dateIntervalOld.setEndDate(dateInterval.getEndDate());
+        dateIntervalOld.setName(dateInterval.getName());
+        dateIntervalOld.setBudget(dateInterval.getBudget());
         dateIntervalRepository.save(dateIntervalOld);
     }
 }

@@ -5,10 +5,9 @@ import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import worldwanderer.backend.dto.TripData;
-import worldwanderer.backend.entity.Rating;
-import worldwanderer.backend.entity.Trip;
-import worldwanderer.backend.entity.TripAccess;
-import worldwanderer.backend.entity.User;
+import worldwanderer.backend.entity.*;
+import worldwanderer.backend.repository.DateIntervalRepository;
+import worldwanderer.backend.repository.TimeSlotRepository;
 import worldwanderer.backend.repository.TripAccessRepository;
 import worldwanderer.backend.repository.TripRepository;
 import worldwanderer.backend.service.TripService;
@@ -23,6 +22,8 @@ import java.util.List;
 public class TripServiceImpl implements TripService {
 
     private final TripRepository tripRepository;
+    private final TimeSlotRepository timeSlotRepository;
+    private final DateIntervalRepository dateIntervalRepository;
     private final TripAccessRepository tripAccessRepository;
 
     @Override
@@ -46,19 +47,47 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public Trip createTripCopy(Trip trip, User user) {
-        Trip newTrip = Trip.builder()
-                .id(trip.getId())
-                .user(user)
-                .intervals(trip.getIntervals())
-                .tripAccesses(new LinkedList<>())
+        Trip tripCopy = Trip.builder()
                 .name(trip.getName())
+                .user(user)
+                .tripAccesses(new LinkedList<>())
+                .ratings(new LinkedList<>())
                 .description(trip.getDescription())
+                .country(trip.getCountry())
                 .rating(0)
                 .published(false)
-                .country(trip.getCountry())
+                .publishedDate(null)
                 .build();
-        Trip newTripCopy = SerializationUtils.clone(newTrip);
-        return tripRepository.save(newTripCopy);
+        tripRepository.save(tripCopy);
+        List<DateInterval> dateIntervals = new LinkedList<>();
+        for(DateInterval dateInterval : trip.getIntervals()) {
+            DateInterval dateIntervalCopy = DateInterval.builder()
+                    .startDate(dateInterval.getStartDate())
+                    .endDate(dateInterval.getEndDate())
+                    .name(dateInterval.getName())
+                    .budget(dateInterval.getBudget())
+                    .trip(tripCopy)
+                    .build();
+            dateIntervalRepository.save(dateIntervalCopy);
+            List<TimeSlot> timeSlots = new LinkedList<>();
+            for(TimeSlot timeSlot : dateInterval.getTimeslots()) {
+                TimeSlot timeSlotCopy = TimeSlot.builder()
+                        .name(timeSlot.getName())
+                        .notes(timeSlot.getNotes())
+                        .startTime(timeSlot.getStartTime())
+                        .endTime(timeSlot.getEndTime())
+                        .lat(timeSlot.getLat())
+                        .lng(timeSlot.getLng())
+                        .interval(dateIntervalCopy)
+                        .build();
+                timeSlotRepository.save(timeSlotCopy);
+                timeSlots.add(timeSlotCopy);
+            }
+            dateIntervalCopy.setTimeslots(timeSlots);
+            dateIntervalRepository.save(dateIntervalCopy);
+        }
+        tripCopy.setIntervals(dateIntervals);
+        return tripRepository.save(tripCopy);
     }
 
     @Override

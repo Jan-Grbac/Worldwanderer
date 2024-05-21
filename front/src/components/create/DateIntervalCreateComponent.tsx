@@ -26,6 +26,14 @@ function DateIntervalCreateComponent(props: Props) {
       newDateIntervalChanged[param] = value;
       setNewDateInterval(newDateIntervalChanged);
     }
+    if (param === "name") {
+      newDateIntervalChanged[param] = value;
+      setNewDateInterval(newDateIntervalChanged);
+    }
+    if (param === "budget") {
+      newDateIntervalChanged[param] = value;
+      setNewDateInterval(newDateIntervalChanged);
+    }
   }
 
   function handleNewDateIntervalCreation() {
@@ -164,7 +172,7 @@ function DateIntervalCreateComponent(props: Props) {
           </div>
 
           <button
-            className="confirmButton mb-2 w-max ml-20"
+            className="confirmButton mb-2 w-max self-center"
             onClick={handleNewDateIntervalCreation}
           >
             Add

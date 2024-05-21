@@ -373,8 +373,8 @@ function TripPlannerPage(props: Props) {
     loading && (
       <>
         <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
-        <div className="flex flex-row">
-          <div>
+        <div className="grid grid-cols-6 max-w-full max-h-full min-h-screen">
+          <div className="col-span-2">
             {trip?.published && (
               <div>
                 Published by {trip.ownerUsername} on: {trip.publishedDate}
@@ -397,7 +397,7 @@ function TripPlannerPage(props: Props) {
               setSelectedDateInterval={setSelectedDateInterval}
             />
           </div>
-          <div>
+          <div className="col-span-3">
             <MapComponent
               jwt={jwt}
               username={username}

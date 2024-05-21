@@ -206,66 +206,104 @@ function TimeSlotCreateComponent(props: Props) {
       });
   }
 
+  function toggleCreateDiv() {
+    let div = document.getElementById("timeslot-create-div-" + dateIntervalId);
+    if (div?.classList.contains("hidden")) {
+      div.classList.remove("hidden");
+    } else {
+      div?.classList.add("hidden");
+    }
+  }
+
   return (
     <>
-      <div className="d-flex flex-row">
-        <div>
-          Destination:
-          <input id={`searchBox-${dateIntervalId}`} />
+      <div className="rounded-md bg-gray-400 mt-2">
+        <div className="flex flex-row">
+          <div
+            className="flex-grow hover:bg-gray-500 cursor-pointer rounded-md"
+            onClick={toggleCreateDiv}
+          >
+            <h2 className="pl-4 font-bold italic">Add new place</h2>
+          </div>
+        </div>
+        <div
+          id={`timeslot-create-div-${dateIntervalId}`}
+          className="hidden flex flex-col gap-2 pl-2 pr-2 mt-2 pb-2 bg-gray-400 rounded-md"
+        >
+          <div className="flex flex-row">
+            Name:
+            <input
+              id={`timeslot-name-input-${dateIntervalId}`}
+              className="ml-2 rounded-md pl-4 pr-4"
+              type="text"
+              value={timeslot?.name}
+              onChange={(event) =>
+                handleInputChange("name", event.target.value)
+              }
+            ></input>
+          </div>
+          <div className="flex flex-row">
+            Destination:
+            <input
+              id={`searchBox-${dateIntervalId}`}
+              className="ml-2 rounded-md pl-4 pr-4"
+            />
+          </div>
           <input
             type="text"
-            className="d-none"
+            className="hidden"
             id={`timeslot-name-input-hidden-${dateIntervalId}`}
           />
           <input
             type="text"
-            className="d-none"
+            className="hidden"
             id={`timeslot-lat-input-hidden-${dateIntervalId}`}
           />
           <input
             type="text"
-            className="d-none"
+            className="hidden"
             id={`timeslot-lng-input-hidden-${dateIntervalId}`}
           />
-          Name:
-          <input
-            id={`timeslot-name-input-${dateIntervalId}`}
-            type="text"
-            value={timeslot?.name}
-            onChange={(event) => handleInputChange("name", event.target.value)}
-          ></input>
-          <br />
-          Notes:
-          <input
+          Notes (optional):
+          <textarea
             id={`timeslot-notes-input-${dateIntervalId}`}
-            type="text"
+            className="rounded-md pl-2 pr-2"
+            rows={3}
             value={timeslot?.notes}
             onChange={(event) => handleInputChange("notes", event.target.value)}
-          ></input>
-          <br />
-          Start time:
-          <input
-            id={`timeslot-starttime-input-${dateIntervalId}`}
-            type="time"
-            value={timeslot?.startTime}
-            onChange={(event) =>
-              handleInputChange("startTime", event.target.value)
-            }
-          ></input>
-          End time:
-          <input
-            id={`timeslot-endtime-input-${dateIntervalId}`}
-            type="time"
-            value={timeslot?.endTime}
-            onChange={(event) =>
-              handleInputChange("endTime", event.target.value)
-            }
-          ></input>
-        </div>
-        <div>
-          <br />
-          <br />
-          <button onClick={handleSubmit}>+</button>
+          ></textarea>
+          <div className="flex flex-row justify-evenly">
+            <div className="flex flex-col">
+              Start time (optional):
+              <input
+                id={`timeslot-starttime-input-${dateIntervalId}`}
+                className="rounded-md pl-2 pr-2"
+                type="time"
+                value={timeslot?.startTime}
+                onChange={(event) =>
+                  handleInputChange("startTime", event.target.value)
+                }
+              ></input>
+            </div>
+            <div className="flex flex-col">
+              End time (optional):
+              <input
+                id={`timeslot-endtime-input-${dateIntervalId}`}
+                className="rounded-md pl-2 pr-2"
+                type="time"
+                value={timeslot?.endTime}
+                onChange={(event) =>
+                  handleInputChange("endTime", event.target.value)
+                }
+              ></input>
+            </div>
+          </div>
+          <button
+            onClick={handleSubmit}
+            className="confirmButton w-max self-center mt-1"
+          >
+            Add
+          </button>
         </div>
       </div>
     </>
