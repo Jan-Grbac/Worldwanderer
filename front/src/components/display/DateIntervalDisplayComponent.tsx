@@ -58,8 +58,15 @@ function DateIntervalDisplayComponent(props: Props) {
   }
 
   function allowDateEditing() {
-    document.getElementById("date-view")?.classList.add("d-none");
-    document.getElementById("date-edit")?.classList.remove("d-none");
+    document
+      .getElementById("dateinterval-date-view-" + dateInterval.id)
+      ?.classList.add("hidden");
+    document
+      .getElementById("dateinterval-date-edit-" + dateInterval.id)
+      ?.classList.remove("hidden");
+    document
+      .getElementById("dateinterval-date-edit-" + dateInterval.id)
+      ?.focus();
   }
 
   function finishDateEditing(event: any) {
@@ -67,8 +74,25 @@ function DateIntervalDisplayComponent(props: Props) {
       return;
     }
 
-    document.getElementById("date-view")?.classList.remove("d-none");
-    document.getElementById("date-edit")?.classList.add("d-none");
+    document
+      .getElementById("dateinterval-date-view-" + dateInterval.id)
+      ?.classList.remove("hidden");
+    document
+      .getElementById("dateinterval-name-view-" + dateInterval.id)
+      ?.classList.remove("hidden");
+    document
+      .getElementById("dateinterval-budget-view-" + dateInterval.id)
+      ?.classList.remove("hidden");
+
+    document
+      .getElementById("dateinterval-date-edit-" + dateInterval.id)
+      ?.classList.add("hidden");
+    document
+      .getElementById("dateinterval-name-edit-" + dateInterval.id)
+      ?.classList.add("hidden");
+    document
+      .getElementById("dateinterval-budget-edit-" + dateInterval.id)
+      ?.classList.add("hidden");
 
     const fetchData = {
       headers: {
@@ -101,16 +125,22 @@ function DateIntervalDisplayComponent(props: Props) {
     }
   }
 
-  function dateChanged(param: string, value: any) {
+  function dateIntervalChanged(param: string, value: any) {
     let newDateIntervals = [...dateIntervals];
 
     for (let i = 0; i < dateIntervals.length; i++) {
       if (dateInterval === dateIntervals[i]) {
+        if (param === "name") {
+          dateInterval.name = value;
+        }
         if (param === "startDate") {
           dateInterval.startDate = value;
         }
         if (param === "endDate") {
           dateInterval.endDate = value;
+        }
+        if (param === "budget") {
+          dateInterval.budget = value;
         }
         newDateIntervals[i] = dateInterval;
         break;
@@ -126,42 +156,101 @@ function DateIntervalDisplayComponent(props: Props) {
         "timeslot-" + selectedTimeslot.id
       );
       if (oldSelected) {
-        oldSelected.classList.remove("border");
-        oldSelected.classList.remove("border-red");
+        oldSelected.classList.remove("border-red-400");
       }
     }
 
     let newSelected = document.getElementById(
       "timeslot-" + timeslot.id
     ) as HTMLElement;
-    newSelected.classList.add("border");
-    newSelected.classList.add("border-red");
+    newSelected.classList.add("border-red-400");
 
     setSelectedTimeslot(timeslot);
   }
 
+  function allowNameEditing() {
+    let view = document.getElementById(
+      "dateinterval-name-view-" + dateInterval.id
+    );
+    view?.classList.add("hidden");
+    let edit = document.getElementById(
+      "dateinterval-name-edit-" + dateInterval.id
+    );
+    edit?.classList.remove("hidden");
+    edit?.focus();
+  }
+
+  function allowBudgetEditing() {
+    let view = document.getElementById(
+      "dateinterval-budget-view-" + dateInterval.id
+    );
+    view?.classList.add("hidden");
+    let edit = document.getElementById(
+      "dateinterval-budget-edit-" + dateInterval.id
+    );
+    edit?.classList.remove("hidden");
+    edit?.focus();
+  }
+
   return (
     <>
-      <div className="border border-black">
-        <div className="d-flex flex-row">
-          {dateInterval.name !== null && (
-            <div id="name-view">{dateInterval.name}</div>
-          )}
-          <div id="date-view" onDoubleClick={allowDateEditing}>
+      <div className="bg-gray-200 m-2 ml-4 p-2 pl-4 rounded-md">
+        <div className="flex flex-col">
+          <div className="flex flex-row pr-2">
+            <div
+              id={`dateinterval-name-view-${dateInterval.id}`}
+              className="flex-grow"
+              onDoubleClick={allowNameEditing}
+            >
+              <h2 className="italic font-semibold">
+                {dateInterval.name !== null ? dateInterval.name : "unnamed"}
+              </h2>
+            </div>
+            <input
+              id={`dateinterval-name-edit-${dateInterval.id}`}
+              className=" hidden flex-grow rounded-md pl-4 pr-4"
+              defaultValue={
+                dateInterval.name !== null ? dateInterval.name : "unnamed"
+              }
+              onChange={(event) =>
+                dateIntervalChanged("name", event.target.value)
+              }
+              onKeyDown={handleEnterKeyPress}
+              onBlur={finishDateEditing}
+              type="text"
+            ></input>
+            {editable && (
+              <RemoveDateIntervalComponent
+                jwt={jwt}
+                username={username}
+                dateIntervalId={dateInterval.id}
+                dateIntervals={dateIntervals}
+                setDateIntervals={setDateIntervals}
+                timeslots={timeslots}
+                setTimeslots={setTimeslots}
+                tripId={tripId}
+                socket={socket}
+              />
+            )}
+          </div>
+
+          <div
+            id={`dateinterval-date-view-${dateInterval.id}`}
+            onDoubleClick={allowDateEditing}
+          >
             {dateInterval.startDate === dateInterval.endDate && (
-              <>Date: {formatDate(dateInterval.startDate)}</>
+              <>{formatDate(dateInterval.startDate)}</>
             )}
             {dateInterval.startDate !== dateInterval.endDate && (
               <>
-                Dates: {formatDate(dateInterval.startDate)} -{" "}
+                {formatDate(dateInterval.startDate)} -{" "}
                 {formatDate(dateInterval.endDate)}
               </>
             )}
           </div>
-          <div id="budget-view">{dateInterval.budget}</div>
           <div
-            id="date-edit"
-            className="d-none"
+            id={`dateinterval-date-edit-${dateInterval.id}`}
+            className="hidden"
             onKeyDown={handleEnterKeyPress}
             onBlur={finishDateEditing}
             contentEditable="true"
@@ -171,41 +260,37 @@ function DateIntervalDisplayComponent(props: Props) {
               type="date"
               name="startDate"
               defaultValue={dateSubstring(dateInterval.startDate)}
-              onChange={(event) => dateChanged("startDate", event.target.value)}
+              onChange={(event) =>
+                dateIntervalChanged("startDate", event.target.value)
+              }
             />
             <input
               type="date"
               name="endDate"
               defaultValue={dateSubstring(dateInterval.endDate)}
-              onChange={(event) => dateChanged("startDate", event.target.value)}
+              onChange={(event) =>
+                dateIntervalChanged("endDate", event.target.value)
+              }
             />
           </div>
-          {editable && (
-            <RemoveDateIntervalComponent
-              jwt={jwt}
-              username={username}
-              dateIntervalId={dateInterval.id}
-              dateIntervals={dateIntervals}
-              setDateIntervals={setDateIntervals}
-              timeslots={timeslots}
-              setTimeslots={setTimeslots}
-              tripId={tripId}
-              socket={socket}
-            />
-          )}
         </div>
-        {editable && (
-          <TimeSlotCreateComponent
-            jwt={jwt}
-            username={username}
-            dateIntervalId={dateInterval.id}
-            timeslots={timeslots}
-            setTimeslots={setTimeslots}
-            dateIntervalTimeslots={dateIntervalTimeslots}
-            tripId={tripId}
-            socket={socket}
-          />
-        )}
+        <div
+          id={`dateinterval-budget-view-${dateInterval.id}`}
+          onDoubleClick={allowBudgetEditing}
+        >
+          {dateInterval.budget}
+        </div>
+        <input
+          id={`dateinterval-budget-edit-${dateInterval.id}`}
+          className=" hidden flex-grow rounded-md pl-4 pr-4"
+          defaultValue={dateInterval.budget}
+          onChange={(event) =>
+            dateIntervalChanged("budget", event.target.value)
+          }
+          onKeyDown={handleEnterKeyPress}
+          onBlur={finishDateEditing}
+          type="number"
+        ></input>
         <ul>
           {dateIntervalTimeslots &&
             dateIntervalTimeslots.map(function (timeslot: TimeSlot) {
@@ -229,6 +314,18 @@ function DateIntervalDisplayComponent(props: Props) {
               );
             })}
         </ul>
+        {editable && (
+          <TimeSlotCreateComponent
+            jwt={jwt}
+            username={username}
+            dateIntervalId={dateInterval.id}
+            timeslots={timeslots}
+            setTimeslots={setTimeslots}
+            dateIntervalTimeslots={dateIntervalTimeslots}
+            tripId={tripId}
+            socket={socket}
+          />
+        )}
       </div>
     </>
   );

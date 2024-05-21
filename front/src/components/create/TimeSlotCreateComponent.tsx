@@ -60,8 +60,6 @@ function TimeSlotCreateComponent(props: Props) {
       searchBox.addListener("place_changed", () => {
         const place = searchBox.getPlace();
 
-        console.log(place);
-
         if (!place.geometry || !place.geometry.location) {
           window.alert("No details available for input: '" + place.name + "'");
           return;

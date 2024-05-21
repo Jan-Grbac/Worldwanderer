@@ -2,14 +2,11 @@ package worldwanderer.backend.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import worldwanderer.backend.dto.UpdateUserInfoData;
 import worldwanderer.backend.dto.UserData;
 import worldwanderer.backend.entity.User;
-import worldwanderer.backend.service.AuthenticationService;
 import worldwanderer.backend.service.EncoderService;
-import worldwanderer.backend.service.TripService;
 import worldwanderer.backend.service.UserService;
 
 @RestController

@@ -74,7 +74,9 @@ function RemoveDateIntervalComponent(props: Props) {
 
   return (
     <>
-      <button onClick={removeDateInterval}>X</button>
+      <button className="w-max" onClick={removeDateInterval}>
+        🗑️
+      </button>
     </>
   );
 }

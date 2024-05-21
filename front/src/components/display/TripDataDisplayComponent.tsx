@@ -107,6 +107,16 @@ function TripDataDisplayComponent(props: Props) {
   }
 
   function handleDateIntervalClicked(dateInterval: DateInterval) {
+    if (selectedDateInterval) {
+      let oldSelected = document.getElementById(
+        "dateinterval-" + selectedDateInterval.id
+      );
+    }
+
+    let newSelected = document.getElementById(
+      "dateinterval-" + dateInterval.id
+    );
+
     setSelectedDateInterval({ ...dateInterval });
     console.log("Selected date interval: " + dateInterval);
   }
@@ -116,6 +126,15 @@ function TripDataDisplayComponent(props: Props) {
     const FlagComponent = (FlagIcons as any)[upperCaseCountryCode];
     return FlagComponent ? <FlagComponent /> : null;
   };
+
+  function toggleDataDiv() {
+    let div = document.getElementById("dateintervals-div");
+    if (div?.classList.contains("hidden")) {
+      div.classList.remove("hidden");
+    } else {
+      div?.classList.add("hidden");
+    }
+  }
 
   return (
     <>
@@ -167,47 +186,57 @@ function TripDataDisplayComponent(props: Props) {
           )}
         </div>
       </div>
-      {editable && (
-        <DateIntervalCreateComponent
-          jwt={jwt}
-          tripId={trip.id}
-          username={username}
-          dateIntervals={dateIntervals}
-          setDateIntervals={setDateIntervals}
-          socket={socket}
-        />
-      )}
-      <ul>
-        {dateIntervals &&
-          dateIntervals.map(function (
-            dateInterval: DateInterval,
-            index: number
-          ) {
-            return (
-              <li
-                id={`dateinterval-${dateInterval.id}`}
-                onClick={() => handleDateIntervalClicked(dateInterval)}
-              >
-                <DateIntervalDisplayComponent
-                  key={dateInterval.id as string}
-                  jwt={jwt}
-                  username={username}
-                  dateInterval={dateInterval}
-                  dateIntervals={dateIntervals}
-                  setDateIntervals={setDateIntervals}
-                  timeslots={timeslots}
-                  setTimeslots={setTimeslots}
-                  dateIntervalTimeslots={timeslots[index]}
-                  tripId={trip.id}
-                  editable={editable}
-                  socket={socket}
-                  selectedTimeslot={selectedTimeslot}
-                  setSelectedTimeslot={setSelectedTimeslot}
-                />
-              </li>
-            );
-          })}
-      </ul>
+      <div className="bg-gray-300 m-2 rounded-md">
+        <div
+          className="flex-grow hover:bg-gray-400 cursor-pointer rounded-md"
+          onClick={toggleDataDiv}
+        >
+          <h2 className="pl-4 font-bold italic">Trip sections</h2>
+        </div>
+        <div id="dateintervals-div" className="hidden pb-2">
+          <ul>
+            {dateIntervals &&
+              dateIntervals.map(function (
+                dateInterval: DateInterval,
+                index: number
+              ) {
+                return (
+                  <li
+                    id={`dateinterval-${dateInterval.id}`}
+                    onClick={() => handleDateIntervalClicked(dateInterval)}
+                  >
+                    <DateIntervalDisplayComponent
+                      key={dateInterval.id as string}
+                      jwt={jwt}
+                      username={username}
+                      dateInterval={dateInterval}
+                      dateIntervals={dateIntervals}
+                      setDateIntervals={setDateIntervals}
+                      timeslots={timeslots}
+                      setTimeslots={setTimeslots}
+                      dateIntervalTimeslots={timeslots[index]}
+                      tripId={trip.id}
+                      editable={editable}
+                      socket={socket}
+                      selectedTimeslot={selectedTimeslot}
+                      setSelectedTimeslot={setSelectedTimeslot}
+                    />
+                  </li>
+                );
+              })}
+          </ul>
+          {editable && (
+            <DateIntervalCreateComponent
+              jwt={jwt}
+              tripId={trip.id}
+              username={username}
+              dateIntervals={dateIntervals}
+              setDateIntervals={setDateIntervals}
+              socket={socket}
+            />
+          )}
+        </div>
+      </div>
     </>
   );
 }

@@ -76,6 +76,14 @@ function DateIntervalCreateComponent(props: Props) {
             `dateinterval-enddate-input`
           ) as HTMLInputElement
         ).value = "mm/dd/yyyy";
+        (
+          document.getElementById(`dateinterval-name-input`) as HTMLInputElement
+        ).value = "";
+        (
+          document.getElementById(
+            `dateinterval-budget-input`
+          ) as HTMLInputElement
+        ).value = "";
 
         if (socket) {
           socket.emit(
@@ -86,7 +94,7 @@ function DateIntervalCreateComponent(props: Props) {
       });
   }
 
-  function showCreateDiv() {
+  function toggleCreateDiv() {
     let div = document.getElementById("dateinterval-create-div");
     if (div?.classList.contains("hidden")) {
       div.classList.remove("hidden");
@@ -97,29 +105,33 @@ function DateIntervalCreateComponent(props: Props) {
 
   return (
     <>
-      <div className="rounded-md bg-gray-200 pl-4 m-2">
+      <div className="rounded-md bg-gray-200 m-2 ml-4">
         <div className="flex flex-row justify-between">
-          <h2 className="font-bold italic">Add new trip section</h2>
-          <button className="mr-4 font-extrabold" onClick={showCreateDiv}>
-            -
-          </button>
+          <div
+            className="flex-grow hover:bg-gray-300 cursor-pointer rounded-md"
+            onClick={toggleCreateDiv}
+          >
+            <h2 className="pl-4 font-bold italic">Add new trip section</h2>
+          </div>
         </div>
-        <div id="dateinterval-create-div" className="hidden">
-          <div className="p-2">
+        <div id="dateinterval-create-div" className="flex flex-col hidden">
+          <div className="p-2 ml-2">
             Name (optional):
             <input
               id="dateinterval-name-input"
-              type="date"
+              className="ml-4 rounded-md pl-4 pr-4"
+              type="text"
               onChange={(event) =>
                 handleInputChange("name", event.target.value)
               }
             ></input>
           </div>
           <div className="flex flex-row justify-start gap-2">
-            <div className="p-2">
+            <div className="p-2 ml-2">
               Start date:
               <input
                 id="dateinterval-startdate-input"
+                className="rounded-md pl-4 pr-4"
                 type="date"
                 onChange={(event) =>
                   handleInputChange("startDate", event.target.value)
@@ -130,6 +142,7 @@ function DateIntervalCreateComponent(props: Props) {
               End date (optional):
               <input
                 id="dateinterval-enddate-input"
+                className="rounded-md pl-4 pr-4"
                 type="date"
                 onChange={(event) =>
                   handleInputChange("endDate", event.target.value)
@@ -137,11 +150,13 @@ function DateIntervalCreateComponent(props: Props) {
               ></input>
             </div>
           </div>
-          <div className="p-2">
+          <div className="p-2 ml-2">
             Budget (optional):
             <input
               id="dateinterval-budget-input"
-              type="date"
+              className="ml-4 rounded-md pl-4 pr-4"
+              type="number"
+              placeholder="0.0$"
               onChange={(event) =>
                 handleInputChange("budget", event.target.value)
               }
@@ -149,7 +164,7 @@ function DateIntervalCreateComponent(props: Props) {
           </div>
 
           <button
-            className="confirmButton mb-2"
+            className="confirmButton mb-2 w-max ml-20"
             onClick={handleNewDateIntervalCreation}
           >
             Add
