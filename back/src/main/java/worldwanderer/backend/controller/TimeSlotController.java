@@ -65,8 +65,14 @@ public class TimeSlotController {
     public ResponseEntity<TimeSlotData> updateTimeSlot(@PathVariable Long timeSlotId, @RequestBody TimeSlotData timeSlotData) {
         TimeSlot timeSlot = timeSlotService.getTimeSlotForId(timeSlotId);
 
-        timeSlot.setStartTime(LocalTime.parse(timeSlotData.getStartTime()));
-        timeSlot.setEndTime(LocalTime.parse(timeSlotData.getEndTime()));
+        if(timeSlotData.getStartTime() != null) {
+            timeSlot.setStartTime(LocalTime.parse(timeSlotData.getStartTime()));
+        }
+        if(timeSlotData.getEndTime() != null) {
+            timeSlot.setEndTime(LocalTime.parse(timeSlotData.getEndTime()));
+        }
+        timeSlot.setName(timeSlotData.getName());
+        timeSlot.setNotes(timeSlotData.getNotes());
 
         timeSlotService.updateTimeSlot(timeSlot);
         return ResponseEntity.ok(timeSlotService.transformTimeSlotIntoTimeSlotData(timeSlot));

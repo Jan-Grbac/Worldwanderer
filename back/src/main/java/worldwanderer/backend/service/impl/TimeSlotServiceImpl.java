@@ -70,6 +70,6 @@ public class TimeSlotServiceImpl implements TimeSlotService {
 
     @Override
     public List<TimeSlot> getTimeSlotsForDateInterval(DateInterval dateInterval) {
-        return timeSlotRepository.findAllByInterval(dateInterval);
+        return timeSlotRepository.findAllByIntervalOrderById(dateInterval);
     }
 }

@@ -59,7 +59,7 @@ function DateIntervalDisplayComponent(props: Props) {
       .getElementById("dateinterval-date-edit-" + dateInterval.id)
       ?.classList.remove("hidden");
     document
-      .getElementById("dateinterval-date-edit-" + dateInterval.id)
+      .getElementById("dateinterval-date-edit-startdate-" + dateInterval.id)
       ?.focus();
   }
 
@@ -88,6 +88,10 @@ function DateIntervalDisplayComponent(props: Props) {
       .getElementById("dateinterval-budget-edit-" + dateInterval.id)
       ?.classList.add("hidden");
 
+    if (dateInterval.endDate < dateInterval.startDate) {
+      return;
+    }
+
     const fetchData = {
       headers: {
         Authorization: `Bearer ${jwt}`,
@@ -107,7 +111,7 @@ function DateIntervalDisplayComponent(props: Props) {
         if (socket) {
           socket.emit(
             "UPDATE",
-            tripId + ":" + username + ":DATE_INTERVAL_UPDATED"
+            tripId + ":" + username + ":UPDATED_DATE_INTERVAL"
           );
         }
       });
@@ -246,28 +250,37 @@ function DateIntervalDisplayComponent(props: Props) {
           </div>
           <div
             id={`dateinterval-date-edit-${dateInterval.id}`}
-            className="hidden"
+            className="hidden flex flex-row justify-start gap-2"
             onKeyDown={handleEnterKeyPress}
             onBlur={finishDateEditing}
             contentEditable="true"
             suppressContentEditableWarning={true}
           >
-            <input
-              type="date"
-              name="startDate"
-              defaultValue={dateSubstring(dateInterval.startDate)}
-              onChange={(event) =>
-                dateIntervalChanged("startDate", event.target.value)
-              }
-            />
-            <input
-              type="date"
-              name="endDate"
-              defaultValue={dateSubstring(dateInterval.endDate)}
-              onChange={(event) =>
-                dateIntervalChanged("endDate", event.target.value)
-              }
-            />
+            <div className="flex flex-row">
+              Start:{" "}
+              <input
+                id={`dateinterval-date-edit-startdate-${dateInterval.id}`}
+                type="date"
+                name="startDate"
+                defaultValue={dateSubstring(dateInterval.startDate)}
+                onChange={(event) =>
+                  dateIntervalChanged("startDate", event.target.value)
+                }
+                className="rounded-md pl-2 pr-2"
+              />
+            </div>
+            <div className="flex flex-row">
+              End:
+              <input
+                type="date"
+                name="endDate"
+                defaultValue={dateSubstring(dateInterval.endDate)}
+                onChange={(event) =>
+                  dateIntervalChanged("endDate", event.target.value)
+                }
+                className="rounded-md pl-2 pr-2"
+              />
+            </div>
           </div>
         </div>
         <div className="flex flex-row mb-2">

@@ -41,6 +41,9 @@ public class SocketIO {
         for(SocketIOClient client : senderClient.getNamespace().getRoomOperations(trip).getClients()) {
             if(!client.getSessionId().equals(senderClient.getSessionId())) {
                 switch(operation) {
+                    case "TRIP_PARAMS_UPDATED":
+                        client.sendEvent("TRIP_PARAMS_UPDATED", user);
+                        break;
                     case "GRANTED_EDIT_PRIVILEGE":
                         String grantedUser = data.split(":")[3];
                         System.out.println(grantedUser + " was granted edit privileges on trip: " + trip);
@@ -59,19 +62,20 @@ public class SocketIO {
                         System.out.println(user + " deleted a new date interval.");
                         client.sendEvent("DELETED_DATE_INTERVAL", user);
                         break;
+                    case "UPDATED_DATE_INTERVAL":
+                        client.sendEvent("UPDATED_DATE_INTERVAL", user);
+                        break;
                     case "ADDED_TIMESLOT":
-                        System.out.println(user + " added a new time slot");
+                        System.out.println(user + " added a new timeslot");
                         client.sendEvent("ADDED_TIMESLOT", user);
                         break;
                     case "DELETED_TIMESLOT":
-                        System.out.println(user + " deleted a new time slot");
+                        System.out.println(user + " deleted a new timeslot");
                         client.sendEvent("DELETED_TIMESLOT", user);
                         break;
-                    case "TRIP_PARAMS_UPDATED":
-                        client.sendEvent("TRIP_PARAMS_UPDATED", user);
-                        break;
-                    case "DATE_INTERVAL_UPDATED":
-                        client.sendEvent("DATE_INTERVAL_UPDATED", user);
+                    case "UPDATED_TIMESLOT":
+                        System.out.println(user + " updated a timeslot");
+                        client.sendEvent("UPDATED_TIMESLOT", user);
                         break;
                 }
             }

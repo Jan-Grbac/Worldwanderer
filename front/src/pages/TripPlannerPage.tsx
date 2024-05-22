@@ -265,6 +265,11 @@ function TripPlannerPage(props: Props) {
     alert(data + " deleted a timeslot.");
     fetchTimeslots(trip.id);
   }
+  function timeslotUpdated(data: string) {
+    if (!trip) return;
+    alert(data + " updated a timeslot.");
+    fetchTimeslots(trip.id);
+  }
   function tripParamsUpdated(data: string) {
     if (!trip) return;
     alert(data + " edited trip parameters.");
@@ -280,24 +285,26 @@ function TripPlannerPage(props: Props) {
       s.connect();
       setSocket(s);
 
+      s.on("TRIP_PARAMS_UPDATED", tripParamsUpdated);
       s.on("GRANTED_EDIT_PRIVILEGE", userGrantedEditPrivilege);
       s.on("REVOKED_EDIT_PRIVILEGE", userRevokedEditPrivilege);
       s.on("ADDED_DATE_INTERVAL", dateIntervalAdded);
       s.on("DELETED_DATE_INTERVAL", dateIntervalDeleted);
+      s.on("UPDATED_DATE_INTERVAL", dateIntervalUpdated);
       s.on("ADDED_TIMESLOT", timeslotAdded);
       s.on("DELETED_TIMESLOT", timeslotDeleted);
-      s.on("TRIP_PARAMS_UPDATED", tripParamsUpdated);
-      s.on("DATE_INTERVAL_UPDATED", dateIntervalUpdated);
+      s.on("UPDATED_TIMESLOT", dateIntervalUpdated);
 
       return () => {
+        s.off("TRIP_PARAMS_UPDATED");
         s.off("GRANTED_EDIT_PRIVILEGE");
         s.off("REVOKED_EDIT_PRIVILEGE");
         s.off("ADDED_DATE_INTERVAL");
         s.off("DELETED_DATE_INTERVAL");
+        s.off("UPDATED_DATE_INTERVAL");
         s.off("ADDED_TIMESLOT");
         s.off("DELETED_TIMESLOT");
-        s.off("TRIP_PARAMS_UPDATED");
-        s.off("DATE_INTERVAL_UPDATED");
+        s.off("UPDATED_TIMESLOT");
 
         s.disconnect();
       };
