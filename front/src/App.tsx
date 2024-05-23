@@ -9,8 +9,9 @@ import { JwtHeader, jwtDecode } from "jwt-decode";
 import TripsPage from "./pages/TripsPage";
 import TripPlannerPage from "./pages/TripPlannerPage";
 import LogoutPage from "./pages/LogoutPage";
-import UserProfilePage from "./pages/UserProfilePage";
+import UserEditProfilePage from "./pages/UserEditProfilePage";
 import AdminPage from "./pages/AdminPage";
+import UserProfilePage from "./pages/UserProfilePage";
 
 function App() {
   const cookies = new Cookies();
@@ -81,9 +82,19 @@ function App() {
               }
             />
             <Route
-              path="/profile"
+              path="/profile/:username"
               element={
                 <UserProfilePage
+                  jwt={jwt}
+                  jwtIsValid={jwtIsValid}
+                  viewerUsername={username as string}
+                />
+              }
+            />
+            <Route
+              path="/editprofile"
+              element={
+                <UserEditProfilePage
                   jwt={jwt}
                   setJwt={setJwt}
                   jwtIsValid={jwtIsValid}
@@ -154,7 +165,7 @@ function App() {
                 />
               }
             />
-            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/admin" element={<AdminPage jwt={jwt} />} />
           </Routes>
         </BrowserRouter>
       </>

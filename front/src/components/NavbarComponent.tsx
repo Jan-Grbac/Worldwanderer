@@ -27,7 +27,10 @@ function NavbarComponent(props: Props) {
     navigate("/trips");
   }
   function profile() {
-    navigate("/profile");
+    navigate("/profile/" + username);
+  }
+  function admin() {
+    navigate("/admin");
   }
 
   return (
@@ -35,24 +38,40 @@ function NavbarComponent(props: Props) {
       <nav className="flex flex-grow justify-between p-4 border-0 max-h-20">
         {jwtIsValid ? (
           <>
-            <div className="flex flex-grow justify-between align-middle">
-              <div className="flex justify-start gap-5 ml-4">
-                <button className="basicButton" onClick={home}>
-                  <h2>Main page</h2>
-                </button>
-                <button className="basicButton" onClick={trips}>
-                  <h2>Your trips</h2>
-                </button>
+            {username !== "admin" && (
+              <div className="flex flex-grow justify-between align-middle">
+                <div className="flex justify-start gap-5 ml-4">
+                  <button className="basicButton" onClick={home}>
+                    <h2>Main page</h2>
+                  </button>
+                  <button className="basicButton" onClick={trips}>
+                    <h2>Your trips</h2>
+                  </button>
+                </div>
+                <div className="flex self-end gap-5 mr-4">
+                  <button className="basicButton" onClick={profile}>
+                    <h2>Your profile</h2>
+                  </button>
+                  <button className="basicButton" onClick={logout}>
+                    <h2>Logout</h2>
+                  </button>
+                </div>
               </div>
-              <div className="flex self-end gap-5 mr-4">
-                <button className="basicButton" onClick={profile}>
-                  <h2>Your profile</h2>
-                </button>
-                <button className="basicButton" onClick={logout}>
-                  <h2>Logout</h2>
-                </button>
+            )}
+            {username === "admin" && (
+              <div className="flex flex-grow justify-between align-middle">
+                <div className="flex justify-start gap-5 ml-4">
+                  <button className="basicButton" onClick={admin}>
+                    <h2>Admin panel</h2>
+                  </button>
+                </div>
+                <div className="flex self-end gap-5 mr-4">
+                  <button className="basicButton" onClick={logout}>
+                    <h2>Logout</h2>
+                  </button>
+                </div>
               </div>
-            </div>
+            )}
           </>
         ) : (
           <>

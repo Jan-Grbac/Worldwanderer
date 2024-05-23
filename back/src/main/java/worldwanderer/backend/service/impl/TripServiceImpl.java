@@ -1,7 +1,6 @@
 package worldwanderer.backend.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import worldwanderer.backend.dto.TripData;
@@ -110,6 +109,15 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
+    public List<TripData> transformTripIntoTripData(List<Trip> trip) {
+        List<TripData> tripDataList = new LinkedList<>();
+        for(Trip tripData : trip) {
+            tripDataList.add(transformTripIntoTripData(tripData));
+        }
+        return tripDataList;
+    }
+
+    @Override
     public Trip getTripForId(long id) {
         return tripRepository.findById(id).orElse(null);
     }
@@ -212,5 +220,15 @@ public class TripServiceImpl implements TripService {
         float newAverage = (float) trip.getRatings().stream().mapToDouble(Rating::getGrade).average().orElse(0);
         trip.setRating(newAverage);
         tripRepository.save(trip);
+    }
+
+    @Override
+    public List<Trip> searchTrips(String query) {
+        return tripRepository.findTripByNameContainsIgnoreCaseAndPublished(query, true);
+    }
+
+    @Override
+    public List<Trip> getTripsForUserContainingQuery(User user, String query) {
+        return tripRepository.findAllByUserAndNameContainsIgnoreCase(user, query);
     }
 }

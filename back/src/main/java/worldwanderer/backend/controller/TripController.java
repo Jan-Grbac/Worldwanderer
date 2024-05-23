@@ -1,6 +1,7 @@
 package worldwanderer.backend.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,10 @@ public class TripController {
         User user = userService.getUserByUsername(username);
         Trip trip = tripService.createTrip(tripData, user);
         tripService.giveTripAccess(trip, user);
+
+        User admin = userService.getUserByUsername("admin");
+        tripService.giveTripAccess(trip, admin);
+
         return ResponseEntity.ok(tripService.transformTripIntoTripData(trip));
     }
 
@@ -44,11 +49,7 @@ public class TripController {
     public ResponseEntity<List<TripData>> getTripsForUsername(@PathVariable String username) {
         User user = userService.getUserByUsername(username);
         List<Trip> trips = tripService.getTripsForUser(user);
-        List<TripData> tripDataList = new LinkedList<>();
-        for(Trip trip: trips) {
-            TripData tripData = tripService.transformTripIntoTripData(trip);
-            tripDataList.add(tripData);
-        }
+        List<TripData> tripDataList = tripService.transformTripIntoTripData(trips);
         return ResponseEntity.ok(tripDataList);
     }
 
@@ -56,11 +57,7 @@ public class TripController {
     public ResponseEntity<List<TripData>> getActiveTripsForUsername(@PathVariable String username) {
         User user = userService.getUserByUsername(username);
         List<Trip> trips = tripService.getActiveTripsForUser(user);
-        List<TripData> tripDataList = new LinkedList<>();
-        for(Trip trip: trips) {
-            TripData tripData = tripService.transformTripIntoTripData(trip);
-            tripDataList.add(tripData);
-        }
+        List<TripData> tripDataList = tripService.transformTripIntoTripData(trips);
         return ResponseEntity.ok(tripDataList);
     }
 
@@ -68,10 +65,7 @@ public class TripController {
     public ResponseEntity<List<TripData>> getSharedTripsForUsername(@PathVariable String username) {
         User user = userService.getUserByUsername(username);
         List<Trip> trips = tripService.getSharedTripsForUser(user);
-        List<TripData> tripDataList = new LinkedList<>();
-        for(Trip trip: trips) {
-            tripDataList.add(tripService.transformTripIntoTripData(trip));
-        }
+        List<TripData> tripDataList = tripService.transformTripIntoTripData(trips);
         return ResponseEntity.ok(tripDataList);
     }
 
@@ -79,10 +73,7 @@ public class TripController {
     public ResponseEntity<List<TripData>> getPublishedTripsForUsername(@PathVariable String username) {
         User user = userService.getUserByUsername(username);
         List<Trip> trips = tripService.getPublishedTripsForUser(user);
-        List<TripData> tripDataList = new LinkedList<>();
-        for(Trip trip: trips) {
-            tripDataList.add(tripService.transformTripIntoTripData(trip));
-        }
+        List<TripData> tripDataList = tripService.transformTripIntoTripData(trips);
         return ResponseEntity.ok(tripDataList);
     }
 
@@ -103,10 +94,7 @@ public class TripController {
     public ResponseEntity<List<UserData>> getAllowedUsers(@PathVariable String tripId) {
         Trip trip = tripService.getTripForId(Long.parseLong(tripId));
         List<User> allowedUsers = tripService.getAllowedUsers(trip);
-        List<UserData> userDataList = new ArrayList<>();
-        for(User user: allowedUsers) {
-            userDataList.add(userService.transformIntoUserData(user));
-        }
+        List<UserData> userDataList = userService.transformIntoUserData(allowedUsers);
         return ResponseEntity.ok(userDataList);
     }
 
@@ -144,10 +132,7 @@ public class TripController {
     @GetMapping("/getHighestRatedTrips")
     public ResponseEntity<List<TripData>> getHighestRatedTrips() {
         List<Trip> trips = tripService.getHighestRatedTrips(5);
-        List<TripData> tripDataList = new LinkedList<>();
-        for(Trip trip : trips) {
-            tripDataList.add(tripService.transformTripIntoTripData(trip));
-        }
+        List<TripData> tripDataList = tripService.transformTripIntoTripData(trips);
         return ResponseEntity.ok(tripDataList);
     }
 
@@ -161,5 +146,15 @@ public class TripController {
     public ResponseEntity<Void> publishTrip(@PathVariable String tripId) {
         tripService.publishTrip(Long.parseLong(tripId));
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/searchTrip")
+    public ResponseEntity<List<TripData>> searchTrips(@RequestBody String query) {
+        if(query.equals("\"\""))
+            return ResponseEntity.ok(new LinkedList<>());
+        query = query.substring(1, query.length() - 1);
+        List<Trip> trips = tripService.searchTrips(query);
+        List<TripData> tripDataList = tripService.transformTripIntoTripData(trips);
+        return ResponseEntity.ok(tripDataList);
     }
 }

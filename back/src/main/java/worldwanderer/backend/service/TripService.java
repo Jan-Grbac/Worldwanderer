@@ -13,6 +13,7 @@ public interface TripService {
     Trip createTripCopy(Trip trip, User user);
     void deleteTrip(long id);
     TripData transformTripIntoTripData(Trip trip);
+    List<TripData> transformTripIntoTripData(List<Trip> trip);
     Trip getTripForId(long id);
     List<Trip> getTripsForUser(User user);
     List<Trip> getActiveTripsForUser(User user);
@@ -26,4 +27,6 @@ public interface TripService {
     void publishTrip(long id);
     List<Trip> getPublishedTripsForUser(User user);
     void updateTripRating(Trip trip);
+    List<Trip> searchTrips(String query);
+    List<Trip> getTripsForUserContainingQuery(User user, String query);
 }

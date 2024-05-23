@@ -14,5 +14,7 @@ import java.util.List;
 @Transactional
 public interface TripRepository extends JpaRepository<Trip, Long> {
     List<Trip> findAllByUser(User user);
+    List<Trip> findTripByNameContainsIgnoreCaseAndPublished(String query, boolean published);
     Page<Trip> findByPublishedTrueOrderByRatingDesc(PageRequest pageRequest);
+    List<Trip> findAllByUserAndNameContainsIgnoreCase(User user, String query);
 }

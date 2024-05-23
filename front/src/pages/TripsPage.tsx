@@ -31,6 +31,25 @@ function TripsPage(props: Props) {
       return;
     }
     if (jwt && username) {
+      fetch(`/api/core/user/getUser/${username}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        method: "GET",
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+        })
+        .then((data) => {
+          if (data.role === "ADMIN") {
+            navigate("/admin");
+          }
+        });
+
       fetch(`/api/core/trip/getActiveTrips/${username}`, {
         headers: {
           Authorization: `Bearer ${jwt}`,

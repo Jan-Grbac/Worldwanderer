@@ -43,7 +43,7 @@ public class TimeSlotServiceImpl implements TimeSlotService {
         else {
             timeSlot.setPos(allTimeslots.getLast().getPos() + 1);
         }
-        
+
         return timeSlotRepository.save(timeSlot);
     }
 

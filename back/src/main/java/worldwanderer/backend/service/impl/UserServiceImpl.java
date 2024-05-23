@@ -5,10 +5,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import worldwanderer.backend.dto.UpdateUserInfoData;
 import worldwanderer.backend.dto.UserData;
+import worldwanderer.backend.entity.Role;
 import worldwanderer.backend.entity.User;
 import worldwanderer.backend.repository.UserRepository;
 import worldwanderer.backend.service.EncoderService;
 import worldwanderer.backend.service.UserService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -47,6 +51,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserData> transformIntoUserData(List<User> users) {
+        List<UserData> userDatas = new ArrayList<>();
+        for (User user : users) {
+            userDatas.add(transformIntoUserData(user));
+        }
+        return userDatas;
+    }
+
+    @Override
     public void updateUser(User user, UpdateUserInfoData userData) {
         if(!userData.getEmail().isEmpty()) {
             user.setEmail(userData.getEmail());
@@ -58,5 +71,15 @@ public class UserServiceImpl implements UserService {
             user.setPassword(encoderService.encode(userData.getNewPassword()));
         }
         userRepository.save(user);
+    }
+
+    @Override
+    public List<User> getUsers() {
+        return userRepository.findAllByRole(Role.USER);
+    }
+
+    @Override
+    public List<User> getUsersUsernameContainsString(String query) {
+        return userRepository.findAllByUsernameContainsIgnoreCase(query);
     }
 }
