@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useReducer, useState } from "react";
 import NavbarComponent from "../components/NavbarComponent";
 import MapComponent from "../components/display/MapComponent";
 import { useNavigate } from "react-router-dom";
+import { APIProvider } from "@vis.gl/react-google-maps";
 import io, { Socket } from "socket.io-client";
 import TripDataDisplayComponent from "../components/display/TripDataDisplayComponent";
 import TripEditPermissionGrantComponent from "../components/update/TripEditPermissionGrantComponent";
@@ -42,6 +43,8 @@ function TripPlannerPage(props: Props) {
   const [hotels, setHotels] = useState<Array<google.maps.places.PlaceResult>>(
     []
   );
+
+  const [map, setMap] = useState<google.maps.Map>();
 
   const [socket, setSocket] = useState<Socket>();
 
@@ -379,166 +382,173 @@ function TripPlannerPage(props: Props) {
   return (
     loading && (
       <>
-        <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
-        <div className="grid grid-cols-6 max-w-full max-h-full min-h-screen">
-          <div className="col-span-2">
-            {trip?.published && (
-              <div>
-                Published by {trip.ownerUsername} on: {trip.publishedDate}
-              </div>
-            )}
-            <TripDataDisplayComponent
-              jwt={jwt}
-              trip={trip as Trip}
-              setTrip={setTrip}
-              username={username}
-              dateIntervals={dateIntervals}
-              setDateIntervals={setDateIntervals}
-              timeslots={timeslots}
-              setTimeslots={setTimeslots}
-              editable={editable}
-              socket={socket}
-              selectedTimeslot={selectedTimeslot as TimeSlot}
-              setSelectedTimeslot={setSelectedTimeslot}
-              selectedDateInterval={selectedDateInterval as DateInterval}
-              setSelectedDateInterval={setSelectedDateInterval}
-            />
-          </div>
-          <div className="col-span-3">
-            <MapComponent
-              jwt={jwt}
-              username={username}
-              trip={trip as Trip}
-              dateIntervals={dateIntervals}
-              timeslots={timeslots}
-              socket={socket}
-              selectedTimeslot={selectedTimeslot as TimeSlot}
-              setSuggestedAttractions={setSuggestedAttractions}
-              setHotels={setHotels}
-            />
-            <div className="d-flex flex-row">
-              {editable && suggestedAttractions.length !== 0 && (
-                <>
-                  <p>Places to visit near {selectedTimeslot?.name}:</p>
-                  {suggestedAttractions.map(function (
-                    attraction: google.maps.places.PlaceResult
-                  ) {
-                    return (
-                      <AttractionDisplayComponent
-                        attraction={attraction}
-                        selectedTimeslot={selectedTimeslot as TimeSlot}
-                      />
-                    );
-                  })}
-                </>
+        <APIProvider apiKey="AIzaSyACu8umhkkYq6tvxaHbP_Y_sAHRV9rCuMQ">
+          <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
+          <div className="grid grid-cols-6 max-w-full max-h-full min-h-screen">
+            <div className="col-span-2">
+              {trip?.published && (
+                <div>
+                  Published by {trip.ownerUsername} on: {trip.publishedDate}
+                </div>
               )}
+              <TripDataDisplayComponent
+                jwt={jwt}
+                trip={trip as Trip}
+                setTrip={setTrip}
+                username={username}
+                dateIntervals={dateIntervals}
+                setDateIntervals={setDateIntervals}
+                timeslots={timeslots}
+                setTimeslots={setTimeslots}
+                editable={editable}
+                socket={socket}
+                selectedTimeslot={selectedTimeslot as TimeSlot}
+                setSelectedTimeslot={setSelectedTimeslot}
+                selectedDateInterval={selectedDateInterval as DateInterval}
+                setSelectedDateInterval={setSelectedDateInterval}
+                map={map as google.maps.Map}
+              />
             </div>
-            <div className="d-flex flex-row">
-              {editable && hotels.length !== 0 && (
-                <>
-                  <p>Accomodation near {selectedTimeslot?.name}:</p>
-                  {hotels.map(function (hotel: google.maps.places.PlaceResult) {
-                    return (
-                      <HotelDisplayComponent
-                        hotel={hotel}
-                        selectedDateInterval={
-                          selectedDateInterval as DateInterval
-                        }
-                      />
-                    );
-                  })}
-                </>
+            <div className="col-span-3">
+              <MapComponent
+                jwt={jwt}
+                username={username}
+                trip={trip as Trip}
+                dateIntervals={dateIntervals}
+                timeslots={timeslots}
+                socket={socket}
+                selectedTimeslot={selectedTimeslot as TimeSlot}
+                setSuggestedAttractions={setSuggestedAttractions}
+                setHotels={setHotels}
+                map={map as google.maps.Map}
+                setMap={setMap}
+              />
+              <div className="d-flex flex-row">
+                {editable && suggestedAttractions.length !== 0 && (
+                  <>
+                    <p>Places to visit near {selectedTimeslot?.name}:</p>
+                    {suggestedAttractions.map(function (
+                      attraction: google.maps.places.PlaceResult
+                    ) {
+                      return (
+                        <AttractionDisplayComponent
+                          attraction={attraction}
+                          selectedTimeslot={selectedTimeslot as TimeSlot}
+                        />
+                      );
+                    })}
+                  </>
+                )}
+              </div>
+              <div className="d-flex flex-row">
+                {editable && hotels.length !== 0 && (
+                  <>
+                    <p>Accomodation near {selectedTimeslot?.name}:</p>
+                    {hotels.map(function (
+                      hotel: google.maps.places.PlaceResult
+                    ) {
+                      return (
+                        <HotelDisplayComponent
+                          hotel={hotel}
+                          selectedDateInterval={
+                            selectedDateInterval as DateInterval
+                          }
+                        />
+                      );
+                    })}
+                  </>
+                )}
+              </div>
+            </div>
+            <div>
+              <div className="flex flex-row mt-4 ml-4 mb-4">
+                <TripEditPermissionDisplayComponent
+                  jwt={jwt}
+                  allowedUsers={allowedUsers}
+                  setAllowedUsers={setAllowedUsers}
+                  trip={trip as Trip}
+                  isOwner={isOwner}
+                  editable={editable}
+                  socket={socket}
+                />
+                {editable && isOwner && (
+                  <div className="flex flex-grow flex-col justify-start align-middle">
+                    <button
+                      className="confirmButton self-center w-max"
+                      onMouseOver={showPublishWarning}
+                      onMouseLeave={showPublishWarning}
+                      onClick={handlePublish}
+                    >
+                      Publish trip.
+                    </button>
+                    <p
+                      id="publish-warning"
+                      className="hidden text-red-800 self-center"
+                    >
+                      Warning: You will not be able to edit the trip after
+                      publishing.
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {isOwner && editable && (
+                <TripEditPermissionGrantComponent
+                  jwt={jwt}
+                  trip={trip as Trip}
+                  allowedUsers={allowedUsers}
+                  setAllowedUsers={setAllowedUsers}
+                  username={username}
+                  socket={socket}
+                />
+              )}
+
+              {!editable && jwtIsValid && trip?.published && (
+                <button onClick={copyTrip}>Copy published trip and edit</button>
+              )}
+              {!editable && !jwtIsValid && trip?.published && (
+                <button onClick={() => navigate("/signin")}>
+                  Sign in to copy trip
+                </button>
+              )}
+              {!editable && isOwner && !trip?.published && (
+                <button onClick={() => navigate("/edittrip/" + trip?.id)}>
+                  Edit your trip
+                </button>
               )}
             </div>
           </div>
           <div>
-            <div className="flex flex-row mt-4 ml-4 mb-4">
-              <TripEditPermissionDisplayComponent
-                jwt={jwt}
-                allowedUsers={allowedUsers}
-                setAllowedUsers={setAllowedUsers}
-                trip={trip as Trip}
-                isOwner={isOwner}
-                editable={editable}
-                socket={socket}
-              />
-              {editable && isOwner && (
-                <div className="flex flex-grow flex-col justify-start align-middle">
-                  <button
-                    className="confirmButton self-center w-max"
-                    onMouseOver={showPublishWarning}
-                    onMouseLeave={showPublishWarning}
-                    onClick={handlePublish}
-                  >
-                    Publish trip.
-                  </button>
-                  <p
-                    id="publish-warning"
-                    className="hidden text-red-800 self-center"
-                  >
-                    Warning: You will not be able to edit the trip after
-                    publishing.
-                  </p>
-                </div>
-              )}
-            </div>
-
-            {isOwner && editable && (
-              <TripEditPermissionGrantComponent
-                jwt={jwt}
-                trip={trip as Trip}
-                allowedUsers={allowedUsers}
-                setAllowedUsers={setAllowedUsers}
-                username={username}
-                socket={socket}
-              />
-            )}
-
-            {!editable && jwtIsValid && trip?.published && (
-              <button onClick={copyTrip}>Copy published trip and edit</button>
-            )}
-            {!editable && !jwtIsValid && trip?.published && (
-              <button onClick={() => navigate("/signin")}>
-                Sign in to copy trip
-              </button>
-            )}
-            {!editable && isOwner && !trip?.published && (
-              <button onClick={() => navigate("/edittrip/" + trip?.id)}>
-                Edit your trip
-              </button>
-            )}
-          </div>
-        </div>
-        <div>
-          {!editable &&
-            trip?.published &&
-            !isAllowedUser &&
-            !hasAlreadyRated && (
-              <RateTripComponent
-                jwt={jwt}
-                username={username}
-                trip={trip}
-                ratings={ratings}
-                setRatings={setRatings}
-                setHasAlreadyRated={setHasAlreadyRated}
-              />
-            )}
-          {!editable &&
-            trip?.published &&
-            ratings &&
-            ratings.map(function (rating: Rating) {
-              return (
-                <RatingDisplayComponent
+            {!editable &&
+              trip?.published &&
+              !isAllowedUser &&
+              !hasAlreadyRated && (
+                <RateTripComponent
                   jwt={jwt}
                   username={username}
-                  rating={rating}
+                  trip={trip}
                   ratings={ratings}
                   setRatings={setRatings}
                   setHasAlreadyRated={setHasAlreadyRated}
                 />
-              );
-            })}
-        </div>
+              )}
+            {!editable &&
+              trip?.published &&
+              ratings &&
+              ratings.map(function (rating: Rating) {
+                return (
+                  <RatingDisplayComponent
+                    jwt={jwt}
+                    username={username}
+                    rating={rating}
+                    ratings={ratings}
+                    setRatings={setRatings}
+                    setHasAlreadyRated={setHasAlreadyRated}
+                  />
+                );
+              })}
+          </div>
+        </APIProvider>
       </>
     )
   );

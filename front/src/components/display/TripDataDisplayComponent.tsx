@@ -19,6 +19,7 @@ interface Props {
   setSelectedTimeslot: Function;
   selectedDateInterval: DateInterval;
   setSelectedDateInterval: Function;
+  map: google.maps.Map;
 }
 
 function TripDataDisplayComponent(props: Props) {
@@ -37,6 +38,7 @@ function TripDataDisplayComponent(props: Props) {
     setSelectedTimeslot,
     selectedDateInterval,
     setSelectedDateInterval,
+    map,
   } = { ...props };
 
   function handleTripChanged() {
@@ -220,6 +222,7 @@ function TripDataDisplayComponent(props: Props) {
                       socket={socket}
                       selectedTimeslot={selectedTimeslot}
                       setSelectedTimeslot={setSelectedTimeslot}
+                      map={map}
                     />
                   </li>
                 );

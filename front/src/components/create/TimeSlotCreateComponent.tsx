@@ -1,4 +1,4 @@
-import GoogleMap from "google-maps-react-markers";
+import { APIProvider, useMapsLibrary } from "@vis.gl/react-google-maps";
 import { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 
@@ -11,6 +11,7 @@ interface Props {
   setTimeslots: Function;
   tripId: string;
   socket: Socket | undefined;
+  map: google.maps.Map;
 }
 
 function TimeSlotCreateComponent(props: Props) {
@@ -23,13 +24,15 @@ function TimeSlotCreateComponent(props: Props) {
     dateIntervalTimeslots,
     tripId,
     socket,
+    map,
   } = {
     ...props,
   };
 
   const [timeslot, setTimeslot] = useState<TimeSlot>(Object);
   const [searchBox, setSearchBox] = useState<google.maps.places.Autocomplete>();
-  const [loadAfter, setLoadAfter] = useState<boolean>(false);
+
+  const placesLib = useMapsLibrary("places");
 
   const options = {
     fields: ["formatted_address", "geometry", "name"],
@@ -37,15 +40,9 @@ function TimeSlotCreateComponent(props: Props) {
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      setLoadAfter(true);
-    }, 200);
-  });
-
-  useEffect(() => {
-    if (typeof google !== "undefined") {
+    if (map && placesLib) {
       setSearchBox(
-        new google.maps.places.Autocomplete(
+        new placesLib.Autocomplete(
           document.getElementById(
             "searchBox-" + dateIntervalId
           ) as HTMLInputElement,
@@ -53,7 +50,7 @@ function TimeSlotCreateComponent(props: Props) {
         )
       );
     }
-  }, [window.google, loadAfter]);
+  }, [map, placesLib]);
 
   useEffect(() => {
     if (searchBox) {

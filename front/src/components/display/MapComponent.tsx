@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from "react";
-import GoogleMap, {
-  LatLngBounds,
-  MapContextProps,
-  MapMouseEvent,
-} from "google-maps-react-markers";
+import {
+  APIProvider,
+  Map,
+  useMap,
+  useMapsLibrary,
+} from "@vis.gl/react-google-maps";
 import { Socket } from "socket.io-client";
 import { colorDict } from "../../assets/colors/colorDictionary";
 
@@ -17,9 +18,26 @@ interface Props {
   selectedTimeslot: TimeSlot;
   setSuggestedAttractions: Function;
   setHotels: Function;
+  map: google.maps.Map;
+  setMap: Function;
 }
 
-const MapComponent = (props: Props) => {
+interface MapLoaderProps {
+  setMap: Function;
+}
+
+function MapLoader(props: MapLoaderProps) {
+  const { setMap } = { ...props };
+  const map = useMap();
+
+  useEffect(() => {
+    setMap(map);
+  }, [map, setMap]);
+
+  return null;
+}
+
+function MapComponent(props: Props) {
   const {
     jwt,
     username,
@@ -30,15 +48,21 @@ const MapComponent = (props: Props) => {
     selectedTimeslot,
     setSuggestedAttractions,
     setHotels,
+    map,
+    setMap,
   } = {
     ...props,
   };
+
+  const placesLib = useMapsLibrary("places");
+  const geocodingLib = useMapsLibrary("geocoding");
+  const routesLib = useMapsLibrary("routes");
+  const coreLib = useMapsLibrary("core");
 
   const [service, setService] = useState<google.maps.places.PlacesService>();
   const [geocoder, setGeocoder] = useState<google.maps.Geocoder>();
   const [directionsService, setDirectionsService] =
     useState<google.maps.DirectionsService>();
-  const [map, setMap] = useState<google.maps.Map>();
 
   const defaultProps = {
     center: {
@@ -46,34 +70,30 @@ const MapComponent = (props: Props) => {
       lng: 13.9651,
     },
     zoom: 11,
-    mapId: "b4bd92c77fd97414",
   };
-  function onGoogleApiLoaded({
-    map,
-    maps,
-  }: {
-    map: MapContextProps["map"];
-    maps: MapContextProps["maps"];
-  }) {
-    setMap(map);
-    setService(new google.maps.places.PlacesService(map));
-    setGeocoder(new google.maps.Geocoder());
-    setDirectionsService(new google.maps.DirectionsService());
-  }
 
   useEffect(() => {
-    if (map && geocoder) {
-      let listener = map.addListener("click", (event: MapMouseEvent) => {
+    if (map && placesLib && geocodingLib && routesLib) {
+      console.log("here?");
+      setService(new placesLib.PlacesService(map));
+      setGeocoder(new geocodingLib.Geocoder());
+      setDirectionsService(new routesLib.DirectionsService());
+    }
+  }, [map, placesLib, geocodingLib, routesLib]);
+
+  useEffect(() => {
+    if (map && geocoder && geocodingLib && coreLib) {
+      let listener = map.addListener("click", (event: any) => {
         let lat = event.latLng?.lat();
         let lng = event.latLng?.lng();
 
         if (lat && lng) {
           geocoder.geocode(
             {
-              location: new google.maps.LatLng(lat, lng),
+              location: new coreLib.LatLng(lat, lng),
             },
             (results, status) => {
-              if (status === google.maps.GeocoderStatus.OK && results) {
+              if (status === geocodingLib.GeocoderStatus.OK && results) {
                 console.log(results);
                 if (selectedTimeslot) {
                   let result = results[0];
@@ -117,10 +137,17 @@ const MapComponent = (props: Props) => {
         listener.remove();
       };
     }
-  }, [map, geocoder, selectedTimeslot]);
+  }, [map, geocoder, selectedTimeslot, geocodingLib, coreLib]);
 
   useEffect(() => {
-    if (dateIntervals && timeslots && window.google) {
+    if (
+      map &&
+      dateIntervals &&
+      timeslots &&
+      directionsService &&
+      coreLib &&
+      routesLib
+    ) {
       for (let i = 0; i < dateIntervals.length; i++) {
         if (i < timeslots.length) {
           let markers: Array<google.maps.LatLng> = [];
@@ -128,10 +155,7 @@ const MapComponent = (props: Props) => {
           for (let j = 0; j < timeslots[i].length; j++) {
             let timeslot = timeslots[i][j];
 
-            let markerLatLng = new google.maps.LatLng(
-              timeslot.lat,
-              timeslot.lng
-            );
+            let markerLatLng = new coreLib.LatLng(timeslot.lat, timeslot.lng);
 
             if (selectedTimeslot && timeslot.id === selectedTimeslot.id) {
             }
@@ -140,18 +164,18 @@ const MapComponent = (props: Props) => {
           }
 
           if (markers.length >= 2 && directionsService) {
-            let src = new google.maps.LatLng(markers[0]);
-            let dest = new google.maps.LatLng(markers[markers.length - 1]);
+            let src = new coreLib.LatLng(markers[0]);
+            let dest = new coreLib.LatLng(markers[markers.length - 1]);
 
             let waypoints = new Array<google.maps.DirectionsWaypoint>();
             for (let i = 1; i < markers.length - 1; i++) {
               waypoints.push({
-                location: new google.maps.LatLng(markers[i]),
+                location: new coreLib.LatLng(markers[i]),
               });
             }
 
-            let directionsRenderer = new google.maps.DirectionsRenderer();
-            directionsRenderer.setMap(map as google.maps.Map);
+            let directionsRenderer = new routesLib.DirectionsRenderer();
+            directionsRenderer.setMap(map);
 
             directionsService.route(
               {
@@ -159,11 +183,11 @@ const MapComponent = (props: Props) => {
                 destination: dest,
                 waypoints: waypoints,
                 provideRouteAlternatives: false,
-                travelMode: google.maps.TravelMode.DRIVING,
-                unitSystem: google.maps.UnitSystem.METRIC,
+                travelMode: routesLib.TravelMode.DRIVING,
+                unitSystem: coreLib.UnitSystem.METRIC,
               },
               (result, status) => {
-                if (status === google.maps.DirectionsStatus.OK) {
+                if (status === routesLib.DirectionsStatus.OK) {
                   console.log(result);
                   directionsRenderer.setDirections(result);
                   directionsRenderer.setOptions({
@@ -189,13 +213,15 @@ const MapComponent = (props: Props) => {
     timeslots,
     selectedTimeslot,
     directionsService,
-    window.google,
+    map,
+    coreLib,
+    routesLib,
   ]);
 
   useEffect(() => {
-    if (selectedTimeslot) {
+    if (selectedTimeslot && service && coreLib && placesLib) {
       let placeSearchRequest = {
-        location: new google.maps.LatLng(
+        location: new coreLib.LatLng(
           selectedTimeslot.lat,
           selectedTimeslot.lng
         ),
@@ -203,15 +229,14 @@ const MapComponent = (props: Props) => {
         type: "tourist_attraction",
       };
       service?.nearbySearch(placeSearchRequest, (results, status) => {
-        if (status === google.maps.places.PlacesServiceStatus.OK)
+        if (status === placesLib.PlacesServiceStatus.OK)
           if (results) {
-            results.splice(5);
-            setSuggestedAttractions(results);
+            setSuggestedAttractions(results.slice(0, 5));
           }
       });
 
       placeSearchRequest = {
-        location: new google.maps.LatLng(
+        location: new coreLib.LatLng(
           selectedTimeslot.lat,
           selectedTimeslot.lng
         ),
@@ -219,28 +244,30 @@ const MapComponent = (props: Props) => {
         type: "lodging",
       };
       service?.nearbySearch(placeSearchRequest, (results, status) => {
-        if (status === google.maps.places.PlacesServiceStatus.OK)
+        if (status === placesLib.PlacesServiceStatus.OK)
           if (results) {
-            results.splice(5);
-            setHotels(results);
+            setHotels(results.slice(0, 5));
           }
       });
     }
-  }, [selectedTimeslot]);
+  }, [
+    selectedTimeslot,
+    service,
+    setSuggestedAttractions,
+    setHotels,
+    coreLib,
+    placesLib,
+  ]);
 
   return (
     <>
       <div style={{ height: "100%", width: "100%", position: "relative" }}>
-        <GoogleMap
-          apiKey="AIzaSyACu8umhkkYq6tvxaHbP_Y_sAHRV9rCuMQ"
-          defaultCenter={defaultProps.center}
-          defaultZoom={defaultProps.zoom}
-          onChange={(map) => console.log("Map moved", map)}
-          onGoogleApiLoaded={onGoogleApiLoaded}
-        ></GoogleMap>
+        <Map mapId={"b4bd92c77fd97414"} controlled={false}>
+          <MapLoader setMap={setMap} />
+        </Map>
       </div>
     </>
   );
-};
+}
 
 export default MapComponent;

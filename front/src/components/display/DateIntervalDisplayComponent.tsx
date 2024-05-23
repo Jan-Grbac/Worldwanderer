@@ -18,6 +18,7 @@ interface Props {
   socket: Socket | undefined;
   selectedTimeslot: TimeSlot;
   setSelectedTimeslot: Function;
+  map: google.maps.Map;
 }
 
 function DateIntervalDisplayComponent(props: Props) {
@@ -35,6 +36,7 @@ function DateIntervalDisplayComponent(props: Props) {
     socket,
     selectedTimeslot,
     setSelectedTimeslot,
+    map,
   } = { ...props };
 
   function formatDate(date: string) {
@@ -338,6 +340,7 @@ function DateIntervalDisplayComponent(props: Props) {
             dateIntervalTimeslots={dateIntervalTimeslots}
             tripId={tripId}
             socket={socket}
+            map={map}
           />
         )}
       </div>
