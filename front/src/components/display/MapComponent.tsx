@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import {
-  APIProvider,
+  AdvancedMarker,
+  Pin,
   Map,
   useMap,
   useMapsLibrary,
@@ -16,6 +17,7 @@ interface Props {
   timeslots: Array<Array<TimeSlot>>;
   socket: Socket | undefined;
   selectedTimeslot: TimeSlot;
+  setSelectedTimeslot: Function;
   setSuggestedAttractions: Function;
   setHotels: Function;
   map: google.maps.Map;
@@ -46,6 +48,7 @@ function MapComponent(props: Props) {
     timeslots,
     socket,
     selectedTimeslot,
+    setSelectedTimeslot,
     setSuggestedAttractions,
     setHotels,
     map,
@@ -64,17 +67,10 @@ function MapComponent(props: Props) {
   const [directionsService, setDirectionsService] =
     useState<google.maps.DirectionsService>();
 
-  const defaultProps = {
-    center: {
-      lat: 45.4076,
-      lng: 13.9651,
-    },
-    zoom: 11,
-  };
+  const [markers, setMarkers] = useState<Array<MarkerInfo>>([]);
 
   useEffect(() => {
     if (map && placesLib && geocodingLib && routesLib) {
-      console.log("here?");
       setService(new placesLib.PlacesService(map));
       setGeocoder(new geocodingLib.Geocoder());
       setDirectionsService(new routesLib.DirectionsService());
@@ -94,11 +90,8 @@ function MapComponent(props: Props) {
             },
             (results, status) => {
               if (status === geocodingLib.GeocoderStatus.OK && results) {
-                console.log(results);
                 if (selectedTimeslot) {
                   let result = results[0];
-                  console.log(result.formatted_address);
-                  console.log(selectedTimeslot);
                   (
                     document.getElementById(
                       "searchBox-" + selectedTimeslot.dateIntervalId
@@ -148,29 +141,37 @@ function MapComponent(props: Props) {
       coreLib &&
       routesLib
     ) {
+      let newMarkersAll: Array<MarkerInfo> = [];
       for (let i = 0; i < dateIntervals.length; i++) {
         if (i < timeslots.length) {
-          let markers: Array<google.maps.LatLng> = [];
-
+          let newMarkers: Array<MarkerInfo> = [];
           for (let j = 0; j < timeslots[i].length; j++) {
             let timeslot = timeslots[i][j];
-
             let markerLatLng = new coreLib.LatLng(timeslot.lat, timeslot.lng);
+            let markerInfo = {
+              position: markerLatLng,
+              color: colorDict[i],
+              text: String(j + 1),
+              timeslot: timeslot,
+              selected: false,
+            } as MarkerInfo;
 
             if (selectedTimeslot && timeslot.id === selectedTimeslot.id) {
+              markerInfo.selected = true;
             }
 
-            markers.push(markerLatLng);
+            newMarkers.push(markerInfo);
           }
+          newMarkersAll = newMarkersAll.concat(newMarkers);
 
-          if (markers.length >= 2 && directionsService) {
-            let src = new coreLib.LatLng(markers[0]);
-            let dest = new coreLib.LatLng(markers[markers.length - 1]);
+          if (newMarkers.length > 1 && directionsService) {
+            let src = newMarkers[0].position;
+            let dest = newMarkers[newMarkers.length - 1].position;
 
             let waypoints = new Array<google.maps.DirectionsWaypoint>();
-            for (let i = 1; i < markers.length - 1; i++) {
+            for (let i = 1; i < newMarkers.length - 1; i++) {
               waypoints.push({
-                location: new coreLib.LatLng(markers[i]),
+                location: newMarkers[i].position,
               });
             }
 
@@ -188,7 +189,6 @@ function MapComponent(props: Props) {
               },
               (result, status) => {
                 if (status === routesLib.DirectionsStatus.OK) {
-                  console.log(result);
                   directionsRenderer.setDirections(result);
                   directionsRenderer.setOptions({
                     polylineOptions: {
@@ -196,10 +196,7 @@ function MapComponent(props: Props) {
                       strokeColor: colorDict[i],
                       strokeWeight: 5,
                     },
-                    markerOptions: {
-                      draggable: true,
-                      crossOnDrag: false,
-                    },
+                    suppressMarkers: true,
                   });
                 }
               }
@@ -207,6 +204,7 @@ function MapComponent(props: Props) {
           }
         }
       }
+      setMarkers(newMarkersAll);
     }
   }, [
     dateIntervals,
@@ -262,8 +260,32 @@ function MapComponent(props: Props) {
   return (
     <>
       <div style={{ height: "100%", width: "100%", position: "relative" }}>
-        <Map mapId={"b4bd92c77fd97414"} controlled={false}>
+        <Map
+          id="map"
+          mapId={"b4bd92c77fd97414"}
+          controlled={false}
+          defaultZoom={10}
+          defaultCenter={{ lat: 45.4091, lng: 13.9636 }}
+        >
           <MapLoader setMap={setMap} />
+          {markers &&
+            markers.map(function (marker: MarkerInfo) {
+              return (
+                <AdvancedMarker
+                  position={marker.position}
+                  clickable={true}
+                  onClick={(event) => setSelectedTimeslot(marker.timeslot)}
+                >
+                  <Pin
+                    background={marker.color}
+                    borderColor={"#006425"}
+                    glyphColor={"white"}
+                    glyph={marker.text}
+                    scale={marker.selected ? 1.25 : 1}
+                  />
+                </AdvancedMarker>
+              );
+            })}
         </Map>
       </div>
     </>

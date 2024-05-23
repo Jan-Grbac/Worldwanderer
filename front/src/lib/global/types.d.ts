@@ -55,6 +55,14 @@ declare global {
         comment: string,
         ratingDate: string,
     }
+
+    type MarkerInfo = {
+        position: google.maps.LatLng,
+        color: string,
+        text: string,
+        timeslot: TimeSlot,
+        selected: boolean,
+    }
 }
 
-export { User, LoginInfo, SignUpInfo, Trip, DateInterval, TimeSlot, Rating }
+export { User, LoginInfo, SignUpInfo, Trip, DateInterval, TimeSlot, Rating, MarkerInfo }

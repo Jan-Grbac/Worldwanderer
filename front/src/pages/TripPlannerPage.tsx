@@ -418,6 +418,7 @@ function TripPlannerPage(props: Props) {
                 timeslots={timeslots}
                 socket={socket}
                 selectedTimeslot={selectedTimeslot as TimeSlot}
+                setSelectedTimeslot={setSelectedTimeslot}
                 setSuggestedAttractions={setSuggestedAttractions}
                 setHotels={setHotels}
                 map={map as google.maps.Map}

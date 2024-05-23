@@ -29,7 +29,7 @@ function TimeSlotCreateComponent(props: Props) {
     ...props,
   };
 
-  const [timeslot, setTimeslot] = useState<TimeSlot>(Object);
+  const [timeslot, setTimeslot] = useState<TimeSlot>();
   const [searchBox, setSearchBox] = useState<google.maps.places.Autocomplete>();
 
   const placesLib = useMapsLibrary("places");
@@ -94,6 +94,7 @@ function TimeSlotCreateComponent(props: Props) {
   }
 
   function handleSubmit() {
+    console.log(timeslot);
     if (!timeslot) return;
 
     if (timeslot.name === undefined) {
@@ -153,10 +154,11 @@ function TimeSlotCreateComponent(props: Props) {
         }
 
         newDateIntervalTimeslots.push(data);
+        console.log(dateIntervalTimeslots);
 
         if (timeslots.length === 0) {
           newTimeslots.push(newDateIntervalTimeslots);
-        } else {
+        } else if (dateIntervalTimeslots !== undefined) {
           for (let i = 0; i < timeslots.length; i++) {
             if (
               JSON.stringify(timeslots[i]) ===
@@ -166,6 +168,8 @@ function TimeSlotCreateComponent(props: Props) {
               break;
             }
           }
+        } else {
+          newTimeslots.push(newDateIntervalTimeslots);
         }
 
         setTimeslots(newTimeslots);
