@@ -37,13 +37,11 @@ function RemoveDateIntervalComponent(props: Props) {
     for (let i = 0; i < dateIntervals.length; i++) {
       if (dateIntervals[i].id === dateIntervalId) {
         newDateIntervals.splice(i, 1);
-        console.log(newDateIntervals);
 
         newTimeslots.splice(i, 1);
         if (newTimeslots.length === 0) {
           newTimeslots.push([]);
         }
-        console.log(newTimeslots);
         break;
       }
     }
@@ -61,11 +59,8 @@ function RemoveDateIntervalComponent(props: Props) {
       fetchData
     );
 
-    console.log("Data after removing:");
     setDateIntervals(newDateIntervals);
-    console.log(newDateIntervals);
     setTimeslots(newTimeslots);
-    console.log(newTimeslots);
 
     if (socket) {
       socket.emit("UPDATE", tripId + ":" + username + ":DELETED_DATE_INTERVAL");

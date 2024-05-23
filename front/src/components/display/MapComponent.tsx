@@ -68,6 +68,9 @@ function MapComponent(props: Props) {
     useState<google.maps.DirectionsService>();
 
   const [markers, setMarkers] = useState<Array<MarkerInfo>>([]);
+  const [previousRenders, setPreviousRenders] = useState<
+    Array<google.maps.DirectionsRenderer>
+  >([]);
 
   useEffect(() => {
     if (map && placesLib && geocodingLib && routesLib) {
@@ -141,6 +144,11 @@ function MapComponent(props: Props) {
       coreLib &&
       routesLib
     ) {
+      for (let i in previousRenders) {
+        previousRenders[i].setMap(null);
+      }
+      let newPreviousRenders: Array<google.maps.DirectionsRenderer> = [];
+
       let newMarkersAll: Array<MarkerInfo> = [];
       for (let i = 0; i < dateIntervals.length; i++) {
         if (i < timeslots.length) {
@@ -177,6 +185,7 @@ function MapComponent(props: Props) {
 
             let directionsRenderer = new routesLib.DirectionsRenderer();
             directionsRenderer.setMap(map);
+            newPreviousRenders.push(directionsRenderer);
 
             directionsService.route(
               {
@@ -205,6 +214,7 @@ function MapComponent(props: Props) {
         }
       }
       setMarkers(newMarkersAll);
+      setPreviousRenders(newPreviousRenders);
     }
   }, [
     dateIntervals,

@@ -154,7 +154,6 @@ function TimeSlotCreateComponent(props: Props) {
         }
 
         newDateIntervalTimeslots.push(data);
-        console.log(dateIntervalTimeslots);
 
         if (timeslots.length === 0) {
           newTimeslots.push(newDateIntervalTimeslots);
