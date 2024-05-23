@@ -25,7 +25,7 @@ declare global {
         rating: number,
         published: boolean,
         publishedDate: string;
-        country: string;
+        countries: Array<string>;
     }
 
     type DateInterval = {

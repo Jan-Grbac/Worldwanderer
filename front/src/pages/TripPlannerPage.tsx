@@ -174,7 +174,7 @@ function TripPlannerPage(props: Props) {
         newTrip.ownerUsername = data.ownerUsername;
         newTrip.published = data.published;
         newTrip.publishedDate = data.publishedDate;
-        newTrip.country = data.country;
+        newTrip.countries = data.countries;
 
         if (username === data.ownerUsername || username === "admin") {
           setIsOwner(true);

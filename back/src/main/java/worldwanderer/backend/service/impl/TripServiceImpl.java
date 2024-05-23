@@ -11,10 +11,8 @@ import worldwanderer.backend.repository.TripAccessRepository;
 import worldwanderer.backend.repository.TripRepository;
 import worldwanderer.backend.service.TripService;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +36,7 @@ public class TripServiceImpl implements TripService {
                 .rating(0)
                 .published(false)
                 .user(user)
-                .country(tripRequest.getCountry())
+                .countries(condenseCountries(tripRequest.getCountries()))
                 .build();
 
         return tripRepository.save(trip);
@@ -52,7 +50,7 @@ public class TripServiceImpl implements TripService {
                 .tripAccesses(new LinkedList<>())
                 .ratings(new LinkedList<>())
                 .description(trip.getDescription())
-                .country(trip.getCountry())
+                .countries(trip.getCountries())
                 .rating(0)
                 .published(false)
                 .publishedDate(null)
@@ -104,7 +102,7 @@ public class TripServiceImpl implements TripService {
                 .id(trip.getId())
                 .published(trip.isPublished())
                 .publishedDate(trip.getPublishedDate())
-                .country(trip.getCountry())
+                .countries(parseCountries(trip.getCountries()))
                 .build();
     }
 
@@ -230,5 +228,13 @@ public class TripServiceImpl implements TripService {
     @Override
     public List<Trip> getTripsForUserContainingQuery(User user, String query) {
         return tripRepository.findAllByUserAndNameContainsIgnoreCase(user, query);
+    }
+
+    private String condenseCountries(List<String> countries) {
+        return String.join(":", countries);
+    }
+
+    private List<String> parseCountries(String countries) {
+        return Arrays.stream(countries.split(":")).toList();
     }
 }

@@ -42,7 +42,7 @@ public class Trip implements Serializable {
     private boolean published;
     private Date publishedDate;
 
-    private String country;
+    private String countries;
 
     public Trip() {
 

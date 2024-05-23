@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import * as FlagIcons from "country-flag-icons/react/3x2";
 import "jquery";
 
 interface Props {
@@ -29,7 +30,9 @@ function CreateTripComponent(props: Props) {
       () => {
         loadScript("build/js/countrySelect.min.js", () => {
           if (typeof ($.fn as any).countrySelect === "function") {
-            ($("#country") as any).countrySelect();
+            setTimeout(() => {
+              ($("#country") as any).countrySelect();
+            }, 100);
           } else {
             console.error("countrySelect is not a function on jQuery");
           }
@@ -38,6 +41,12 @@ function CreateTripComponent(props: Props) {
       }
     );
   }, []);
+
+  const getFlagComponent = (countryCode: string) => {
+    const upperCaseCountryCode = countryCode.toUpperCase();
+    const FlagComponent = (FlagIcons as any)[upperCaseCountryCode];
+    return FlagComponent ? <FlagComponent /> : null;
+  };
 
   function handleInputChange(param: string, value: any) {
     let newTripChanged = { ...newTrip } as Trip;
@@ -49,6 +58,18 @@ function CreateTripComponent(props: Props) {
       newTripChanged[param] = value;
       setNewTrip(newTripChanged);
     }
+    if (param === "countries") {
+      if (newTripChanged[param] === undefined) {
+        newTripChanged[param] = new Array<string>();
+      }
+      let country_code = String(
+        ($("#country_code") as JQuery<HTMLInputElement>).val()
+      );
+      if (!newTripChanged[param].includes(country_code)) {
+        newTripChanged[param].push(country_code);
+      }
+      setNewTrip(newTripChanged);
+    }
   }
 
   function handleNewTripCreation() {
@@ -58,10 +79,10 @@ function CreateTripComponent(props: Props) {
       alert("Name cannot be empty!");
       return;
     }
-
-    newTrip.country = String(
-      ($("#country_code") as JQuery<HTMLInputElement>).val()
-    );
+    if (newTrip.countries === undefined) {
+      alert("You need to select at least one country.");
+      return;
+    }
 
     const fetchData = {
       headers: {
@@ -123,11 +144,23 @@ function CreateTripComponent(props: Props) {
           ></textarea>
         </div>
         <div className="pl-4 pt-4 flex flex-row gap-2 pr-4">
-          <strong className="pt-2">
-            <i>Country:</i>
+          <strong>
+            <i>Countries (add at least one):</i>
           </strong>
+          {newTrip?.countries &&
+            newTrip.countries.map(function (country: string) {
+              return <div className="w-10">{getFlagComponent(country)}</div>;
+            })}
+        </div>
+        <div className="pl-4 pt-4 flex flex-row gap-2 pr-4">
           <input type="text" id="country" className="rounded-md p-2" />
           <input type="hidden" id="country_code" />
+          <button
+            className="ml-2 rounded-md bg-gray-300 pl-2 pr-2 hover:bg-gray-400"
+            onClick={(event) => handleInputChange("countries", "")}
+          >
+            Add country
+          </button>
         </div>
         <button
           className="mt-4 mb-4 confirmButton self-center"

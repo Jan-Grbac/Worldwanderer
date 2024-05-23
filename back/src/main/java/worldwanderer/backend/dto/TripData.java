@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Builder
 @Data
@@ -19,5 +20,5 @@ public class TripData {
     private float rating;
     private boolean published;
     private Date publishedDate;
-    private String country;
+    private List<String> countries;
 }

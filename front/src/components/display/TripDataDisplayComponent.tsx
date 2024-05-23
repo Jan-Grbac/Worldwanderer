@@ -46,6 +46,14 @@ function TripDataDisplayComponent(props: Props) {
     newTrip.name = (
       document.getElementById("trip-name-edit") as HTMLInputElement
     ).value;
+
+    if (newTrip.name === "") {
+      document.getElementById("trip-name-edit")?.classList.add("hidden");
+      document.getElementById("trip-name-view")?.classList.remove("hidden");
+      alert("Name cannot be empty.");
+      return;
+    }
+
     newTrip.description = (
       document.getElementById("trip-description-edit") as HTMLInputElement
     ).value;
@@ -166,7 +174,9 @@ function TripDataDisplayComponent(props: Props) {
             className="hover:bg-gray-100 rounded-md"
             onDoubleClick={allowDescriptionEditing}
           >
-            {trip.description}
+            {trip.description === "" || trip.description === null
+              ? "Add description..."
+              : trip.description}
           </div>
           <textarea
             id="trip-description-edit"
@@ -178,11 +188,17 @@ function TripDataDisplayComponent(props: Props) {
             onBlur={handleTripChanged}
             suppressContentEditableWarning={true}
           ></textarea>
-          {trip.country !== undefined && (
+          {trip.countries !== undefined && (
             <>
-              <h2 className="font-bold italic">Country</h2>
-              <div id="trip-description-view" className="w-10">
-                {getFlagComponent(trip.country)}
+              <h2 className="font-bold italic">Countries</h2>
+              <div className="flex flex-row gap-2">
+                {trip.countries.map(function (country: string) {
+                  {
+                    return (
+                      <div className="w-10">{getFlagComponent(country)}</div>
+                    );
+                  }
+                })}
               </div>
             </>
           )}
