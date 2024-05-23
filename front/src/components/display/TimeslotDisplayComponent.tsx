@@ -194,7 +194,7 @@ function TimeSlotDisplayComponent(props: Props) {
       method: "POST",
       body: JSON.stringify(newTimeslot),
     };
-    fetch(`/api/core/timeslot/updateTimeslot/${timeslot.id}`, fetchData)
+    fetch(`/api/core/timeslot/updateTimeslot`, fetchData)
       .then((response) => {
         if (response.ok) {
           return;

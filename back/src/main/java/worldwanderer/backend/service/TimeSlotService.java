@@ -10,7 +10,7 @@ public interface TimeSlotService {
     TimeSlot createTimeSlot(TimeSlotData timeSlotData, DateInterval dateInterval);
     TimeSlotData transformTimeSlotIntoTimeSlotData(TimeSlot timeSlot);
     TimeSlot getTimeSlotForId(long id);
-    TimeSlot updateTimeSlot(TimeSlot timeSlot);
+    void updateTimeSlot(TimeSlotData timeSlot);
     void deleteTimeSlot(long id);
     List<TimeSlot> getTimeSlotsForDateInterval(DateInterval dateInterval);
 }

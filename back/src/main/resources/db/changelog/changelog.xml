@@ -36,9 +36,7 @@
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="description" type="VARCHAR(1024)">
-                <constraints nullable="false"/>
-            </column>
+            <column name="description" type="VARCHAR(1024)"/>
             <column name="rating" type="float" defaultValue="0" defaultOnNull="true">
                 <constraints nullable="false" />
             </column>
@@ -70,12 +68,8 @@
             <column name="interval_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="start_time" type="TIME">
-                <constraints nullable="false"/>
-            </column>
-            <column name="end_time" type="TIME">
-                <constraints nullable="false"/>
-            </column>
+            <column name="start_time" type="TIME" />
+            <column name="end_time" type="TIME" />
         </createTable>
     </changeSet>
 
@@ -110,11 +104,6 @@
             <column name="name" type="VARCHAR(255)" />
             <column name="notes" type="VARCHAR(1024)" />
         </addColumn>
-    </changeSet>
-
-    <changeSet id="TimeslotTimesCanBeNull" author="me">
-        <dropNotNullConstraint tableName="timeslot" columnName="start_time" />
-        <dropNotNullConstraint tableName="timeslot" columnName="end_time" />
     </changeSet>
 
     <changeSet id="addPublishedColumnToTrip" author="me">
@@ -171,6 +160,15 @@
     <changeSet id="3" author="me">
         <addColumn tableName="trip">
             <column name="country" type="varchar(10)" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="4" author="me">
+        <addColumn tableName="interval">
+            <column name="pos" type="int" />
+        </addColumn>
+        <addColumn tableName="timeslot">
+            <column name="pos" type="int" />
         </addColumn>
     </changeSet>
 

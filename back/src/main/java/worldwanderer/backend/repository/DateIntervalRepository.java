@@ -12,5 +12,5 @@ import java.util.List;
 @Transactional
 public interface DateIntervalRepository extends JpaRepository<DateInterval, Long> {
 
-    List<DateInterval> findAllByTrip(Trip trip);
+    List<DateInterval> findAllByTripOrderByPosAsc(Trip trip);
 }

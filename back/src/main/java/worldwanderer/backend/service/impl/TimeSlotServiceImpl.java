@@ -35,7 +35,15 @@ public class TimeSlotServiceImpl implements TimeSlotService {
                 .lat(timeSlotData.getLat())
                 .lng(timeSlotData.getLng())
                 .interval(dateInterval).build();
+        List<TimeSlot> allTimeslots = getTimeSlotsForDateInterval(dateInterval);
 
+        if(allTimeslots.isEmpty()) {
+            timeSlot.setPos(0);
+        }
+        else {
+            timeSlot.setPos(allTimeslots.getLast().getPos() + 1);
+        }
+        
         return timeSlotRepository.save(timeSlot);
     }
 
@@ -50,6 +58,7 @@ public class TimeSlotServiceImpl implements TimeSlotService {
                 .lng(timeSlot.getLng())
                 .id(timeSlot.getId())
                 .dateIntervalId(timeSlot.getInterval().getId().toString())
+                .pos(timeSlot.getPos())
                 .build();
     }
 
@@ -59,17 +68,41 @@ public class TimeSlotServiceImpl implements TimeSlotService {
     }
 
     @Override
-    public TimeSlot updateTimeSlot(TimeSlot timeSlot) {
-        return timeSlotRepository.save(timeSlot);
+    public void updateTimeSlot(TimeSlotData timeSlotData) {
+        TimeSlot timeSlot = getTimeSlotForId(timeSlotData.getId());
+
+        if(timeSlotData.getStartTime() != null) {
+            timeSlot.setStartTime(LocalTime.parse(timeSlotData.getStartTime()));
+        }
+        if(timeSlotData.getEndTime() != null) {
+            timeSlot.setEndTime(LocalTime.parse(timeSlotData.getEndTime()));
+        }
+        timeSlot.setName(timeSlotData.getName());
+        timeSlot.setNotes(timeSlotData.getNotes());
+
+        timeSlotRepository.save(timeSlot);
     }
 
     @Override
     public void deleteTimeSlot(long id) {
-        timeSlotRepository.deleteById(id);
+        TimeSlot timeSlot = getTimeSlotForId(id);
+        List<TimeSlot> allTimeslots = getTimeSlotsForDateInterval(timeSlot.getInterval());
+
+        boolean moveBack = false;
+        for(TimeSlot otherTimeslot: allTimeslots) {
+            if(moveBack) {
+                otherTimeslot.setPos(otherTimeslot.getPos() - 1);
+                timeSlotRepository.save(otherTimeslot);
+            }
+            if(otherTimeslot.equals(timeSlot)) {
+                moveBack = true;
+            }
+        }
+        timeSlotRepository.delete(timeSlot);
     }
 
     @Override
     public List<TimeSlot> getTimeSlotsForDateInterval(DateInterval dateInterval) {
-        return timeSlotRepository.findAllByIntervalOrderById(dateInterval);
+        return timeSlotRepository.findAllByIntervalOrderByPosAsc(dateInterval);
     }
 }

@@ -61,21 +61,10 @@ public class TimeSlotController {
         return ResponseEntity.ok(timeSlotsData);
     }
 
-    @PostMapping("/updateTimeslot/{timeSlotId}")
-    public ResponseEntity<TimeSlotData> updateTimeSlot(@PathVariable Long timeSlotId, @RequestBody TimeSlotData timeSlotData) {
-        TimeSlot timeSlot = timeSlotService.getTimeSlotForId(timeSlotId);
-
-        if(timeSlotData.getStartTime() != null) {
-            timeSlot.setStartTime(LocalTime.parse(timeSlotData.getStartTime()));
-        }
-        if(timeSlotData.getEndTime() != null) {
-            timeSlot.setEndTime(LocalTime.parse(timeSlotData.getEndTime()));
-        }
-        timeSlot.setName(timeSlotData.getName());
-        timeSlot.setNotes(timeSlotData.getNotes());
-
-        timeSlotService.updateTimeSlot(timeSlot);
-        return ResponseEntity.ok(timeSlotService.transformTimeSlotIntoTimeSlotData(timeSlot));
+    @PostMapping("/updateTimeslot")
+    public ResponseEntity<Void> updateTimeSlot(@RequestBody TimeSlotData timeSlotData) {
+        timeSlotService.updateTimeSlot(timeSlotData);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/deleteTimeslot/{timeSlotId}")

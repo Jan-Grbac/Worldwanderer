@@ -25,13 +25,34 @@ public class DateIntervalServiceImpl implements DateIntervalService {
                 .name(dateIntervalData.getName())
                 .budget(dateIntervalData.getBudget())
                 .build();
+        List<DateInterval> allIntervals = getDateIntervalsForTrip(dateInterval.getTrip());
+        if(allIntervals.isEmpty()) {
+            dateInterval.setPos(0);
+        }
+        else {
+            dateInterval.setPos(allIntervals.getLast().getPos() + 1);
+        }
 
         return dateIntervalRepository.save(dateInterval);
     }
 
     @Override
     public void deleteDateInterval(long id) {
-        dateIntervalRepository.deleteById(id);
+        DateInterval dateInterval = getDateIntervalForId(id);
+        List<DateInterval> allIntervals = getDateIntervalsForTrip(dateInterval.getTrip());
+
+        boolean moveBack = false;
+        for(DateInterval interval: allIntervals) {
+            if(moveBack) {
+                interval.setPos(interval.getPos() - 1);
+                dateIntervalRepository.save(interval);
+            }
+            if(interval.equals(dateInterval)) {
+                moveBack = true;
+            }
+        }
+
+        dateIntervalRepository.delete(dateInterval);
     }
 
     @Override
@@ -43,6 +64,7 @@ public class DateIntervalServiceImpl implements DateIntervalService {
                 .budget(dateInterval.getBudget())
                 .id(dateInterval.getId())
                 .tripId(dateInterval.getTrip().getId().toString())
+                .pos(dateInterval.getPos())
                 .build();
     }
 
@@ -53,7 +75,7 @@ public class DateIntervalServiceImpl implements DateIntervalService {
 
     @Override
     public List<DateInterval> getDateIntervalsForTrip(Trip trip) {
-        return dateIntervalRepository.findAllByTrip(trip);
+        return dateIntervalRepository.findAllByTripOrderByPosAsc(trip);
     }
 
     @Override

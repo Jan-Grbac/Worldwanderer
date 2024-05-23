@@ -35,6 +35,7 @@ declare global {
         startDate: string,
         endDate: string,
         tripId: string,
+        pos: number,
     }
 
     type TimeSlot = {
@@ -46,6 +47,7 @@ declare global {
         lat: number,
         lng: number,
         dateIntervalId: string,
+        pos: number,
     }
 
     type Rating = {

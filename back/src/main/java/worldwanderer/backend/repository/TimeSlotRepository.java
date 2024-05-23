@@ -12,5 +12,5 @@ import java.util.List;
 @Transactional
 public interface TimeSlotRepository extends JpaRepository<TimeSlot, Long> {
 
-    List<TimeSlot> findAllByIntervalOrderById(DateInterval interval);
+    List<TimeSlot> findAllByIntervalOrderByPosAsc(DateInterval interval);
 }

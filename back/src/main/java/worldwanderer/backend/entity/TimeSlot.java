@@ -32,6 +32,8 @@ public class TimeSlot implements Serializable {
     private Double lat;
     private Double lng;
 
+    private int pos;
+
     public TimeSlot() {
 
     }
