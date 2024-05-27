@@ -67,6 +67,12 @@ public class TimeSlotController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/updateTimeslotPosition")
+    public ResponseEntity<Void> updateTimeSlotPosition(@RequestBody TimeSlotData timeSlotData) {
+        timeSlotService.updateTimeSlotPosition(timeSlotData);
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/deleteTimeslot/{timeSlotId}")
     public ResponseEntity<Void> deleteTimeSlot(@PathVariable Long timeSlotId) {
         timeSlotService.deleteTimeSlot(timeSlotId);

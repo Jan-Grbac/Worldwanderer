@@ -15,13 +15,17 @@ interface Props {
   trip: Trip;
   dateIntervals: Array<DateInterval>;
   timeslots: Array<Array<TimeSlot>>;
+  setTimeslots: Function;
   socket: Socket | undefined;
   selectedTimeslot: TimeSlot;
+  selectedDateInterval: DateInterval;
   setSelectedTimeslot: Function;
   setSuggestedAttractions: Function;
   setHotels: Function;
   map: google.maps.Map;
   setMap: Function;
+  selectOnMap: boolean;
+  setSelectOnMap: Function;
 }
 
 interface MapLoaderProps {
@@ -46,13 +50,17 @@ function MapComponent(props: Props) {
     trip,
     dateIntervals,
     timeslots,
+    setTimeslots,
     socket,
     selectedTimeslot,
     setSelectedTimeslot,
+    selectedDateInterval,
     setSuggestedAttractions,
     setHotels,
     map,
     setMap,
+    selectOnMap,
+    setSelectOnMap,
   } = {
     ...props,
   };
@@ -72,6 +80,9 @@ function MapComponent(props: Props) {
     Array<google.maps.DirectionsRenderer>
   >([]);
 
+  const [center, setCenter] = useState({ lat: 45.4091, lng: 13.9636 });
+  const [zoom, setZoom] = useState(10);
+
   useEffect(() => {
     if (map && placesLib && geocodingLib && routesLib) {
       setService(new placesLib.PlacesService(map));
@@ -83,6 +94,10 @@ function MapComponent(props: Props) {
   useEffect(() => {
     if (map && geocoder && geocodingLib && coreLib) {
       let listener = map.addListener("click", (event: any) => {
+        if (!selectOnMap) {
+          return;
+        }
+
         let lat = event.latLng?.lat();
         let lng = event.latLng?.lng();
 
@@ -93,34 +108,31 @@ function MapComponent(props: Props) {
             },
             (results, status) => {
               if (status === geocodingLib.GeocoderStatus.OK && results) {
-                if (selectedTimeslot) {
+                if (selectedDateInterval) {
                   let result = results[0];
                   (
                     document.getElementById(
-                      "searchBox-" + selectedTimeslot.dateIntervalId
+                      "searchBox-" + selectedDateInterval.id
                     ) as HTMLInputElement
                   ).value = result.formatted_address;
                   (
                     document.getElementById(
-                      "timeslot-name-input-" + selectedTimeslot.dateIntervalId
+                      "timeslot-name-input-" + selectedDateInterval.id
                     ) as HTMLInputElement
                   ).value = result.formatted_address;
                   (
                     document.getElementById(
-                      "timeslot-name-input-hidden-" +
-                        selectedTimeslot.dateIntervalId
+                      "timeslot-name-input-hidden-" + selectedDateInterval.id
                     ) as HTMLInputElement
                   ).value = result.formatted_address;
                   (
                     document.getElementById(
-                      "timeslot-lat-input-hidden-" +
-                        selectedTimeslot.dateIntervalId
+                      "timeslot-lat-input-hidden-" + selectedDateInterval.id
                     ) as HTMLInputElement
                   ).value = String(result.geometry.location.lat());
                   (
                     document.getElementById(
-                      "timeslot-lng-input-hidden-" +
-                        selectedTimeslot.dateIntervalId
+                      "timeslot-lng-input-hidden-" + selectedDateInterval.id
                     ) as HTMLInputElement
                   ).value = String(result.geometry.location.lng());
                 }
@@ -128,12 +140,13 @@ function MapComponent(props: Props) {
             }
           );
         }
+        setSelectOnMap(false);
       });
       return () => {
         listener.remove();
       };
     }
-  }, [map, geocoder, selectedTimeslot, geocodingLib, coreLib]);
+  }, [map, geocoder, selectedTimeslot, geocodingLib, coreLib, selectOnMap]);
 
   useEffect(() => {
     if (
@@ -206,6 +219,9 @@ function MapComponent(props: Props) {
                       strokeWeight: 5,
                     },
                     suppressMarkers: true,
+                    suppressBicyclingLayer: true,
+                    suppressInfoWindows: true,
+                    preserveViewport: true,
                   });
                 }
               }
@@ -267,15 +283,81 @@ function MapComponent(props: Props) {
     placesLib,
   ]);
 
+  function updateTimeslotPosition(timeslot: TimeSlot) {
+    const fetchData = {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify(timeslot),
+    };
+    fetch(`/api/core/timeslot/updateTimeslotPosition`, fetchData)
+      .then((response) => {
+        if (response.ok) {
+          return;
+        }
+      })
+      .then(() => {
+        if (socket) {
+          socket.emit("UPDATE", trip.id + ":" + username + ":UPDATED_TIMESLOT");
+        }
+      });
+  }
+
+  function dragEnd(timeslot: TimeSlot, latLng: google.maps.LatLng | null) {
+    if (dragEnd === null) {
+      return;
+    }
+
+    let newTimeslots = [...timeslots];
+    let newTimeslot = { ...timeslot };
+
+    newTimeslot.lat = latLng?.lat() as number;
+    newTimeslot.lng = latLng?.lng() as number;
+
+    for (let i = 0; i < newTimeslots.length; i++) {
+      for (let j = 0; j < newTimeslots[i].length; j++) {
+        if (newTimeslots[i][j].id === newTimeslot.id) {
+          newTimeslots[i][j] = newTimeslot;
+          break;
+        }
+      }
+    }
+
+    updateTimeslotPosition(newTimeslot);
+    setTimeslots(newTimeslots);
+  }
+
+  const handleCenterChanged = () => {
+    if (map) {
+      const newCenter = map.getCenter();
+      if (newCenter) {
+        setCenter({ lat: newCenter.lat(), lng: newCenter.lng() });
+      }
+    }
+  };
+
+  const handleZoomChanged = () => {
+    if (map) {
+      setZoom(map.getZoom() as number);
+    }
+  };
+
   return (
     <>
-      <div style={{ height: "100%", width: "100%", position: "relative" }}>
+      <div
+        id="map-container"
+        style={{ height: "100%", width: "100%", position: "relative" }}
+      >
         <Map
           id="map"
           mapId={"b4bd92c77fd97414"}
-          controlled={false}
-          defaultZoom={10}
-          defaultCenter={{ lat: 45.4091, lng: 13.9636 }}
+          center={center}
+          zoom={zoom}
+          onCenterChanged={handleCenterChanged}
+          onZoomChanged={handleZoomChanged}
         >
           <MapLoader setMap={setMap} />
           {markers &&
@@ -284,7 +366,9 @@ function MapComponent(props: Props) {
                 <AdvancedMarker
                   position={marker.position}
                   clickable={true}
+                  draggable={true}
                   onClick={(event) => setSelectedTimeslot(marker.timeslot)}
+                  onDragEnd={(event) => dragEnd(marker.timeslot, event.latLng)}
                 >
                   <Pin
                     background={marker.color}

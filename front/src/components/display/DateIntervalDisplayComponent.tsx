@@ -18,6 +18,8 @@ interface Props {
   socket: Socket | undefined;
   selectedTimeslot: TimeSlot;
   setSelectedTimeslot: Function;
+  selectOnMap: boolean;
+  setSelectOnMap: Function;
   map: google.maps.Map;
 }
 
@@ -36,6 +38,8 @@ function DateIntervalDisplayComponent(props: Props) {
     socket,
     selectedTimeslot,
     setSelectedTimeslot,
+    selectOnMap,
+    setSelectOnMap,
     map,
   } = { ...props };
 
@@ -68,6 +72,16 @@ function DateIntervalDisplayComponent(props: Props) {
   function finishDateEditing(event: any) {
     if (event.currentTarget.contains(event.relatedTarget)) {
       return;
+    }
+
+    if (dateInterval.name === "") {
+      dateInterval.name = "unnamed";
+      let view = document.getElementById(
+        "dateinterval-name-view-" + dateInterval.id
+      );
+      if (view) {
+        view.innerHTML = "unnamed";
+      }
     }
 
     document
@@ -157,20 +171,19 @@ function DateIntervalDisplayComponent(props: Props) {
         "timeslot-" + selectedTimeslot.id
       );
       if (oldSelected) {
-        oldSelected.classList.remove("border-red-400");
       }
     }
 
     let newSelected = document.getElementById(
       "timeslot-" + timeslot.id
     ) as HTMLElement;
-    newSelected.classList.add("border-red-400");
 
-    setSelectedTimeslot(timeslot);
+    console.log("New selected: ", newSelected);
+
+    setSelectedTimeslot({ ...timeslot });
   }
 
   function allowNameEditing() {
-    console.log(dateInterval.name);
     let view = document.getElementById(
       "dateinterval-name-view-" + dateInterval.id
     );
@@ -192,6 +205,23 @@ function DateIntervalDisplayComponent(props: Props) {
     );
     edit?.classList.remove("hidden");
     edit?.focus();
+  }
+
+  // Drag start event handler
+  function handleDragStart(event: any) {
+    let draggedItem = event.target;
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("text", (draggedItem as DateInterval).id);
+    event.target.style.opacity = "0.5";
+  }
+
+  // Drop event handler
+  function handleDrop(event: any) {
+    event.preventDefault();
+    const targetItem = event.target;
+
+    let srcIndex = event;
+    let targetIndex = (targetItem as HTMLElement).id;
   }
 
   return (
@@ -310,23 +340,25 @@ function DateIntervalDisplayComponent(props: Props) {
           {dateIntervalTimeslots &&
             dateIntervalTimeslots.map(function (timeslot: TimeSlot) {
               return (
-                <li
-                  id={`timeslot-${timeslot.id}`}
-                  onClick={() => handleTimeslotClicked(timeslot)}
-                >
-                  <TimeSlotDisplayComponent
-                    key={timeslot.id as string}
-                    jwt={jwt}
-                    username={username}
-                    timeslot={timeslot}
-                    timeslots={timeslots}
-                    setTimeslots={setTimeslots}
-                    tripId={tripId}
-                    editable={editable}
-                    socket={socket}
-                    dateInterval={dateInterval}
-                  />
-                </li>
+                timeslot.name !== "" && (
+                  <li
+                    id={`timeslot-${timeslot.id}`}
+                    onClick={() => handleTimeslotClicked(timeslot)}
+                  >
+                    <TimeSlotDisplayComponent
+                      key={timeslot.id as string}
+                      jwt={jwt}
+                      username={username}
+                      timeslot={timeslot}
+                      timeslots={timeslots}
+                      setTimeslots={setTimeslots}
+                      tripId={tripId}
+                      editable={editable}
+                      socket={socket}
+                      dateInterval={dateInterval}
+                    />
+                  </li>
+                )
               );
             })}
         </ul>
@@ -341,6 +373,8 @@ function DateIntervalDisplayComponent(props: Props) {
             tripId={tripId}
             socket={socket}
             map={map}
+            selectOnMap={selectOnMap}
+            setSelectOnMap={setSelectOnMap}
           />
         )}
       </div>

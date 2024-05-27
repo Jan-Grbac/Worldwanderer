@@ -7,11 +7,22 @@ interface Props {
   username: string;
   dateIntervals: Array<DateInterval>;
   setDateIntervals: Function;
+  timeslots: Array<Array<TimeSlot>>;
+  setTimeslots: Function;
   socket: Socket | undefined;
 }
 
 function DateIntervalCreateComponent(props: Props) {
-  const { jwt, tripId, username, dateIntervals, setDateIntervals, socket } = {
+  const {
+    jwt,
+    tripId,
+    username,
+    dateIntervals,
+    setDateIntervals,
+    timeslots,
+    setTimeslots,
+    socket,
+  } = {
     ...props,
   };
   const [newDateInterval, setNewDateInterval] = useState<DateInterval>();
@@ -68,11 +79,7 @@ function DateIntervalCreateComponent(props: Props) {
       })
       .then((data) => {
         let newDateIntervals = [...dateIntervals] as Array<DateInterval>;
-
         newDateIntervals.push(data);
-
-        setDateIntervals(newDateIntervals);
-        setNewDateInterval({} as DateInterval);
 
         (
           document.getElementById(
@@ -92,6 +99,29 @@ function DateIntervalCreateComponent(props: Props) {
             `dateinterval-budget-input`
           ) as HTMLInputElement
         ).value = "";
+
+        let newTimeslots = [...timeslots];
+        let newTimeslot = {
+          id: "",
+          name: "",
+          notes: "",
+          startTime: "",
+          endTime: "",
+          lat: 0,
+          lng: 0,
+          dateIntervalId: "",
+          pos: 0,
+        } as TimeSlot;
+
+        let newTimeslotsArray = [];
+        newTimeslotsArray.push(newTimeslot);
+        newTimeslots.push(newTimeslotsArray);
+        console.log(newTimeslots);
+
+        setTimeslots(newTimeslots);
+
+        setDateIntervals(newDateIntervals);
+        setNewDateInterval({} as DateInterval);
 
         if (socket) {
           socket.emit(

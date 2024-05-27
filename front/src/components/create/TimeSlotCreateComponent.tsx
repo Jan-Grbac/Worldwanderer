@@ -12,6 +12,8 @@ interface Props {
   tripId: string;
   socket: Socket | undefined;
   map: google.maps.Map;
+  selectOnMap: boolean;
+  setSelectOnMap: Function;
 }
 
 function TimeSlotCreateComponent(props: Props) {
@@ -25,11 +27,13 @@ function TimeSlotCreateComponent(props: Props) {
     tripId,
     socket,
     map,
+    selectOnMap,
+    setSelectOnMap,
   } = {
     ...props,
   };
 
-  const [timeslot, setTimeslot] = useState<TimeSlot>();
+  const [timeslot, setTimeslot] = useState<TimeSlot>(Object);
   const [searchBox, setSearchBox] = useState<google.maps.places.Autocomplete>();
 
   const placesLib = useMapsLibrary("places");
@@ -94,7 +98,6 @@ function TimeSlotCreateComponent(props: Props) {
   }
 
   function handleSubmit() {
-    console.log(timeslot);
     if (!timeslot) return;
 
     if (timeslot.name === undefined) {
@@ -147,7 +150,7 @@ function TimeSlotCreateComponent(props: Props) {
       .then((data) => {
         let newTimeslots = [...timeslots];
         let newDateIntervalTimeslots: Array<TimeSlot>;
-        if (dateIntervalTimeslots === undefined) {
+        if (dateIntervalTimeslots[0].name === "") {
           newDateIntervalTimeslots = [];
         } else {
           newDateIntervalTimeslots = [...dateIntervalTimeslots];
@@ -171,6 +174,7 @@ function TimeSlotCreateComponent(props: Props) {
           newTimeslots.push(newDateIntervalTimeslots);
         }
 
+        console.log(newTimeslots);
         setTimeslots(newTimeslots);
         setTimeslot({} as TimeSlot);
 
@@ -215,6 +219,10 @@ function TimeSlotCreateComponent(props: Props) {
     }
   }
 
+  function activateMapSelection() {
+    setSelectOnMap(true);
+  }
+
   return (
     <>
       <div className="rounded-md bg-gray-400 mt-2">
@@ -248,6 +256,7 @@ function TimeSlotCreateComponent(props: Props) {
               id={`searchBox-${dateIntervalId}`}
               className="ml-2 rounded-md pl-4 pr-4"
             />
+            <button onClick={activateMapSelection}>Select on map</button>
           </div>
           <input
             type="text"

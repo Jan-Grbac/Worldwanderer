@@ -44,6 +44,8 @@ function TripPlannerPage(props: Props) {
     []
   );
 
+  const [selectOnMap, setSelectOnMap] = useState<boolean>(false);
+
   const [map, setMap] = useState<google.maps.Map>();
 
   const [socket, setSocket] = useState<Socket>();
@@ -406,6 +408,8 @@ function TripPlannerPage(props: Props) {
                 setSelectedTimeslot={setSelectedTimeslot}
                 selectedDateInterval={selectedDateInterval as DateInterval}
                 setSelectedDateInterval={setSelectedDateInterval}
+                selectOnMap={selectOnMap}
+                setSelectOnMap={setSelectOnMap}
                 map={map as google.maps.Map}
               />
             </div>
@@ -416,11 +420,15 @@ function TripPlannerPage(props: Props) {
                 trip={trip as Trip}
                 dateIntervals={dateIntervals}
                 timeslots={timeslots}
+                setTimeslots={setTimeslots}
                 socket={socket}
                 selectedTimeslot={selectedTimeslot as TimeSlot}
                 setSelectedTimeslot={setSelectedTimeslot}
+                selectedDateInterval={selectedDateInterval as DateInterval}
                 setSuggestedAttractions={setSuggestedAttractions}
                 setHotels={setHotels}
+                selectOnMap={selectOnMap}
+                setSelectOnMap={setSelectOnMap}
                 map={map as google.maps.Map}
                 setMap={setMap}
               />

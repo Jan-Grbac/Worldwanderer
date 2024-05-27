@@ -84,6 +84,16 @@ public class TimeSlotServiceImpl implements TimeSlotService {
     }
 
     @Override
+    public void updateTimeSlotPosition(TimeSlotData timeSlotData) {
+        TimeSlot timeSlot = getTimeSlotForId(timeSlotData.getId());
+
+        timeSlot.setLat(timeSlotData.getLat());
+        timeSlot.setLng(timeSlotData.getLng());
+
+        timeSlotRepository.save(timeSlot);
+    }
+
+    @Override
     public void deleteTimeSlot(long id) {
         TimeSlot timeSlot = getTimeSlotForId(id);
         List<TimeSlot> allTimeslots = getTimeSlotsForDateInterval(timeSlot.getInterval());

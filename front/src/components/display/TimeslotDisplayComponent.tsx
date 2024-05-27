@@ -173,13 +173,16 @@ function TimeSlotDisplayComponent(props: Props) {
   }
 
   function update(newTimeslot: TimeSlot) {
+    if (newTimeslot.name === "") {
+      return;
+    }
+
     let newTimeslots = JSON.parse(JSON.stringify(timeslots));
 
     for (let i = 0; i < timeslots.length; i++) {
       for (let j = 0; j < timeslots[i].length; j++) {
         if (timeslots[i][j].id === timeslot.id) {
           newTimeslots[i][j] = newTimeslot;
-          console.log(i, j);
           break;
         }
       }

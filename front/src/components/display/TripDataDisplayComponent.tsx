@@ -19,6 +19,8 @@ interface Props {
   setSelectedTimeslot: Function;
   selectedDateInterval: DateInterval;
   setSelectedDateInterval: Function;
+  selectOnMap: boolean;
+  setSelectOnMap: Function;
   map: google.maps.Map;
 }
 
@@ -38,6 +40,8 @@ function TripDataDisplayComponent(props: Props) {
     setSelectedTimeslot,
     selectedDateInterval,
     setSelectedDateInterval,
+    selectOnMap,
+    setSelectOnMap,
     map,
   } = { ...props };
 
@@ -221,6 +225,7 @@ function TripDataDisplayComponent(props: Props) {
                 return (
                   <li
                     id={`dateinterval-${dateInterval.id}`}
+                    draggable={true}
                     onClick={() => handleDateIntervalClicked(dateInterval)}
                   >
                     <DateIntervalDisplayComponent
@@ -238,6 +243,8 @@ function TripDataDisplayComponent(props: Props) {
                       socket={socket}
                       selectedTimeslot={selectedTimeslot}
                       setSelectedTimeslot={setSelectedTimeslot}
+                      selectOnMap={selectOnMap}
+                      setSelectOnMap={setSelectOnMap}
                       map={map}
                     />
                   </li>
@@ -251,6 +258,8 @@ function TripDataDisplayComponent(props: Props) {
               username={username}
               dateIntervals={dateIntervals}
               setDateIntervals={setDateIntervals}
+              timeslots={timeslots}
+              setTimeslots={setTimeslots}
               socket={socket}
             />
           )}
