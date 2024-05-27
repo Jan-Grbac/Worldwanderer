@@ -3,6 +3,7 @@ import TimeSlotCreateComponent from "../create/TimeSlotCreateComponent";
 import TimeSlotDisplayComponent from "./TimeSlotDisplayComponent";
 import { Socket } from "socket.io-client";
 import { useEffect, useState } from "react";
+import { colorDict } from "../../assets/colors/colorDictionary";
 
 interface Props {
   jwt: string;
@@ -18,6 +19,7 @@ interface Props {
   socket: Socket | undefined;
   selectedTimeslot: TimeSlot;
   setSelectedTimeslot: Function;
+  selectedDateInterval: DateInterval;
   selectOnMap: boolean;
   setSelectOnMap: Function;
   map: google.maps.Map;
@@ -38,6 +40,7 @@ function DateIntervalDisplayComponent(props: Props) {
     socket,
     selectedTimeslot,
     setSelectedTimeslot,
+    selectedDateInterval,
     selectOnMap,
     setSelectOnMap,
     map,
@@ -58,6 +61,8 @@ function DateIntervalDisplayComponent(props: Props) {
   }
 
   function allowDateEditing() {
+    if (!editable) return;
+
     document
       .getElementById("dateinterval-date-view-" + dateInterval.id)
       ?.classList.add("hidden");
@@ -70,6 +75,8 @@ function DateIntervalDisplayComponent(props: Props) {
   }
 
   function finishDateEditing(event: any) {
+    if (!editable) return;
+
     if (event.currentTarget.contains(event.relatedTarget)) {
       return;
     }
@@ -166,24 +173,13 @@ function DateIntervalDisplayComponent(props: Props) {
   }
 
   function handleTimeslotClicked(timeslot: TimeSlot) {
-    if (selectedTimeslot) {
-      let oldSelected = document.getElementById(
-        "timeslot-" + selectedTimeslot.id
-      );
-      if (oldSelected) {
-      }
-    }
-
-    let newSelected = document.getElementById(
-      "timeslot-" + timeslot.id
-    ) as HTMLElement;
-
-    console.log("New selected: ", newSelected);
-
+    if (timeslot.id === selectedTimeslot.id) return;
     setSelectedTimeslot({ ...timeslot });
   }
 
   function allowNameEditing() {
+    if (!editable) return;
+
     let view = document.getElementById(
       "dateinterval-name-view-" + dateInterval.id
     );
@@ -196,6 +192,8 @@ function DateIntervalDisplayComponent(props: Props) {
   }
 
   function allowBudgetEditing() {
+    if (!editable) return;
+
     let view = document.getElementById(
       "dateinterval-budget-view-" + dateInterval.id
     );
@@ -224,159 +222,188 @@ function DateIntervalDisplayComponent(props: Props) {
     let targetIndex = (targetItem as HTMLElement).id;
   }
 
+  useEffect(() => {
+    if (selectedDateInterval) {
+      let div = document.getElementById("dateinterval-" + dateInterval.id);
+      if (selectedDateInterval.id === dateInterval.id) {
+        div?.classList.add("border-2", "border-black");
+      } else {
+        div?.classList.remove("border-2", "border-black");
+      }
+    }
+  }, [selectedDateInterval]);
+
+  useEffect(() => {
+    let top = document.getElementById(
+      "dateinterval-div-top-" + dateInterval.id
+    );
+    if (top) {
+      top.style.backgroundColor = colorDict[dateInterval.pos % 20];
+    }
+  }, [dateInterval]);
+
   return (
     <>
-      <div className="bg-gray-200 m-2 ml-4 p-2 pl-4 rounded-md">
+      <div
+        id={`dateinterval-${dateInterval.id}`}
+        className="bg-gray-200 m-2 ml-4 rounded-md"
+      >
         <div className="flex flex-col gap-2">
-          <div className="flex flex-row pr-2">
-            <div
-              id={`dateinterval-name-view-${dateInterval.id}`}
-              className="flex-grow"
-              onDoubleClick={allowNameEditing}
-            >
-              <h2 className="italic font-semibold">
-                {dateInterval.name !== null ? dateInterval.name : "unnamed"}
-              </h2>
+          <div
+            id={`dateinterval-div-top-` + dateInterval.id}
+            className="min-h-6 max-h-6 rounded-t-md"
+          ></div>
+          <div className="pl-4 pr-2 pb-2">
+            <div className="flex flex-row pr-2">
+              <div
+                id={`dateinterval-name-view-${dateInterval.id}`}
+                className="flex-grow hover:bg-gray-300 rounded-md"
+                onClick={allowNameEditing}
+              >
+                <h2 className="italic font-semibold">
+                  {dateInterval.name !== null ? dateInterval.name : "unnamed"}
+                </h2>
+              </div>
+              <input
+                id={`dateinterval-name-edit-${dateInterval.id}`}
+                className=" hidden flex-grow rounded-md pl-4 pr-4"
+                defaultValue={
+                  dateInterval.name !== null ? dateInterval.name : "unnamed"
+                }
+                onChange={(event) =>
+                  dateIntervalChanged("name", event.target.value)
+                }
+                onKeyDown={handleEnterKeyPress}
+                onBlur={finishDateEditing}
+                type="text"
+              ></input>
+              {editable && (
+                <RemoveDateIntervalComponent
+                  jwt={jwt}
+                  username={username}
+                  dateIntervalId={dateInterval.id}
+                  dateIntervals={dateIntervals}
+                  setDateIntervals={setDateIntervals}
+                  timeslots={timeslots}
+                  setTimeslots={setTimeslots}
+                  tripId={tripId}
+                  socket={socket}
+                />
+              )}
             </div>
-            <input
-              id={`dateinterval-name-edit-${dateInterval.id}`}
-              className=" hidden flex-grow rounded-md pl-4 pr-4"
-              defaultValue={
-                dateInterval.name !== null ? dateInterval.name : "unnamed"
-              }
-              onChange={(event) =>
-                dateIntervalChanged("name", event.target.value)
-              }
+
+            <div
+              id={`dateinterval-date-view-${dateInterval.id}`}
+              className="hover:bg-gray-300 rounded-md"
+              onClick={allowDateEditing}
+            >
+              {dateInterval.startDate === dateInterval.endDate && (
+                <>{formatDate(dateInterval.startDate)}</>
+              )}
+              {dateInterval.startDate !== dateInterval.endDate && (
+                <>
+                  {formatDate(dateInterval.startDate)} -{" "}
+                  {formatDate(dateInterval.endDate)}
+                </>
+              )}
+            </div>
+            <div
+              id={`dateinterval-date-edit-${dateInterval.id}`}
+              className="hidden flex flex-row justify-start gap-2"
               onKeyDown={handleEnterKeyPress}
               onBlur={finishDateEditing}
-              type="text"
-            ></input>
+              contentEditable="true"
+              suppressContentEditableWarning={true}
+            >
+              <div className="flex flex-row">
+                Start:{" "}
+                <input
+                  id={`dateinterval-date-edit-startdate-${dateInterval.id}`}
+                  type="date"
+                  name="startDate"
+                  defaultValue={dateSubstring(dateInterval.startDate)}
+                  onChange={(event) =>
+                    dateIntervalChanged("startDate", event.target.value)
+                  }
+                  className="rounded-md pl-2 pr-2"
+                />
+              </div>
+              <div className="flex flex-row">
+                End:
+                <input
+                  type="date"
+                  name="endDate"
+                  defaultValue={dateSubstring(dateInterval.endDate)}
+                  onChange={(event) =>
+                    dateIntervalChanged("endDate", event.target.value)
+                  }
+                  className="rounded-md pl-2 pr-2"
+                />
+              </div>
+            </div>
+            <div className="flex flex-row mb-2">
+              <p>Budget: </p>
+              <div
+                id={`dateinterval-budget-view-${dateInterval.id}`}
+                className="hover:bg-gray-300 rounded-md"
+                onClick={allowBudgetEditing}
+              >
+                &nbsp;{"$" + dateInterval.budget}&nbsp;
+              </div>
+              <input
+                id={`dateinterval-budget-edit-${dateInterval.id}`}
+                className=" hidden flex-grow rounded-md pl-4 pr-4"
+                defaultValue={dateInterval.budget}
+                onChange={(event) =>
+                  dateIntervalChanged("budget", event.target.value)
+                }
+                onKeyDown={handleEnterKeyPress}
+                onBlur={finishDateEditing}
+                type="number"
+              ></input>
+            </div>
+
+            <ul className="flex flex-col gap-2">
+              {dateIntervalTimeslots &&
+                dateIntervalTimeslots.map(function (timeslot: TimeSlot) {
+                  return (
+                    timeslot.name !== "" && (
+                      <li onClick={() => handleTimeslotClicked(timeslot)}>
+                        <TimeSlotDisplayComponent
+                          key={timeslot.id as string}
+                          jwt={jwt}
+                          username={username}
+                          timeslot={timeslot}
+                          timeslots={timeslots}
+                          setTimeslots={setTimeslots}
+                          tripId={tripId}
+                          editable={editable}
+                          socket={socket}
+                          dateInterval={dateInterval}
+                          selectedTimeslot={selectedTimeslot}
+                        />
+                      </li>
+                    )
+                  );
+                })}
+            </ul>
             {editable && (
-              <RemoveDateIntervalComponent
+              <TimeSlotCreateComponent
                 jwt={jwt}
                 username={username}
                 dateIntervalId={dateInterval.id}
-                dateIntervals={dateIntervals}
-                setDateIntervals={setDateIntervals}
                 timeslots={timeslots}
                 setTimeslots={setTimeslots}
+                dateIntervalTimeslots={dateIntervalTimeslots}
                 tripId={tripId}
                 socket={socket}
+                map={map}
+                selectOnMap={selectOnMap}
+                setSelectOnMap={setSelectOnMap}
               />
             )}
-          </div>
-
-          <div
-            id={`dateinterval-date-view-${dateInterval.id}`}
-            onDoubleClick={allowDateEditing}
-          >
-            {dateInterval.startDate === dateInterval.endDate && (
-              <>{formatDate(dateInterval.startDate)}</>
-            )}
-            {dateInterval.startDate !== dateInterval.endDate && (
-              <>
-                {formatDate(dateInterval.startDate)} -{" "}
-                {formatDate(dateInterval.endDate)}
-              </>
-            )}
-          </div>
-          <div
-            id={`dateinterval-date-edit-${dateInterval.id}`}
-            className="hidden flex flex-row justify-start gap-2"
-            onKeyDown={handleEnterKeyPress}
-            onBlur={finishDateEditing}
-            contentEditable="true"
-            suppressContentEditableWarning={true}
-          >
-            <div className="flex flex-row">
-              Start:{" "}
-              <input
-                id={`dateinterval-date-edit-startdate-${dateInterval.id}`}
-                type="date"
-                name="startDate"
-                defaultValue={dateSubstring(dateInterval.startDate)}
-                onChange={(event) =>
-                  dateIntervalChanged("startDate", event.target.value)
-                }
-                className="rounded-md pl-2 pr-2"
-              />
-            </div>
-            <div className="flex flex-row">
-              End:
-              <input
-                type="date"
-                name="endDate"
-                defaultValue={dateSubstring(dateInterval.endDate)}
-                onChange={(event) =>
-                  dateIntervalChanged("endDate", event.target.value)
-                }
-                className="rounded-md pl-2 pr-2"
-              />
-            </div>
           </div>
         </div>
-        <div className="flex flex-row mb-2">
-          <p>Budget: $</p>
-          <div
-            id={`dateinterval-budget-view-${dateInterval.id}`}
-            onDoubleClick={allowBudgetEditing}
-          >
-            {dateInterval.budget}
-          </div>
-          <input
-            id={`dateinterval-budget-edit-${dateInterval.id}`}
-            className=" hidden flex-grow rounded-md pl-4 pr-4"
-            defaultValue={dateInterval.budget}
-            onChange={(event) =>
-              dateIntervalChanged("budget", event.target.value)
-            }
-            onKeyDown={handleEnterKeyPress}
-            onBlur={finishDateEditing}
-            type="number"
-          ></input>
-        </div>
-
-        <ul className="flex flex-col gap-2">
-          {dateIntervalTimeslots &&
-            dateIntervalTimeslots.map(function (timeslot: TimeSlot) {
-              return (
-                timeslot.name !== "" && (
-                  <li
-                    id={`timeslot-${timeslot.id}`}
-                    onClick={() => handleTimeslotClicked(timeslot)}
-                  >
-                    <TimeSlotDisplayComponent
-                      key={timeslot.id as string}
-                      jwt={jwt}
-                      username={username}
-                      timeslot={timeslot}
-                      timeslots={timeslots}
-                      setTimeslots={setTimeslots}
-                      tripId={tripId}
-                      editable={editable}
-                      socket={socket}
-                      dateInterval={dateInterval}
-                    />
-                  </li>
-                )
-              );
-            })}
-        </ul>
-        {editable && (
-          <TimeSlotCreateComponent
-            jwt={jwt}
-            username={username}
-            dateIntervalId={dateInterval.id}
-            timeslots={timeslots}
-            setTimeslots={setTimeslots}
-            dateIntervalTimeslots={dateIntervalTimeslots}
-            tripId={tripId}
-            socket={socket}
-            map={map}
-            selectOnMap={selectOnMap}
-            setSelectOnMap={setSelectOnMap}
-          />
-        )}
       </div>
     </>
   );

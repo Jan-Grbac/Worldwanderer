@@ -17,7 +17,7 @@ function RateTripComponent(props: Props) {
   const [rating, setRating] = useState<Rating>({
     id: "",
     username: username,
-    grade: 1,
+    grade: 0,
     comment: "",
     ratingDate: "",
   });
@@ -37,6 +37,10 @@ function RateTripComponent(props: Props) {
 
   function handleRatingSubmit() {
     if (rating) {
+      if (rating.grade === 0) {
+        return;
+      }
+
       let newRatings = [...ratings];
       rating.username = username;
 
@@ -67,22 +71,36 @@ function RateTripComponent(props: Props) {
   }
 
   return (
-    <div>
-      <select
-        onChange={(event) => handleInputChange("grade", event.target.value)}
-        value={rating?.grade}
-      >
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-      </select>
+    <div className="flex flex-col border-2 border-black rounded-md m-2">
+      <div className="flex flex-row text-3xl self-center hover:cursor-pointer">
+        <div onClick={() => handleInputChange("grade", 1)}>
+          {rating.grade >= 1 ? "★" : "☆"}
+        </div>
+        <div onClick={() => handleInputChange("grade", 2)}>
+          {rating.grade >= 2 ? "★" : "☆"}
+        </div>
+        <div onClick={() => handleInputChange("grade", 3)}>
+          {rating.grade >= 3 ? "★" : "☆"}
+        </div>
+        <div onClick={() => handleInputChange("grade", 4)}>
+          {rating.grade >= 4 ? "★" : "☆"}
+        </div>
+        <div onClick={() => handleInputChange("grade", 5)}>
+          {rating.grade >= 5 ? "★" : "☆"}
+        </div>
+      </div>
       <textarea
         value={rating?.comment}
+        className="pl-2 pr-2 ml-2 mr-2 bg-gray-200 rounded-md"
+        rows={4}
         onChange={(event) => handleInputChange("comment", event.target.value)}
       ></textarea>
-      <button onClick={handleRatingSubmit}>Submit rating</button>
+      <button
+        onClick={handleRatingSubmit}
+        className="confirmButton w-max self-center mt-2 mb-2"
+      >
+        Submit rating
+      </button>
     </div>
   );
 }

@@ -26,6 +26,7 @@ interface Props {
   setMap: Function;
   selectOnMap: boolean;
   setSelectOnMap: Function;
+  editable: boolean;
 }
 
 interface MapLoaderProps {
@@ -61,6 +62,7 @@ function MapComponent(props: Props) {
     setMap,
     selectOnMap,
     setSelectOnMap,
+    editable,
   } = {
     ...props,
   };
@@ -171,7 +173,7 @@ function MapComponent(props: Props) {
             let markerLatLng = new coreLib.LatLng(timeslot.lat, timeslot.lng);
             let markerInfo = {
               position: markerLatLng,
-              color: colorDict[i],
+              color: colorDict[i % 20],
               text: String(j + 1),
               timeslot: timeslot,
               selected: false,
@@ -366,8 +368,8 @@ function MapComponent(props: Props) {
                 <AdvancedMarker
                   position={marker.position}
                   clickable={true}
-                  draggable={true}
-                  onClick={(event) => setSelectedTimeslot(marker.timeslot)}
+                  draggable={editable}
+                  onClick={() => setSelectedTimeslot(marker.timeslot)}
                   onDragEnd={(event) => dragEnd(marker.timeslot, event.latLng)}
                 >
                   <Pin

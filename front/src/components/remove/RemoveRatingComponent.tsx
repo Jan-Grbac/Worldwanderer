@@ -37,7 +37,7 @@ function RemoveRatingComponent(props: Props) {
     }
   }
 
-  return <button onClick={deleteRating}>X</button>;
+  return <button onClick={deleteRating}>🗑️</button>;
 }
 
 export default RemoveRatingComponent;

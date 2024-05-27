@@ -64,6 +64,7 @@ public class TripServiceImpl implements TripService {
                     .name(dateInterval.getName())
                     .budget(dateInterval.getBudget())
                     .trip(tripCopy)
+                    .pos(dateInterval.getPos())
                     .build();
             dateIntervalRepository.save(dateIntervalCopy);
             List<TimeSlot> timeSlots = new LinkedList<>();
@@ -76,6 +77,7 @@ public class TripServiceImpl implements TripService {
                         .lat(timeSlot.getLat())
                         .lng(timeSlot.getLng())
                         .interval(dateIntervalCopy)
+                        .pos(timeSlot.getPos())
                         .build();
                 timeSlotRepository.save(timeSlotCopy);
                 timeSlots.add(timeSlotCopy);

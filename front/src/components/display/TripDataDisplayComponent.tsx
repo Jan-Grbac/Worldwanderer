@@ -107,12 +107,14 @@ function TripDataDisplayComponent(props: Props) {
 
   function allowNameEditing() {
     if (!editable) return;
+
     document.getElementById("trip-name-view")?.classList.add("hidden");
     document.getElementById("trip-name-edit")?.classList.remove("hidden");
     document.getElementById("trip-name-edit")?.focus();
   }
   function allowDescriptionEditing() {
     if (!editable) return;
+
     document.getElementById("trip-description-view")?.classList.add("hidden");
     document
       .getElementById("trip-description-edit")
@@ -121,18 +123,22 @@ function TripDataDisplayComponent(props: Props) {
   }
 
   function handleDateIntervalClicked(dateInterval: DateInterval) {
-    if (selectedDateInterval) {
-      let oldSelected = document.getElementById(
-        "dateinterval-" + selectedDateInterval.id
-      );
-    }
-
-    let newSelected = document.getElementById(
-      "dateinterval-" + dateInterval.id
-    );
-
+    if (dateInterval.id === selectedDateInterval.id) return;
     setSelectedDateInterval({ ...dateInterval });
-    console.log("Selected date interval: " + dateInterval);
+    if (
+      selectedTimeslot &&
+      selectedTimeslot.dateIntervalId != dateInterval.id
+    ) {
+      console.log(selectedTimeslot.id, dateInterval.id);
+      console.log("inside");
+      if (timeslots[dateInterval.pos][0] !== undefined) {
+        setSelectedTimeslot({ ...timeslots[dateInterval.pos][0] });
+      } else {
+        let div = document.getElementById("timeslot-" + selectedTimeslot.id);
+        div?.classList.remove("border-2", "border-black");
+        setSelectedTimeslot(undefined);
+      }
+    }
   }
 
   const getFlagComponent = (countryCode: string) => {
@@ -158,7 +164,7 @@ function TripDataDisplayComponent(props: Props) {
           <div
             id="trip-name-view"
             className="hover:bg-gray-100 rounded-md"
-            onDoubleClick={allowNameEditing}
+            onClick={allowNameEditing}
           >
             {trip.name}
           </div>
@@ -176,7 +182,7 @@ function TripDataDisplayComponent(props: Props) {
           <div
             id="trip-description-view"
             className="hover:bg-gray-100 rounded-md"
-            onDoubleClick={allowDescriptionEditing}
+            onClick={allowDescriptionEditing}
           >
             {trip.description === "" || trip.description === null
               ? "Add description..."
@@ -223,11 +229,7 @@ function TripDataDisplayComponent(props: Props) {
                 index: number
               ) {
                 return (
-                  <li
-                    id={`dateinterval-${dateInterval.id}`}
-                    draggable={true}
-                    onClick={() => handleDateIntervalClicked(dateInterval)}
-                  >
+                  <li onClick={() => handleDateIntervalClicked(dateInterval)}>
                     <DateIntervalDisplayComponent
                       key={dateInterval.id as string}
                       jwt={jwt}
@@ -243,6 +245,7 @@ function TripDataDisplayComponent(props: Props) {
                       socket={socket}
                       selectedTimeslot={selectedTimeslot}
                       setSelectedTimeslot={setSelectedTimeslot}
+                      selectedDateInterval={selectedDateInterval}
                       selectOnMap={selectOnMap}
                       setSelectOnMap={setSelectOnMap}
                       map={map}

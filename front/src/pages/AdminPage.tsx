@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import NavbarComponent from "../components/NavbarComponent";
 import { useNavigate } from "react-router-dom";
+import RemoveTripComponent from "../components/remove/RemoveTripComponent";
 
 interface Props {
   jwt: string;
@@ -64,6 +65,19 @@ function AdminPage(props: Props) {
     getForUsernameAndTripName(usernameQuery, tripnameQuery);
   }
 
+  function handleTripDelete(username: string, tripId: string) {
+    let newUserTripData = { ...userTripData };
+
+    for (let i = 0; i < userTripData[username].length; i++) {
+      if (userTripData[username][i].id === tripId) {
+        newUserTripData[username].splice(i, 1);
+        break;
+      }
+    }
+
+    setUserTripData(newUserTripData);
+  }
+
   return (
     loading && (
       <div className="flex flex-col">
@@ -103,17 +117,27 @@ function AdminPage(props: Props) {
                       className="flex flex-row justify-between pl-2 pr-2 bg-gray-300 rounded-md"
                     >
                       {trip.name}
-                      <button
-                        onClick={() =>
-                          navigate(
-                            trip.published
-                              ? `/viewtrip/${trip.id}`
-                              : `/edittrip/${trip.id}`
-                          )
-                        }
-                      >
-                        View trip
-                      </button>
+                      <div className="flex flex-row gap-5">
+                        <button
+                          onClick={() =>
+                            navigate(
+                              trip.published
+                                ? `/viewtrip/${trip.id}`
+                                : `/edittrip/${trip.id}`
+                            )
+                          }
+                        >
+                          View trip
+                        </button>
+                        <RemoveTripComponent
+                          jwt={jwt}
+                          tripId={trip.id}
+                          trips={trips}
+                          setTrips={() => {
+                            handleTripDelete(username, trip.id);
+                          }}
+                        />
+                      </div>
                     </li>
                   ))}
                 </ul>

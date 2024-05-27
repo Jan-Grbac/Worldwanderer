@@ -20,7 +20,6 @@ function LogoutPage(props: Props) {
     setLoading(false);
     cookies.remove("jwt");
     navigate("/home");
-    window.location.reload();
   }
 
   function handleLogoutCancel() {

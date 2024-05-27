@@ -221,7 +221,21 @@ function TimeSlotCreateComponent(props: Props) {
 
   function activateMapSelection() {
     setSelectOnMap(true);
+    let button = document.getElementById(
+      "timeslot-create-map-button-" + dateIntervalId
+    );
+    button?.classList.add("bg-gray-500");
   }
+
+  useEffect(() => {
+    if (!selectOnMap) {
+      document
+        .querySelectorAll("button[id^=timeslot-create-map-button-]")
+        .forEach((button) => {
+          (button as HTMLElement).classList.remove("bg-gray-500");
+        });
+    }
+  }, [selectOnMap]);
 
   return (
     <>
@@ -256,7 +270,13 @@ function TimeSlotCreateComponent(props: Props) {
               id={`searchBox-${dateIntervalId}`}
               className="ml-2 rounded-md pl-4 pr-4"
             />
-            <button onClick={activateMapSelection}>Select on map</button>
+            <button
+              id={`timeslot-create-map-button-${dateIntervalId}`}
+              onClick={() => activateMapSelection()}
+              className="ml-2 bg-gray-300 rounded-md hover:bg-gray-500"
+            >
+              🚩
+            </button>
           </div>
           <input
             type="text"

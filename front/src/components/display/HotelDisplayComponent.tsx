@@ -9,7 +9,9 @@ function HotelDisplayComponent(props: Props) {
   const { hotel, selectedDateInterval } = { ...props };
 
   useEffect(() => {
-    console.log(hotel);
+    if (hotel) {
+      console.log(hotel);
+    }
   }, [hotel]);
 
   function formatDate(date: string) {
@@ -17,7 +19,7 @@ function HotelDisplayComponent(props: Props) {
     let month = date.substring(5, 7);
     let day = date.substring(8, 10);
 
-    let newDate = year + month + day;
+    let newDate = day + "/" + month + "/" + year;
 
     return newDate;
   }
@@ -26,25 +28,43 @@ function HotelDisplayComponent(props: Props) {
     if (window) {
       let startDate = formatDate(selectedDateInterval.startDate);
       let endDate = formatDate(selectedDateInterval.endDate);
-      let url =
-        "https://www.trivago.com/en-US/lm/" +
-        hotel.name +
-        "?search=100-1752777;dr-" +
-        startDate +
-        "-" +
-        endDate;
+      let url = generateGoogleSearchUrl(
+        hotel.name + " " + startDate + "-" + endDate + " " + hotel.vicinity
+      );
       window.open(url, "_blank")?.focus();
     }
   }
 
+  function generateGoogleSearchUrl(query: string): string {
+    const baseUrl = "https://www.google.com/search?q=";
+    const formattedQuery = encodeURIComponent(query);
+    return `${baseUrl}${formattedQuery}`;
+  }
+
   return (
-    <>
-      <div onClick={handleHotelClick}>
-        <p>{hotel.name}</p>
-        <br />
-        <p>{hotel.formatted_address}</p>
-      </div>
-    </>
+    hotel.photos && (
+      <>
+        <div
+          onClick={handleHotelClick}
+          className="rounded-md border-2 border-black w-1/3 flex flex-col justify-start"
+        >
+          <div className="pt-2 pb-2">
+            <img
+              className="self-center align-middle object-contain max-h-20 max-w-40 min-h-20 min-w-40"
+              src={hotel.photos[0].getUrl()}
+              width={150}
+              height={150}
+            ></img>
+          </div>
+          <div className="pl-2 pr-2">{hotel.name}</div>
+          <div className="pl-2 pr-2">{hotel.formatted_address}</div>
+          <div className="pl-2 pr-2">
+            {hotel.rating}
+            {hotel.rating && "⭐"}
+          </div>
+        </div>
+      </>
+    )
   );
 }
 

@@ -13,6 +13,7 @@ interface Props {
   editable: boolean;
   socket: Socket | undefined;
   dateInterval: DateInterval;
+  selectedTimeslot: TimeSlot;
 }
 
 function TimeSlotDisplayComponent(props: Props) {
@@ -26,6 +27,7 @@ function TimeSlotDisplayComponent(props: Props) {
     editable,
     socket,
     dateInterval,
+    selectedTimeslot,
   } = {
     ...props,
   };
@@ -82,6 +84,8 @@ function TimeSlotDisplayComponent(props: Props) {
   }
 
   function toggleNotesUpdate() {
+    if (!editable) return;
+
     let edit = document.getElementById("notes-edit-" + timeslot.id);
     let placeholder = document.getElementById(
       "notes-placeholder-" + timeslot.id
@@ -106,6 +110,8 @@ function TimeSlotDisplayComponent(props: Props) {
   }
 
   function toggleNameUpdate() {
+    if (!editable) return;
+
     let edit = document.getElementById("name-edit-" + timeslot.id);
     let content = document.getElementById("name-content-" + timeslot.id);
 
@@ -125,6 +131,8 @@ function TimeSlotDisplayComponent(props: Props) {
   }
 
   function toggleStartTimeUpdate() {
+    if (!editable) return;
+
     let edit = document.getElementById("starttime-edit-" + timeslot.id);
     let placeholder = document.getElementById(
       "starttime-placeholder-" + timeslot.id
@@ -149,6 +157,8 @@ function TimeSlotDisplayComponent(props: Props) {
   }
 
   function toggleEndTimeUpdate() {
+    if (!editable) return;
+
     let edit = document.getElementById("endtime-edit-" + timeslot.id);
     let placeholder = document.getElementById(
       "endtime-placeholder-" + timeslot.id
@@ -212,16 +222,30 @@ function TimeSlotDisplayComponent(props: Props) {
     setTimeslots(newTimeslots);
   }
 
+  useEffect(() => {
+    if (selectedTimeslot) {
+      let div = document.getElementById("timeslot-" + timeslot.id);
+      if (selectedTimeslot.id === timeslot.id) {
+        div?.classList.add("border-2", "border-black");
+      } else {
+        div?.classList.remove("border-2", "border-black");
+      }
+    }
+  }, [selectedTimeslot]);
+
   return (
     loading && (
-      <div className="flex flex-col bg-gray-400 rounded-md p-2">
+      <div
+        id={`timeslot-${timeslot.id}`}
+        className="flex flex-col bg-gray-400 rounded-md p-2"
+      >
         <div>
           <div className="flex flex-row">
             <div className="flex flex-row gap-2 flex-grow justify-start">
               <h3
                 id={`name-content-` + timeslot.id}
-                className="font-medium italic"
-                onDoubleClick={toggleNameUpdate}
+                className="font-medium italic rounded-md hover:bg-gray-300"
+                onClick={toggleNameUpdate}
               >
                 {timeslot.name}
               </h3>
@@ -258,8 +282,8 @@ function TimeSlotDisplayComponent(props: Props) {
           {!timeslot.notes && (
             <div
               id={`notes-placeholder-` + timeslot.id}
-              className="italic font-thin ml-2"
-              onDoubleClick={toggleNotesUpdate}
+              className="italic font-thin ml-2 w-max rounded-md hover:bg-gray-300"
+              onClick={toggleNotesUpdate}
             >
               Add notes...
             </div>
@@ -268,8 +292,8 @@ function TimeSlotDisplayComponent(props: Props) {
             <>
               <div
                 id={`notes-content-` + timeslot.id}
-                className="italic font-thin ml-2"
-                onDoubleClick={toggleNotesUpdate}
+                className="italic font-thin ml-2 w-max"
+                onClick={toggleNotesUpdate}
               >
                 {timeslot.notes}
               </div>
@@ -282,13 +306,13 @@ function TimeSlotDisplayComponent(props: Props) {
             rows={3}
             placeholder="Notes..."
             defaultValue={timeslot.notes}
-            className="hidden rounded-md pl-2 pr-2 ml-2"
+            className="hidden rounded-md pl-2 pr-2 ml-2 w-max"
           ></textarea>
           {timeslot.startTime && (
             <p
               id={`starttime-content-` + timeslot.id}
               className="font-thin ml-2"
-              onDoubleClick={toggleStartTimeUpdate}
+              onClick={toggleStartTimeUpdate}
             >
               From: {timeslot.startTime}
             </p>
@@ -296,8 +320,8 @@ function TimeSlotDisplayComponent(props: Props) {
           {!timeslot.startTime && (
             <p
               id={`starttime-placeholder-` + timeslot.id}
-              className="italic font-thin ml-2"
-              onDoubleClick={toggleStartTimeUpdate}
+              className="italic font-thin ml-2 w-max rounded-md hover:bg-gray-300"
+              onClick={toggleStartTimeUpdate}
             >
               Add start time...
             </p>
@@ -305,7 +329,7 @@ function TimeSlotDisplayComponent(props: Props) {
           <input
             id={`starttime-edit-` + timeslot.id}
             type="time"
-            className="hidden rounded-md pl-2 pr-2 ml-2"
+            className="hidden rounded-md pl-2 pr-2 ml-2 w-max"
             defaultValue={timeslot.startTime}
             onKeyDown={handleEnterKeyPress}
             onBlur={toggleStartTimeUpdate}
@@ -314,7 +338,7 @@ function TimeSlotDisplayComponent(props: Props) {
             <p
               id={`endtime-content-` + timeslot.id}
               className="font-thin ml-2"
-              onDoubleClick={toggleEndTimeUpdate}
+              onClick={toggleEndTimeUpdate}
             >
               To: {timeslot.endTime}
             </p>
@@ -322,8 +346,8 @@ function TimeSlotDisplayComponent(props: Props) {
           {!timeslot.endTime && (
             <p
               id={`endtime-placeholder-` + timeslot.id}
-              className="italic font-thin ml-2"
-              onDoubleClick={toggleEndTimeUpdate}
+              className="italic font-thin ml-2 w-max rounded-md hover:bg-gray-300"
+              onClick={toggleEndTimeUpdate}
             >
               Add end time...
             </p>
@@ -331,7 +355,7 @@ function TimeSlotDisplayComponent(props: Props) {
           <input
             id={`endtime-edit-` + timeslot.id}
             type="time"
-            className="hidden rounded-md pl-2 pr-2 ml-2"
+            className="hidden rounded-md pl-2 pr-2 ml-2 w-max"
             defaultValue={timeslot.endTime}
             onKeyDown={handleEnterKeyPress}
             onBlur={toggleEndTimeUpdate}

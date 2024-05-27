@@ -381,6 +381,16 @@ function TripPlannerPage(props: Props) {
     }
   }
 
+  function formatDate(date: string) {
+    let year = date.substring(0, 4);
+    let month = date.substring(5, 7);
+    let day = date.substring(8, 10);
+
+    let newDate = day + "/" + month + "/" + year;
+
+    return newDate;
+  }
+
   return (
     loading && (
       <>
@@ -389,9 +399,11 @@ function TripPlannerPage(props: Props) {
           <div className="grid grid-cols-6 max-w-full max-h-full min-h-screen">
             <div className="col-span-2">
               {trip?.published && (
-                <div>
-                  Published by {trip.ownerUsername} on: {trip.publishedDate}
-                </div>
+                <h2 className="ml-6 mt-2 mb-2 italic">
+                  Published by <strong>{trip.ownerUsername}</strong>
+                  <br />
+                  {formatDate(trip.publishedDate)}
+                </h2>
               )}
               <TripDataDisplayComponent
                 jwt={jwt}
@@ -431,11 +443,11 @@ function TripPlannerPage(props: Props) {
                 setSelectOnMap={setSelectOnMap}
                 map={map as google.maps.Map}
                 setMap={setMap}
+                editable={editable}
               />
-              <div className="d-flex flex-row">
+              <div className="flex flex-row">
                 {editable && suggestedAttractions.length !== 0 && (
                   <>
-                    <p>Places to visit near {selectedTimeslot?.name}:</p>
                     {suggestedAttractions.map(function (
                       attraction: google.maps.places.PlaceResult
                     ) {
@@ -449,10 +461,9 @@ function TripPlannerPage(props: Props) {
                   </>
                 )}
               </div>
-              <div className="d-flex flex-row">
+              <div className="flex flex-row gap-2">
                 {editable && hotels.length !== 0 && (
                   <>
-                    <p>Accomodation near {selectedTimeslot?.name}:</p>
                     {hotels.map(function (
                       hotel: google.maps.places.PlaceResult
                     ) {
@@ -470,7 +481,7 @@ function TripPlannerPage(props: Props) {
               </div>
             </div>
             <div>
-              <div className="flex flex-row mt-4 ml-4 mb-4">
+              <div className="flex flex-col mt-4 ml-4 mb-4">
                 <TripEditPermissionDisplayComponent
                   jwt={jwt}
                   allowedUsers={allowedUsers}
@@ -481,7 +492,7 @@ function TripPlannerPage(props: Props) {
                   socket={socket}
                 />
                 {editable && isOwner && (
-                  <div className="flex flex-grow flex-col justify-start align-middle">
+                  <div className="flex flex-grow flex-col justify-start align-middle mt-2">
                     <button
                       className="confirmButton self-center w-max"
                       onMouseOver={showPublishWarning}
@@ -492,7 +503,7 @@ function TripPlannerPage(props: Props) {
                     </button>
                     <p
                       id="publish-warning"
-                      className="hidden text-red-800 self-center"
+                      className="hidden text-red-800 self-center text-center"
                     >
                       Warning: You will not be able to edit the trip after
                       publishing.
@@ -513,7 +524,12 @@ function TripPlannerPage(props: Props) {
               )}
 
               {!editable && jwtIsValid && trip?.published && (
-                <button onClick={copyTrip}>Copy published trip and edit</button>
+                <button
+                  onClick={copyTrip}
+                  className="confirmButton max-w-50 ml-4 mr-4"
+                >
+                  Copy published trip and edit
+                </button>
               )}
               {!editable && !jwtIsValid && trip?.published && (
                 <button onClick={() => navigate("/signin")}>
@@ -525,37 +541,37 @@ function TripPlannerPage(props: Props) {
                   Edit your trip
                 </button>
               )}
+              <div>
+                {!editable &&
+                  trip?.published &&
+                  !isAllowedUser &&
+                  !hasAlreadyRated && (
+                    <RateTripComponent
+                      jwt={jwt}
+                      username={username}
+                      trip={trip}
+                      ratings={ratings}
+                      setRatings={setRatings}
+                      setHasAlreadyRated={setHasAlreadyRated}
+                    />
+                  )}
+                {!editable &&
+                  trip?.published &&
+                  ratings &&
+                  ratings.map(function (rating: Rating) {
+                    return (
+                      <RatingDisplayComponent
+                        jwt={jwt}
+                        username={username}
+                        rating={rating}
+                        ratings={ratings}
+                        setRatings={setRatings}
+                        setHasAlreadyRated={setHasAlreadyRated}
+                      />
+                    );
+                  })}
+              </div>
             </div>
-          </div>
-          <div>
-            {!editable &&
-              trip?.published &&
-              !isAllowedUser &&
-              !hasAlreadyRated && (
-                <RateTripComponent
-                  jwt={jwt}
-                  username={username}
-                  trip={trip}
-                  ratings={ratings}
-                  setRatings={setRatings}
-                  setHasAlreadyRated={setHasAlreadyRated}
-                />
-              )}
-            {!editable &&
-              trip?.published &&
-              ratings &&
-              ratings.map(function (rating: Rating) {
-                return (
-                  <RatingDisplayComponent
-                    jwt={jwt}
-                    username={username}
-                    rating={rating}
-                    ratings={ratings}
-                    setRatings={setRatings}
-                    setHasAlreadyRated={setHasAlreadyRated}
-                  />
-                );
-              })}
           </div>
         </APIProvider>
       </>
