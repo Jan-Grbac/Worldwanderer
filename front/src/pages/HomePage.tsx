@@ -96,49 +96,73 @@ function HomePage(props: Props) {
 
   return (
     loading && (
-      <div className="flex flex-col">
+      <div className="flex flex-col min-h-screen bg-gray-100">
         <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
-        <h1 className="ml-4 mt-2 p-4 text-7xl italic underline">
-          Featured trips
-        </h1>
-        <div className="grid grid-cols-5 m-4 pl-4 pr-4 gap-5">
-          {highestRatedTrips?.map((trip: any) => {
-            return <TripPublicDisplayComponent trip={trip} />;
-          })}
-          {highestRatedTrips?.length === 0 && (
-            <p>
-              <i>No trips found. Go make some!</i>
-            </p>
-          )}
-        </div>
-        <h2 className="ml-4 mt-2 p-4 text-4xl italic underline self-center">
-          Search for trips
-        </h2>
-        <div className="self-center">
-          <input
-            id="trip-search-input"
-            type="text"
-            className="border-2 border-black rounded-md rounded-r-none pl-2 pr-2"
-          ></input>
-          <button
-            className="border-2 border-black rounded-r-md pl-2 pr-2"
-            onClick={searchTrips}
-          >
-            <i>Search...</i>
-          </button>
-        </div>
-        <div className="grid grid-cols-5 m-4 pl-4 pr-4 gap-5">
-          {searchResults?.map((trip: any) => {
-            return <TripPublicDisplayComponent trip={trip} />;
-          })}
-        </div>
-        <div className="self-center">
-          {searchResults?.length === 0 && (
-            <p>
-              <i>No trips match search criteria.</i>
-            </p>
-          )}
-        </div>
+
+        <main className="flex-1">
+          <div className="py-6">
+            <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+              <div className="bg-white shadow-sm rounded-lg p-6">
+                <h2 className="mb-4 text-3xl font-bold text-black">
+                  Featured trips
+                </h2>
+                <hr className="mb-6 border-b-2 border-orange-500 mx-auto" />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {highestRatedTrips?.map((trip: any) => (
+                    <TripPublicDisplayComponent key={trip.id} trip={trip} />
+                  ))}
+                  {highestRatedTrips?.length === 0 && (
+                    <p className="col-span-full text-center text-gray-500">
+                      <i>No trips found. Go make some!</i>
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <section className="py-6 bg-gray-50">
+            <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 text-center">
+              <h2 className="text-2xl font-bold text-black">
+                Search for trips
+              </h2>
+              <div className="mt-4 flex justify-center">
+                <input
+                  id="trip-search-input"
+                  type="text"
+                  className="border-2 border-gray-300 rounded-l-md pl-3 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+                <button
+                  className="border-2 border-gray-300 bg-blue-500 text-white rounded-r-md pl-3 pr-3 py-2 hover:bg-blue-700"
+                  onClick={searchTrips}
+                >
+                  <i>Search...</i>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <div className="py-6">
+            <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+              <div className="bg-white shadow-sm rounded-lg p-6">
+                <h2 className="mb-4 text-3xl font-bold text-black">
+                  Search results
+                </h2>
+                <hr className="mb-6 border-b-2 border-orange-500 mx-auto" />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {searchResults?.map((trip: any) => (
+                    <TripPublicDisplayComponent key={trip.id} trip={trip} />
+                  ))}
+                  {searchResults?.length === 0 && (
+                    <p className="col-span-full text-center text-gray-500">
+                      <i>No trips match search criteria.</i>
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
       </div>
     )
   );

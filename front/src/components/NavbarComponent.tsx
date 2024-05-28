@@ -35,60 +35,74 @@ function NavbarComponent(props: Props) {
 
   return (
     <div className="flex flex-col">
-      <nav className="flex flex-grow justify-between p-4 border-0 max-h-20">
+      <nav className="flex flex-grow justify-between p-4 bg-white shadow-md max-h-20 border-b-2 border-orange-500">
         {jwtIsValid ? (
           <>
             {username !== "admin" && (
-              <div className="flex flex-grow justify-between align-middle">
+              <div className="flex flex-grow justify-between items-center w-full">
                 <div className="flex justify-start gap-5 ml-4">
                   <button className="basicButton" onClick={home}>
-                    <h2>Main page</h2>
+                    <h2 className="text-lg font-medium text-black hover:text-orange-500">
+                      Main page
+                    </h2>
                   </button>
                   <button className="basicButton" onClick={trips}>
-                    <h2>Your trips</h2>
+                    <h2 className="text-lg font-medium text-black hover:text-orange-500">
+                      Your trips
+                    </h2>
                   </button>
                 </div>
-                <div className="flex self-end gap-5 mr-4">
+                <div className="flex items-center gap-5 mr-4">
                   <button className="basicButton" onClick={profile}>
-                    <h2>Your profile</h2>
+                    <h2 className="text-lg font-medium text-black hover:text-orange-500">
+                      Your profile
+                    </h2>
                   </button>
                   <button className="basicButton" onClick={logout}>
-                    <h2>Logout</h2>
+                    <h2 className="text-lg font-medium text-black hover:text-orange-500">
+                      Logout
+                    </h2>
                   </button>
                 </div>
               </div>
             )}
             {username === "admin" && (
-              <div className="flex flex-grow justify-between align-middle">
+              <div className="flex flex-grow justify-between items-center w-full">
                 <div className="flex justify-start gap-5 ml-4">
                   <button className="basicButton" onClick={admin}>
-                    <h2>Admin panel</h2>
+                    <h2 className="text-lg font-medium text-black hover:text-orange-500">
+                      Admin panel
+                    </h2>
                   </button>
                 </div>
-                <div className="flex self-end gap-5 mr-4">
+                <div className="flex items-center gap-5 mr-4">
                   <button className="basicButton" onClick={logout}>
-                    <h2>Logout</h2>
+                    <h2 className="text-lg font-medium text-black hover:text-orange-500">
+                      Logout
+                    </h2>
                   </button>
                 </div>
               </div>
             )}
           </>
         ) : (
-          <>
-            <div className="flex flex-grow justify-between align-middle container">
-              <div className="flex justify-start gap-5 ml-4">
-                <button className="basicButton" onClick={signup}>
-                  <h2>Sign up</h2>
-                </button>
-                <button className="basicButton" onClick={signin}>
-                  <h2>Sign in</h2>
-                </button>
-              </div>
+          <div className="flex flex-grow justify-between items-center w-full">
+            <div className="flex justify-start gap-5 ml-4">
+              <button className="basicButton" onClick={signup}>
+                <h2 className="text-lg font-medium text-black hover:text-orange-500">
+                  Sign up
+                </h2>
+              </button>
+              <button className="basicButton" onClick={signin}>
+                <h2 className="text-lg font-medium text-black hover:text-orange-500">
+                  Sign in
+                </h2>
+              </button>
             </div>
-          </>
+          </div>
         )}
       </nav>
-      <hr className="border border-gray-400 w-full" />
+      <hr className="border-t border-gray-300 w-full" />
     </div>
   );
 }

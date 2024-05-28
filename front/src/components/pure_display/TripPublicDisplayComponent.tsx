@@ -22,16 +22,17 @@ function TripPublicDisplayComponent(props: Props) {
 
   return (
     <div
-      className="tripDisplayContainer"
+      className="cursor-pointer p-6 bg-white shadow-md rounded-lg border border-gray-200 hover:shadow-lg transition-shadow duration-300"
       onClick={() => {
         viewTrip(trip.id);
       }}
     >
-      <h1 className="mb-4 text-2xl font-extrabold">{trip.name}</h1>
-      <p>{trip.rating} ⭐</p>
-
-      <p>Made by: {trip.ownerUsername}</p>
-      <p>Published on: {formatDate(trip.publishedDate)}</p>
+      <h1 className="mb-4 text-2xl font-extrabold text-black">{trip.name}</h1>
+      <p className="text-lg text-gray-700">{trip.rating} ⭐</p>
+      <p className="text-gray-600">Made by: {trip.ownerUsername}</p>
+      <p className="text-gray-600">
+        Published on: {formatDate(trip.publishedDate)}
+      </p>
     </div>
   );
 }

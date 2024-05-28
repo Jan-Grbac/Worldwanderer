@@ -123,7 +123,10 @@ function TripDataDisplayComponent(props: Props) {
   }
 
   function handleDateIntervalClicked(dateInterval: DateInterval) {
-    if (dateInterval.id === selectedDateInterval.id) return;
+    if (selectedDateInterval) {
+      if (dateInterval.id === selectedDateInterval.id) return;
+    }
+
     setSelectedDateInterval({ ...dateInterval });
     if (
       selectedTimeslot &&

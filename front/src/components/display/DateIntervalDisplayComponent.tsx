@@ -173,7 +173,9 @@ function DateIntervalDisplayComponent(props: Props) {
   }
 
   function handleTimeslotClicked(timeslot: TimeSlot) {
-    if (timeslot.id === selectedTimeslot.id) return;
+    if (selectedTimeslot) {
+      if (timeslot.id === selectedTimeslot.id) return;
+    }
     setSelectedTimeslot({ ...timeslot });
   }
 
