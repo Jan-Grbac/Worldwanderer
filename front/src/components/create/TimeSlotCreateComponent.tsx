@@ -174,6 +174,8 @@ function TimeSlotCreateComponent(props: Props) {
           newTimeslots.push(newDateIntervalTimeslots);
         }
 
+        map.panTo(new google.maps.LatLng(data.lat, data.lng));
+
         console.log(newTimeslots);
         setTimeslots(newTimeslots);
         setTimeslot({} as TimeSlot);

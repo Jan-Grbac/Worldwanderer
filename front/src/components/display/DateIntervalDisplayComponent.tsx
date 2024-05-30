@@ -177,6 +177,7 @@ function DateIntervalDisplayComponent(props: Props) {
       if (timeslot.id === selectedTimeslot.id) return;
     }
     setSelectedTimeslot({ ...timeslot });
+    map.panTo(new google.maps.LatLng(timeslot.lat, timeslot.lng));
   }
 
   function allowNameEditing() {
@@ -244,6 +245,27 @@ function DateIntervalDisplayComponent(props: Props) {
     }
   }, [dateInterval]);
 
+  function toggleDateInterval() {
+    let timeslotsShow = document.getElementById(
+      "dateinterval-timeslots-" + dateInterval.id
+    );
+    let timeslotsCreate = document.getElementById(
+      "dateinterval-timeslots-create-" + dateInterval.id
+    );
+
+    if (timeslotsShow?.classList.contains("hidden")) {
+      timeslotsShow.classList.remove("hidden");
+    } else {
+      timeslotsShow?.classList.add("hidden");
+    }
+
+    if (timeslotsCreate?.classList.contains("hidden")) {
+      timeslotsCreate.classList.remove("hidden");
+    } else {
+      timeslotsCreate?.classList.add("hidden");
+    }
+  }
+
   return (
     <>
       <div
@@ -254,6 +276,7 @@ function DateIntervalDisplayComponent(props: Props) {
           <div
             id={`dateinterval-div-top-` + dateInterval.id}
             className="min-h-6 max-h-6 rounded-t-md"
+            onClick={toggleDateInterval}
           ></div>
           <div className="pl-4 pr-2 pb-2">
             <div className="flex flex-row pr-2">
@@ -365,7 +388,10 @@ function DateIntervalDisplayComponent(props: Props) {
               ></input>
             </div>
 
-            <ul className="flex flex-col gap-2">
+            <ul
+              id={`dateinterval-timeslots-` + dateInterval.id}
+              className="flex flex-col gap-2"
+            >
               {dateIntervalTimeslots &&
                 dateIntervalTimeslots.map(function (timeslot: TimeSlot) {
                   return (
@@ -389,21 +415,23 @@ function DateIntervalDisplayComponent(props: Props) {
                   );
                 })}
             </ul>
-            {editable && (
-              <TimeSlotCreateComponent
-                jwt={jwt}
-                username={username}
-                dateIntervalId={dateInterval.id}
-                timeslots={timeslots}
-                setTimeslots={setTimeslots}
-                dateIntervalTimeslots={dateIntervalTimeslots}
-                tripId={tripId}
-                socket={socket}
-                map={map}
-                selectOnMap={selectOnMap}
-                setSelectOnMap={setSelectOnMap}
-              />
-            )}
+            <div id={`dateinterval-timeslots-create-` + dateInterval.id}>
+              {editable && (
+                <TimeSlotCreateComponent
+                  jwt={jwt}
+                  username={username}
+                  dateIntervalId={dateInterval.id}
+                  timeslots={timeslots}
+                  setTimeslots={setTimeslots}
+                  dateIntervalTimeslots={dateIntervalTimeslots}
+                  tripId={tripId}
+                  socket={socket}
+                  map={map}
+                  selectOnMap={selectOnMap}
+                  setSelectOnMap={setSelectOnMap}
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>

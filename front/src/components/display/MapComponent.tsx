@@ -170,6 +170,7 @@ function MapComponent(props: Props) {
           let newMarkers: Array<MarkerInfo> = [];
           for (let j = 0; j < timeslots[i].length; j++) {
             let timeslot = timeslots[i][j];
+            if (timeslot.lat === 0 && timeslot.lng === 0) continue;
             let markerLatLng = new coreLib.LatLng(timeslot.lat, timeslot.lng);
             let markerInfo = {
               position: markerLatLng,

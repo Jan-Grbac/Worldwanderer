@@ -133,9 +133,10 @@ function TripDataDisplayComponent(props: Props) {
       selectedTimeslot.dateIntervalId != dateInterval.id
     ) {
       console.log(selectedTimeslot.id, dateInterval.id);
-      console.log("inside");
-      if (timeslots[dateInterval.pos][0] !== undefined) {
-        setSelectedTimeslot({ ...timeslots[dateInterval.pos][0] });
+      let firstTimeslot = timeslots[dateInterval.pos][0];
+      if (firstTimeslot.lat !== 0 && firstTimeslot.lng !== 0) {
+        setSelectedTimeslot({ ...firstTimeslot });
+        map.panTo(new google.maps.LatLng(firstTimeslot.lat, firstTimeslot.lng));
       } else {
         let div = document.getElementById("timeslot-" + selectedTimeslot.id);
         div?.classList.remove("border-2", "border-black");

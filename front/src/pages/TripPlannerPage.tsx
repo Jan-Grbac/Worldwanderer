@@ -47,6 +47,7 @@ function TripPlannerPage(props: Props) {
   const [selectOnMap, setSelectOnMap] = useState<boolean>(false);
 
   const [map, setMap] = useState<google.maps.Map>();
+  const [renderArray, setRenderArray] = useState<Array<boolean>>([]);
 
   const [socket, setSocket] = useState<Socket>();
 

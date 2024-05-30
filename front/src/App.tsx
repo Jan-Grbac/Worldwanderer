@@ -158,7 +158,9 @@ function App() {
               path="/logout"
               element={
                 <LogoutPage
+                  username={username as string}
                   setJwt={setJwt}
+                  jwtIsValid={jwtIsValid}
                   setJwtIsValid={setJwtIsValid}
                   setLoading={setLoading}
                   cookies={cookies}
