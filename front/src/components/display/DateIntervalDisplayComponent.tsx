@@ -4,6 +4,9 @@ import TimeSlotDisplayComponent from "./TimeSlotDisplayComponent";
 import { Socket } from "socket.io-client";
 import { useEffect, useState } from "react";
 import { colorDict } from "../../assets/colors/colorDictionary";
+import eyeIcon from "../../assets/eye.svg";
+import eyeIconCrossed from "../../assets/eye-slash.svg";
+import { render } from "react-dom";
 
 interface Props {
   jwt: string;
@@ -23,6 +26,8 @@ interface Props {
   selectOnMap: boolean;
   setSelectOnMap: Function;
   map: google.maps.Map;
+  renderArray: Array<boolean>;
+  setRenderArray: Function;
 }
 
 function DateIntervalDisplayComponent(props: Props) {
@@ -44,6 +49,8 @@ function DateIntervalDisplayComponent(props: Props) {
     selectOnMap,
     setSelectOnMap,
     map,
+    renderArray,
+    setRenderArray,
   } = { ...props };
 
   function formatDate(date: string) {
@@ -208,23 +215,6 @@ function DateIntervalDisplayComponent(props: Props) {
     edit?.focus();
   }
 
-  // Drag start event handler
-  function handleDragStart(event: any) {
-    let draggedItem = event.target;
-    event.dataTransfer.effectAllowed = "move";
-    event.dataTransfer.setData("text", (draggedItem as DateInterval).id);
-    event.target.style.opacity = "0.5";
-  }
-
-  // Drop event handler
-  function handleDrop(event: any) {
-    event.preventDefault();
-    const targetItem = event.target;
-
-    let srcIndex = event;
-    let targetIndex = (targetItem as HTMLElement).id;
-  }
-
   useEffect(() => {
     if (selectedDateInterval) {
       let div = document.getElementById("dateinterval-" + dateInterval.id);
@@ -266,6 +256,29 @@ function DateIntervalDisplayComponent(props: Props) {
     }
   }
 
+  function toggleDateIntervalShow() {
+    let enabledIcon = document.getElementById(
+      "dateinterval-enabled-icon-" + dateInterval.id
+    );
+    let disabledIcon = document.getElementById(
+      "dateinterval-disabled-icon-" + dateInterval.id
+    );
+
+    let newRenderArray = [...renderArray];
+
+    if (enabledIcon?.classList.contains("hidden")) {
+      disabledIcon?.classList.add("hidden");
+      enabledIcon.classList.remove("hidden");
+      newRenderArray[dateInterval.pos] = true;
+    } else {
+      enabledIcon?.classList.add("hidden");
+      disabledIcon?.classList.remove("hidden");
+      newRenderArray[dateInterval.pos] = false;
+    }
+
+    setRenderArray(newRenderArray);
+  }
+
   return (
     <>
       <div
@@ -302,6 +315,20 @@ function DateIntervalDisplayComponent(props: Props) {
                 onBlur={finishDateEditing}
                 type="text"
               ></input>
+              <img
+                id={`dateinterval-enabled-icon-${dateInterval.id}`}
+                src={eyeIcon}
+                className="mr-4"
+                width={28}
+                onClick={toggleDateIntervalShow}
+              ></img>
+              <img
+                id={`dateinterval-disabled-icon-${dateInterval.id}`}
+                src={eyeIconCrossed}
+                width={28}
+                className="mr-4 hidden"
+                onClick={toggleDateIntervalShow}
+              ></img>
               {editable && (
                 <RemoveDateIntervalComponent
                   jwt={jwt}

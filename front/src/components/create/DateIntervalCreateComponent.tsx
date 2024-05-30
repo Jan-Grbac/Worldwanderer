@@ -10,6 +10,8 @@ interface Props {
   timeslots: Array<Array<TimeSlot>>;
   setTimeslots: Function;
   socket: Socket | undefined;
+  renderArray: Array<boolean>;
+  setRenderArray: Function;
 }
 
 function DateIntervalCreateComponent(props: Props) {
@@ -22,6 +24,8 @@ function DateIntervalCreateComponent(props: Props) {
     timeslots,
     setTimeslots,
     socket,
+    renderArray,
+    setRenderArray,
   } = {
     ...props,
   };
@@ -117,6 +121,10 @@ function DateIntervalCreateComponent(props: Props) {
         newTimeslotsArray.push(newTimeslot);
         newTimeslots.push(newTimeslotsArray);
         console.log(newTimeslots);
+
+        let newRenderArray = [...renderArray];
+        newRenderArray.push(true);
+        setRenderArray(newRenderArray);
 
         setTimeslots(newTimeslots);
 

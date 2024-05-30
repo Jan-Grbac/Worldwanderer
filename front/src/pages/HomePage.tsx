@@ -15,6 +15,7 @@ function HomePage(props: Props) {
   const [loading, setLoading] = useState<boolean>(false);
   const [highestRatedTrips, setHighestRatedTrips] = useState<Array<Trip>>();
   const [searchResults, setSearchResults] = useState<Array<Trip>>();
+  const [searchLoaded, setSearchLoaded] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -34,6 +35,32 @@ function HomePage(props: Props) {
       .then((data) => {
         setHighestRatedTrips(data);
       });
+  }, []);
+
+  useEffect(() => {
+    const loadScript = (src: string, onLoad: () => void) => {
+      const script = document.createElement("script");
+      script.src = src;
+      script.async = true;
+      script.onload = onLoad;
+      document.body.appendChild(script);
+    };
+
+    loadScript(
+      "https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js",
+      () => {
+        loadScript("build/js/countrySelect.min.js", () => {
+          if (typeof ($.fn as any).countrySelect === "function") {
+            setTimeout(() => {
+              ($("#country") as any).countrySelect();
+            }, 100);
+          } else {
+            console.error("countrySelect is not a function on jQuery");
+          }
+        });
+        setSearchLoaded(true);
+      }
+    );
   }, []);
 
   useEffect(() => {
@@ -65,15 +92,18 @@ function HomePage(props: Props) {
   }, [jwt, username]);
 
   useEffect(() => {
-    if (highestRatedTrips) {
+    if (highestRatedTrips && searchLoaded) {
       setLoading(true);
     }
-  }, [highestRatedTrips]);
+  }, [highestRatedTrips, searchLoaded]);
 
   function searchTrips() {
     let query = (
       document.getElementById("trip-search-input") as HTMLInputElement
     ).value;
+    let country_code = String(
+      ($("#country_code") as JQuery<HTMLInputElement>).val()
+    );
 
     const fetchData = {
       headers: {
@@ -81,7 +111,10 @@ function HomePage(props: Props) {
         "Content-Type": "application/json",
       },
       method: "POST",
-      body: JSON.stringify(query),
+      body: JSON.stringify({
+        query: query,
+        country: country_code,
+      }),
     };
     fetch(`/api/core/trip/searchTrip`, fetchData)
       .then((response) => {
@@ -132,6 +165,12 @@ function HomePage(props: Props) {
                   type="text"
                   className="border-2 border-gray-300 rounded-l-md pl-3 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
+                <input
+                  type="text"
+                  id="country"
+                  className="rounded-md p-2 w-40"
+                />
+                <input type="hidden" id="country_code" />
                 <button
                   className="border-2 border-gray-300 bg-blue-500 text-white rounded-r-md pl-3 pr-3 py-2 hover:bg-blue-700"
                   onClick={searchTrips}

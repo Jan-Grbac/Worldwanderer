@@ -11,6 +11,7 @@ import AttractionDisplayComponent from "../components/display/AttractionDisplayC
 import RateTripComponent from "../components/update/RateTripComponent";
 import RatingDisplayComponent from "../components/display/RatingDisplayComponent";
 import HotelDisplayComponent from "../components/display/HotelDisplayComponent";
+import { render } from "react-dom";
 
 interface Props {
   jwt: string;
@@ -424,6 +425,8 @@ function TripPlannerPage(props: Props) {
                 selectOnMap={selectOnMap}
                 setSelectOnMap={setSelectOnMap}
                 map={map as google.maps.Map}
+                renderArray={renderArray}
+                setRenderArray={setRenderArray}
               />
             </div>
             <div className="col-span-3">
@@ -445,6 +448,7 @@ function TripPlannerPage(props: Props) {
                 map={map as google.maps.Map}
                 setMap={setMap}
                 editable={editable}
+                renderArray={renderArray}
               />
               <div className="flex flex-row">
                 {editable && suggestedAttractions.length !== 0 && (

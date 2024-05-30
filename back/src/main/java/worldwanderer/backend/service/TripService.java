@@ -28,5 +28,6 @@ public interface TripService {
     List<Trip> getPublishedTripsForUser(User user);
     void updateTripRating(Trip trip);
     List<Trip> searchTrips(String query);
+    List<Trip> searchTrips(String query, String country);
     List<Trip> getTripsForUserContainingQuery(User user, String query);
 }

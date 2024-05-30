@@ -22,6 +22,8 @@ interface Props {
   selectOnMap: boolean;
   setSelectOnMap: Function;
   map: google.maps.Map;
+  renderArray: Array<boolean>;
+  setRenderArray: Function;
 }
 
 function TripDataDisplayComponent(props: Props) {
@@ -43,6 +45,8 @@ function TripDataDisplayComponent(props: Props) {
     selectOnMap,
     setSelectOnMap,
     map,
+    renderArray,
+    setRenderArray,
   } = { ...props };
 
   function handleTripChanged() {
@@ -253,6 +257,8 @@ function TripDataDisplayComponent(props: Props) {
                       selectOnMap={selectOnMap}
                       setSelectOnMap={setSelectOnMap}
                       map={map}
+                      renderArray={renderArray}
+                      setRenderArray={setRenderArray}
                     />
                   </li>
                 );
@@ -268,6 +274,8 @@ function TripDataDisplayComponent(props: Props) {
               timeslots={timeslots}
               setTimeslots={setTimeslots}
               socket={socket}
+              renderArray={renderArray}
+              setRenderArray={setRenderArray}
             />
           )}
         </div>

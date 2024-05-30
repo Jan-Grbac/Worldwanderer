@@ -172,4 +172,11 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="1" author="yourname">
+        <sql>
+            INSERT INTO users (email, username, password, role) VALUES
+                ('guest@gmail.com', 'guest', '$2a$10$VuRaPbWjH518CLXtvVSn7eUk.Vc4njFmhSBTj9BNaNWIZTd6yoaxe', 2);
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>

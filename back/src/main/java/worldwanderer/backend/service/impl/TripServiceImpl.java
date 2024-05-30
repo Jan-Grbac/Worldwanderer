@@ -228,6 +228,11 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
+    public List<Trip> searchTrips(String query, String country) {
+        return tripRepository.findTripByNameContainsIgnoreCaseAndPublishedAndCountriesContainsIgnoreCase(query, true, country);
+    }
+
+    @Override
     public List<Trip> getTripsForUserContainingQuery(User user, String query) {
         return tripRepository.findAllByUserAndNameContainsIgnoreCase(user, query);
     }

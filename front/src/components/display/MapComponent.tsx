@@ -27,6 +27,7 @@ interface Props {
   selectOnMap: boolean;
   setSelectOnMap: Function;
   editable: boolean;
+  renderArray: Array<boolean>;
 }
 
 interface MapLoaderProps {
@@ -63,6 +64,7 @@ function MapComponent(props: Props) {
     selectOnMap,
     setSelectOnMap,
     editable,
+    renderArray,
   } = {
     ...props,
   };
@@ -157,7 +159,8 @@ function MapComponent(props: Props) {
       timeslots &&
       directionsService &&
       coreLib &&
-      routesLib
+      routesLib &&
+      renderArray
     ) {
       for (let i in previousRenders) {
         previousRenders[i].setMap(null);
@@ -166,6 +169,7 @@ function MapComponent(props: Props) {
 
       let newMarkersAll: Array<MarkerInfo> = [];
       for (let i = 0; i < dateIntervals.length; i++) {
+        if (renderArray[i] === false) continue;
         if (i < timeslots.length) {
           let newMarkers: Array<MarkerInfo> = [];
           for (let j = 0; j < timeslots[i].length; j++) {
@@ -243,6 +247,7 @@ function MapComponent(props: Props) {
     map,
     coreLib,
     routesLib,
+    renderArray,
   ]);
 
   useEffect(() => {

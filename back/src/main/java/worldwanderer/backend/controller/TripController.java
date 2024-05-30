@@ -5,6 +5,7 @@ import org.apache.coyote.Response;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import worldwanderer.backend.dto.HomePageSearchQuery;
 import worldwanderer.backend.dto.TripData;
 import worldwanderer.backend.dto.UserData;
 import worldwanderer.backend.entity.Trip;
@@ -149,11 +150,11 @@ public class TripController {
     }
 
     @PostMapping("/searchTrip")
-    public ResponseEntity<List<TripData>> searchTrips(@RequestBody String query) {
-        if(query.equals("\"\""))
+    public ResponseEntity<List<TripData>> searchTrips(@RequestBody HomePageSearchQuery query) {
+        if(query.getQuery().equals("\"\""))
             return ResponseEntity.ok(new LinkedList<>());
-        query = query.substring(1, query.length() - 1);
-        List<Trip> trips = tripService.searchTrips(query);
+        String strQuery = query.getQuery().substring(1, query.getQuery().length() - 1);
+        List<Trip> trips = tripService.searchTrips(strQuery, query.getCountry());
         List<TripData> tripDataList = tripService.transformTripIntoTripData(trips);
         return ResponseEntity.ok(tripDataList);
     }
