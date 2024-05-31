@@ -112,17 +112,19 @@ function TripsPage(props: Props) {
   return (
     loading && (
       <>
-        <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
-        <div className="flex flex-col ml-4 mt-4">
-          <TripListDisplayComponent
-            jwt={jwt}
-            username={username}
-            ownedTrips={ownedTrips as Array<Trip>}
-            setOwnedTrips={setOwnedTrips}
-            sharedTrips={sharedTrips as Array<Trip>}
-            publishedTrips={publishedTrips as Array<Trip>}
-            setPublishedTrips={setPublishedTrips}
-          />
+        <div className="flex flex-col">
+          <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
+          <div className="flex flex-col flex-grow ml-4 mt-4 mr-4">
+            <TripListDisplayComponent
+              jwt={jwt}
+              username={username}
+              ownedTrips={ownedTrips as Array<Trip>}
+              setOwnedTrips={setOwnedTrips}
+              sharedTrips={sharedTrips as Array<Trip>}
+              publishedTrips={publishedTrips as Array<Trip>}
+              setPublishedTrips={setPublishedTrips}
+            />
+          </div>
         </div>
       </>
     )

@@ -104,7 +104,13 @@ function DateIntervalCreateComponent(props: Props) {
           ) as HTMLInputElement
         ).value = "";
 
-        let newTimeslots = [...timeslots];
+        let newTimeslots: Array<Array<TimeSlot>>;
+        if (timeslots.length === 0) {
+          newTimeslots = [];
+        } else {
+          newTimeslots = [...timeslots];
+        }
+
         let newTimeslot = {
           id: "",
           name: "",

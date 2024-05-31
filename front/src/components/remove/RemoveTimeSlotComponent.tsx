@@ -27,7 +27,19 @@ function RemoveTimeSlotComponent(props: Props) {
       for (let j = 0; j < timeslots[i].length; j++) {
         if (timeslots[i][j].id === timeslotId) {
           newTimeslots[i].splice(j, 1);
-          console.log(newTimeslots);
+          if (newTimeslots[i].length === 0) {
+            newTimeslots[i].push({
+              id: "",
+              name: "",
+              notes: "",
+              startTime: "",
+              endTime: "",
+              lat: 0,
+              lng: 0,
+              dateIntervalId: "",
+              pos: 0,
+            } as TimeSlot);
+          }
           break;
         }
       }

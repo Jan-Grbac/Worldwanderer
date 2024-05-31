@@ -39,8 +39,8 @@ function NavbarComponent(props: Props) {
         {jwtIsValid ? (
           <>
             {username !== "admin" && (
-              <div className="flex flex-grow justify-between items-center w-full">
-                <div className="flex justify-start gap-5 ml-4">
+              <div className="flex flex-grow justify-between items-center w-full pl-32 pr-32">
+                <div className="flex justify-start gap-10 ml-4">
                   <button className="basicButton" onClick={home}>
                     <h2 className="text-lg font-medium text-black hover:text-orange-500">
                       Main page
@@ -52,7 +52,7 @@ function NavbarComponent(props: Props) {
                     </h2>
                   </button>
                 </div>
-                <div className="flex items-center gap-5 mr-4">
+                <div className="flex items-center gap-10 mr-4">
                   <button className="basicButton" onClick={profile}>
                     <h2 className="text-lg font-medium text-black hover:text-orange-500">
                       Your profile
@@ -67,7 +67,7 @@ function NavbarComponent(props: Props) {
               </div>
             )}
             {username === "admin" && (
-              <div className="flex flex-grow justify-between items-center w-full">
+              <div className="flex flex-grow justify-between items-center w-full pl-32 pr-32">
                 <div className="flex justify-start gap-5 ml-4">
                   <button className="basicButton" onClick={admin}>
                     <h2 className="text-lg font-medium text-black hover:text-orange-500">
@@ -86,8 +86,15 @@ function NavbarComponent(props: Props) {
             )}
           </>
         ) : (
-          <div className="flex flex-grow justify-between items-center w-full">
+          <div className="flex flex-grow justify-between items-center w-full pl-32 pr-32">
             <div className="flex justify-start gap-5 ml-4">
+              <button className="basicButton" onClick={home}>
+                <h2 className="text-lg font-medium text-black hover:text-orange-500">
+                  Main page
+                </h2>
+              </button>
+            </div>
+            <div className="flex justify-end gap-10 ml-4">
               <button className="basicButton" onClick={signup}>
                 <h2 className="text-lg font-medium text-black hover:text-orange-500">
                   Sign up

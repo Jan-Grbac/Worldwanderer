@@ -162,6 +162,7 @@ function MapComponent(props: Props) {
       routesLib &&
       renderArray
     ) {
+      let panned = false;
       for (let i in previousRenders) {
         previousRenders[i].setMap(null);
       }
@@ -175,6 +176,10 @@ function MapComponent(props: Props) {
           for (let j = 0; j < timeslots[i].length; j++) {
             let timeslot = timeslots[i][j];
             if (timeslot.lat === 0 && timeslot.lng === 0) continue;
+            if (!panned) {
+              panned = true;
+              setCenter({ lat: timeslot.lat, lng: timeslot.lng });
+            }
             let markerLatLng = new coreLib.LatLng(timeslot.lat, timeslot.lng);
             let markerInfo = {
               position: markerLatLng,

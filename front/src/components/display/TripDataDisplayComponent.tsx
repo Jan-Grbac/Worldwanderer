@@ -166,7 +166,7 @@ function TripDataDisplayComponent(props: Props) {
 
   return (
     <>
-      <div className="bg-gray-200 rounded-md m-2 p-4">
+      <div className="bg-white rounded-md border-l-2 border-orange-400 m-2 p-4">
         <div className="flex flex-col">
           <h2 className="font-bold italic">Trip name</h2>
           <div
@@ -222,7 +222,8 @@ function TripDataDisplayComponent(props: Props) {
           )}
         </div>
       </div>
-      <div className="bg-gray-300 m-2 rounded-md">
+      <hr className="border border-orange-400 ml-6 mr-6 rounded-md" />
+      <div className="bg-gray-100 border-l-2 border-orange-500 m-2 rounded-md">
         <div
           className="flex-grow hover:bg-gray-400 cursor-pointer rounded-md"
           onClick={toggleDataDiv}

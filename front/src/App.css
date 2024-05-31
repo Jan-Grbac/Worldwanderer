@@ -6,10 +6,10 @@
   @apply font-extralight;
 }
 
+html,
 body {
-  min-height: 100vh;
-  min-width: 100%;
-  @apply bg-white;
+  height: 100%;
+  margin: 0;
 }
 
 h1 {

@@ -49,19 +49,24 @@ function HomePage(props: Props) {
     loadScript(
       "https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js",
       () => {
-        loadScript("build/js/countrySelect.min.js", () => {
-          if (typeof ($.fn as any).countrySelect === "function") {
-            setTimeout(() => {
+        loadScript(
+          "https://cdnjs.cloudflare.com/ajax/libs/country-select-js/2.1.1/js/countrySelect.min.js",
+          () => {
+            ($ as any)(document).ready(() => {
               ($("#country") as any).countrySelect();
-            }, 100);
-          } else {
-            console.error("countrySelect is not a function on jQuery");
+            });
+            setSearchLoaded(true);
           }
-        });
-        setSearchLoaded(true);
+        );
       }
     );
-  }, []);
+
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href =
+      "https://cdnjs.cloudflare.com/ajax/libs/country-select-js/2.1.1/css/countrySelect.min.css";
+    document.head.appendChild(link);
+  }, [loading]);
 
   useEffect(() => {
     if (jwt && username) {
@@ -168,7 +173,7 @@ function HomePage(props: Props) {
                 <input
                   type="text"
                   id="country"
-                  className="rounded-md p-2 w-40"
+                  className="p-2 w-40 border-2 border-gray-300"
                 />
                 <input type="hidden" id="country_code" />
                 <button

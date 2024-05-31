@@ -55,27 +55,40 @@ function TripPlannerPage(props: Props) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (jwtIsValid && jwt && editable !== undefined) {
-      if (!jwtIsValid && editable) {
+    console.log(jwtIsValid, jwt, editable);
+    if (
+      jwtIsValid !== undefined &&
+      jwt !== undefined &&
+      editable !== undefined &&
+      username
+    ) {
+      if (!jwtIsValid && jwt === "" && editable) {
         navigate("/home");
         alert("You need to be logged in to edit a trip!");
       } else {
         const tripId = window.location.href.split("/")[4];
 
-        fetchTrip(tripId);
-        fetchAllowedUsers(tripId);
-        fetchDateIntervals(tripId);
-        fetchTimeslots(tripId);
-        fetchRatings(tripId);
-        if (editable) checkTripAccess(tripId);
+        let userJwt = "";
+        if (jwt !== undefined) {
+          userJwt = jwt;
+        }
+
+        console.log(userJwt);
+
+        fetchTrip(tripId, userJwt);
+        fetchAllowedUsers(tripId, userJwt);
+        fetchDateIntervals(tripId, userJwt);
+        fetchTimeslots(tripId, userJwt);
+        fetchRatings(tripId, userJwt);
+        if (editable) checkTripAccess(tripId, userJwt);
       }
     }
-  }, [jwt, jwtIsValid, editable]);
+  }, [jwt, jwtIsValid, editable, username]);
 
-  function checkTripAccess(tripId: string) {
+  function checkTripAccess(tripId: string, userJwt: string) {
     fetch(`/api/core/trip/checkTripAccess/${username}/${tripId}`, {
       headers: {
-        Authorization: `Bearer ${jwt}`,
+        Authorization: userJwt === "" ? "" : `Bearer ${userJwt}`,
         Accept: "application/json",
         "Content-Type": "application/json",
       },
@@ -89,10 +102,10 @@ function TripPlannerPage(props: Props) {
     });
   }
 
-  function fetchAllowedUsers(tripId: string) {
+  function fetchAllowedUsers(tripId: string, userJwt: string) {
     fetch(`/api/core/trip/getAllowedUsers/${tripId}`, {
       headers: {
-        Authorization: `Bearer ${jwt}`,
+        Authorization: userJwt === "" ? "" : `Bearer ${userJwt}`,
         Accept: "application/json",
         "Content-Type": "application/json",
       },
@@ -117,10 +130,10 @@ function TripPlannerPage(props: Props) {
       });
   }
 
-  function fetchDateIntervals(tripId: string) {
+  function fetchDateIntervals(tripId: string, userJwt: string) {
     fetch(`/api/core/dateInterval/getIntervals/${tripId}`, {
       headers: {
-        Authorization: `Bearer ${jwt}`,
+        Authorization: userJwt === "" ? "" : `Bearer ${userJwt}`,
         Accept: "application/json",
         "Content-Type": "application/json",
       },
@@ -136,10 +149,10 @@ function TripPlannerPage(props: Props) {
       });
   }
 
-  function fetchTimeslots(tripId: string) {
+  function fetchTimeslots(tripId: string, userJwt: string) {
     fetch(`/api/core/timeslot/getTimeslotsForTrip/${tripId}`, {
       headers: {
-        Authorization: `Bearer ${jwt}`,
+        Authorization: userJwt === "" ? "" : `Bearer ${userJwt}`,
         Accept: "application/json",
         "Content-Type": "application/json",
       },
@@ -155,10 +168,10 @@ function TripPlannerPage(props: Props) {
       });
   }
 
-  function fetchTrip(tripId: string) {
+  function fetchTrip(tripId: string, userJwt: string) {
     fetch(`/api/core/trip/getTrip/${tripId}`, {
       headers: {
-        Authorization: `Bearer ${jwt}`,
+        Authorization: userJwt === "" ? "" : `Bearer ${userJwt}`,
         Accept: "application/json",
         "Content-Type": "application/json",
       },
@@ -190,10 +203,10 @@ function TripPlannerPage(props: Props) {
       });
   }
 
-  function fetchRatings(tripId: string) {
+  function fetchRatings(tripId: string, userJwt: string) {
     const fetchData = {
       headers: {
-        Authorization: `Bearer ${jwt}`,
+        Authorization: userJwt === "" ? "" : `Bearer ${userJwt}`,
         Accept: "application/json",
         "Content-Type": "application/json",
       },
@@ -216,15 +229,7 @@ function TripPlannerPage(props: Props) {
   }
 
   useEffect(() => {
-    if (
-      jwt &&
-      username &&
-      trip &&
-      dateIntervals &&
-      timeslots &&
-      allowedUsers &&
-      ratings
-    ) {
+    if (trip && dateIntervals && timeslots && allowedUsers && ratings) {
       setLoading(true);
     }
   }, [jwt, username, trip, dateIntervals, timeslots, allowedUsers, ratings]);
@@ -232,7 +237,7 @@ function TripPlannerPage(props: Props) {
   function userGrantedEditPrivilege(data: string) {
     if (!trip) return;
     alert("User " + data + " was granted edit privilege.");
-    fetchAllowedUsers(trip.id);
+    fetchAllowedUsers(trip.id, jwt);
   }
   function userRevokedEditPrivilege(data: string) {
     if (data === username) {
@@ -241,46 +246,46 @@ function TripPlannerPage(props: Props) {
     } else {
       if (!trip) return;
       alert("User " + data + "'s edit privilege was revoked.");
-      fetchAllowedUsers(trip.id);
+      fetchAllowedUsers(trip.id, jwt);
     }
   }
   function dateIntervalAdded(data: string) {
     if (!trip) return;
     alert(data + " added a date interval.");
-    fetchDateIntervals(trip.id);
-    fetchTimeslots(trip.id);
+    fetchDateIntervals(trip.id, jwt);
+    fetchTimeslots(trip.id, jwt);
   }
   function dateIntervalDeleted(data: string) {
     if (!trip) return;
     alert(data + " deleted a date interval.");
-    fetchDateIntervals(trip.id);
-    fetchTimeslots(trip.id);
+    fetchDateIntervals(trip.id, jwt);
+    fetchTimeslots(trip.id, jwt);
   }
   function dateIntervalUpdated(data: string) {
     if (!trip) return;
     alert(data + " updated a date interval.");
-    fetchDateIntervals(trip.id);
-    fetchTimeslots(trip.id);
+    fetchDateIntervals(trip.id, jwt);
+    fetchTimeslots(trip.id, jwt);
   }
   function timeslotAdded(data: string) {
     if (!trip) return;
     alert(data + " added a timeslot.");
-    fetchTimeslots(trip.id);
+    fetchTimeslots(trip.id, jwt);
   }
   function timeslotDeleted(data: string) {
     if (!trip) return;
     alert(data + " deleted a timeslot.");
-    fetchTimeslots(trip.id);
+    fetchTimeslots(trip.id, jwt);
   }
   function timeslotUpdated(data: string) {
     if (!trip) return;
     alert(data + " updated a timeslot.");
-    fetchTimeslots(trip.id);
+    fetchTimeslots(trip.id, jwt);
   }
   function tripParamsUpdated(data: string) {
     if (!trip) return;
     alert(data + " edited trip parameters.");
-    fetchTrip(trip.id);
+    fetchTrip(trip.id, jwt);
   }
 
   useEffect(() => {
@@ -346,6 +351,11 @@ function TripPlannerPage(props: Props) {
   function handlePublish() {
     if (!trip) return;
 
+    let newTrip = { ...trip };
+    newTrip.published = true;
+
+    setTrip(newTrip);
+
     const fetchData = {
       headers: {
         Authorization: `Bearer ${jwt}`,
@@ -367,11 +377,6 @@ function TripPlannerPage(props: Props) {
         alert("Trip published successfully.");
         navigate("/viewtrip/" + trip.id);
       });
-
-    let newTrip = { ...trip };
-    newTrip.published = true;
-
-    setTrip(newTrip);
   }
 
   function showPublishWarning() {
@@ -384,197 +389,209 @@ function TripPlannerPage(props: Props) {
   }
 
   function formatDate(date: string) {
-    let year = date.substring(0, 4);
-    let month = date.substring(5, 7);
-    let day = date.substring(8, 10);
+    if (date !== null) {
+      let year = date.substring(0, 4);
+      let month = date.substring(5, 7);
+      let day = date.substring(8, 10);
 
-    let newDate = day + "/" + month + "/" + year;
+      let newDate = day + "/" + month + "/" + year;
 
-    return newDate;
+      return newDate;
+    }
+    return "";
   }
 
   return (
     loading && (
       <>
         <APIProvider apiKey="AIzaSyACu8umhkkYq6tvxaHbP_Y_sAHRV9rCuMQ">
-          <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
-          <div className="grid grid-cols-6 max-w-full max-h-full min-h-screen">
-            <div className="col-span-2">
-              {trip?.published && (
-                <h2 className="ml-6 mt-2 mb-2 italic">
-                  Published by <strong>{trip.ownerUsername}</strong>
-                  <br />
-                  {formatDate(trip.publishedDate)}
-                </h2>
-              )}
-              <TripDataDisplayComponent
-                jwt={jwt}
-                trip={trip as Trip}
-                setTrip={setTrip}
-                username={username}
-                dateIntervals={dateIntervals}
-                setDateIntervals={setDateIntervals}
-                timeslots={timeslots}
-                setTimeslots={setTimeslots}
-                editable={editable}
-                socket={socket}
-                selectedTimeslot={selectedTimeslot as TimeSlot}
-                setSelectedTimeslot={setSelectedTimeslot}
-                selectedDateInterval={selectedDateInterval as DateInterval}
-                setSelectedDateInterval={setSelectedDateInterval}
-                selectOnMap={selectOnMap}
-                setSelectOnMap={setSelectOnMap}
-                map={map as google.maps.Map}
-                renderArray={renderArray}
-                setRenderArray={setRenderArray}
-              />
-            </div>
-            <div className="col-span-3">
-              <MapComponent
-                jwt={jwt}
-                username={username}
-                trip={trip as Trip}
-                dateIntervals={dateIntervals}
-                timeslots={timeslots}
-                setTimeslots={setTimeslots}
-                socket={socket}
-                selectedTimeslot={selectedTimeslot as TimeSlot}
-                setSelectedTimeslot={setSelectedTimeslot}
-                selectedDateInterval={selectedDateInterval as DateInterval}
-                setSuggestedAttractions={setSuggestedAttractions}
-                setHotels={setHotels}
-                selectOnMap={selectOnMap}
-                setSelectOnMap={setSelectOnMap}
-                map={map as google.maps.Map}
-                setMap={setMap}
-                editable={editable}
-                renderArray={renderArray}
-              />
-              <div className="flex flex-row">
-                {editable && suggestedAttractions.length !== 0 && (
-                  <>
-                    {suggestedAttractions.map(function (
-                      attraction: google.maps.places.PlaceResult
-                    ) {
-                      return (
-                        <AttractionDisplayComponent
-                          attraction={attraction}
-                          selectedTimeslot={selectedTimeslot as TimeSlot}
-                        />
-                      );
-                    })}
-                  </>
+          <div className="flex flex-col h-screen">
+            <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
+            <div className="grid grid-cols-6 flex-grow">
+              <div className="col-span-2 overflow-auto">
+                {trip?.published && (
+                  <h2 className="ml-6 mt-2 mb-2 italic">
+                    Published by <strong>{trip.ownerUsername}</strong>
+                    <br />
+                    {formatDate(trip.publishedDate)}
+                  </h2>
                 )}
-              </div>
-              <div className="flex flex-row gap-2">
-                {editable && hotels.length !== 0 && (
-                  <>
-                    {hotels.map(function (
-                      hotel: google.maps.places.PlaceResult
-                    ) {
-                      return (
-                        <HotelDisplayComponent
-                          hotel={hotel}
-                          selectedDateInterval={
-                            selectedDateInterval as DateInterval
-                          }
-                        />
-                      );
-                    })}
-                  </>
-                )}
-              </div>
-            </div>
-            <div>
-              <div className="flex flex-col mt-4 ml-4 mb-4">
-                <TripEditPermissionDisplayComponent
+                <TripDataDisplayComponent
                   jwt={jwt}
-                  allowedUsers={allowedUsers}
-                  setAllowedUsers={setAllowedUsers}
                   trip={trip as Trip}
-                  isOwner={isOwner}
+                  setTrip={setTrip}
+                  username={username}
+                  dateIntervals={dateIntervals}
+                  setDateIntervals={setDateIntervals}
+                  timeslots={timeslots}
+                  setTimeslots={setTimeslots}
                   editable={editable}
                   socket={socket}
+                  selectedTimeslot={selectedTimeslot as TimeSlot}
+                  setSelectedTimeslot={setSelectedTimeslot}
+                  selectedDateInterval={selectedDateInterval as DateInterval}
+                  setSelectedDateInterval={setSelectedDateInterval}
+                  selectOnMap={selectOnMap}
+                  setSelectOnMap={setSelectOnMap}
+                  map={map as google.maps.Map}
+                  renderArray={renderArray}
+                  setRenderArray={setRenderArray}
                 />
-                {editable && isOwner && (
-                  <div className="flex flex-grow flex-col justify-start align-middle mt-2">
-                    <button
-                      className="confirmButton self-center w-max"
-                      onMouseOver={showPublishWarning}
-                      onMouseLeave={showPublishWarning}
-                      onClick={handlePublish}
-                    >
-                      Publish trip.
-                    </button>
-                    <p
-                      id="publish-warning"
-                      className="hidden text-red-800 self-center text-center"
-                    >
-                      Warning: You will not be able to edit the trip after
-                      publishing.
-                    </p>
-                  </div>
-                )}
               </div>
-
-              {isOwner && editable && (
-                <TripEditPermissionGrantComponent
+              <div className="col-span-3">
+                <MapComponent
                   jwt={jwt}
-                  trip={trip as Trip}
-                  allowedUsers={allowedUsers}
-                  setAllowedUsers={setAllowedUsers}
                   username={username}
+                  trip={trip as Trip}
+                  dateIntervals={dateIntervals}
+                  timeslots={timeslots}
+                  setTimeslots={setTimeslots}
                   socket={socket}
+                  selectedTimeslot={selectedTimeslot as TimeSlot}
+                  setSelectedTimeslot={setSelectedTimeslot}
+                  selectedDateInterval={selectedDateInterval as DateInterval}
+                  setSuggestedAttractions={setSuggestedAttractions}
+                  setHotels={setHotels}
+                  selectOnMap={selectOnMap}
+                  setSelectOnMap={setSelectOnMap}
+                  map={map as google.maps.Map}
+                  setMap={setMap}
+                  editable={editable}
+                  renderArray={renderArray}
                 />
-              )}
-
-              {!editable && jwtIsValid && trip?.published && (
-                <button
-                  onClick={copyTrip}
-                  className="confirmButton max-w-50 ml-4 mr-4"
-                >
-                  Copy published trip and edit
-                </button>
-              )}
-              {!editable && !jwtIsValid && trip?.published && (
-                <button onClick={() => navigate("/signin")}>
-                  Sign in to copy trip
-                </button>
-              )}
-              {!editable && isOwner && !trip?.published && (
-                <button onClick={() => navigate("/edittrip/" + trip?.id)}>
-                  Edit your trip
-                </button>
-              )}
-              <div>
-                {!editable &&
-                  trip?.published &&
-                  !isAllowedUser &&
-                  !hasAlreadyRated && (
-                    <RateTripComponent
-                      jwt={jwt}
-                      username={username}
-                      trip={trip}
-                      ratings={ratings}
-                      setRatings={setRatings}
-                      setHasAlreadyRated={setHasAlreadyRated}
-                    />
+                <div className="flex flex-row">
+                  {editable && suggestedAttractions.length !== 0 && (
+                    <>
+                      {suggestedAttractions.map(function (
+                        attraction: google.maps.places.PlaceResult
+                      ) {
+                        return (
+                          <AttractionDisplayComponent
+                            attraction={attraction}
+                            selectedTimeslot={selectedTimeslot as TimeSlot}
+                          />
+                        );
+                      })}
+                    </>
                   )}
-                {!editable &&
-                  trip?.published &&
-                  ratings &&
-                  ratings.map(function (rating: Rating) {
-                    return (
-                      <RatingDisplayComponent
+                </div>
+                <div className="flex flex-row gap-2">
+                  {editable && hotels.length !== 0 && (
+                    <>
+                      {hotels.map(function (
+                        hotel: google.maps.places.PlaceResult
+                      ) {
+                        return (
+                          <HotelDisplayComponent
+                            hotel={hotel}
+                            selectedDateInterval={
+                              selectedDateInterval as DateInterval
+                            }
+                          />
+                        );
+                      })}
+                    </>
+                  )}
+                </div>
+              </div>
+              <div>
+                <div className="flex flex-col mt-4 ml-4 mb-4">
+                  <TripEditPermissionDisplayComponent
+                    jwt={jwt}
+                    allowedUsers={allowedUsers}
+                    setAllowedUsers={setAllowedUsers}
+                    trip={trip as Trip}
+                    isOwner={isOwner}
+                    editable={editable}
+                    socket={socket}
+                  />
+                  {editable && isOwner && (
+                    <div className="flex flex-grow flex-col justify-start align-middle mt-2">
+                      <button
+                        className="confirmButton self-center w-max"
+                        onMouseOver={showPublishWarning}
+                        onMouseLeave={showPublishWarning}
+                        onClick={handlePublish}
+                      >
+                        Publish trip.
+                      </button>
+                      <p
+                        id="publish-warning"
+                        className="hidden text-red-800 self-center text-center"
+                      >
+                        Warning: You will not be able to edit the trip after
+                        publishing.
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {isOwner && editable && (
+                  <TripEditPermissionGrantComponent
+                    jwt={jwt}
+                    trip={trip as Trip}
+                    allowedUsers={allowedUsers}
+                    setAllowedUsers={setAllowedUsers}
+                    username={username}
+                    socket={socket}
+                  />
+                )}
+
+                {!editable && jwtIsValid && trip?.published && (
+                  <button
+                    onClick={copyTrip}
+                    className="confirmButton max-w-50 ml-4 mr-4"
+                  >
+                    Copy published trip and edit
+                  </button>
+                )}
+                {!editable && !jwtIsValid && trip?.published && (
+                  <button
+                    onClick={() => navigate("/signin")}
+                    className="confirmButton max-w-50 ml-4 mr-4"
+                  >
+                    Sign in to copy trip
+                  </button>
+                )}
+                {!editable && isOwner && !trip?.published && (
+                  <button
+                    onClick={() => navigate("/edittrip/" + trip?.id)}
+                    className="confirmButton max-w-50 ml-4 mr-4"
+                  >
+                    Edit your trip
+                  </button>
+                )}
+                <div>
+                  {!editable &&
+                    trip?.published &&
+                    !isAllowedUser &&
+                    !hasAlreadyRated &&
+                    jwt && (
+                      <RateTripComponent
                         jwt={jwt}
                         username={username}
-                        rating={rating}
+                        trip={trip}
                         ratings={ratings}
                         setRatings={setRatings}
                         setHasAlreadyRated={setHasAlreadyRated}
                       />
-                    );
-                  })}
+                    )}
+                  {!editable &&
+                    trip?.published &&
+                    ratings &&
+                    ratings.map(function (rating: Rating) {
+                      return (
+                        <RatingDisplayComponent
+                          jwt={jwt}
+                          username={username}
+                          rating={rating}
+                          ratings={ratings}
+                          setRatings={setRatings}
+                          setHasAlreadyRated={setHasAlreadyRated}
+                        />
+                      );
+                    })}
+                </div>
               </div>
             </div>
           </div>

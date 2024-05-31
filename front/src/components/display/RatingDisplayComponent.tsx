@@ -16,9 +16,11 @@ function RatingDisplayComponent(props: Props) {
   };
 
   function formatDate(date: string) {
+    console.log(date);
     let year = date.substring(0, 4);
     let month = date.substring(5, 7);
     let day = date.substring(8, 10);
+    console.log(year, month, day);
 
     let newDate = day + "/" + month + "/" + year;
 

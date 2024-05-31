@@ -14,6 +14,7 @@ function CreateTripComponent(props: Props) {
   const { jwt, username, trips, setTrips } = { ...props };
 
   const [newTrip, setNewTrip] = useState<Trip>();
+  const [loading, setLoading] = useState<boolean>(false);
   const [searchLoaded, setSearchLoaded] = useState<boolean>(false);
 
   useEffect(() => {
@@ -28,19 +29,24 @@ function CreateTripComponent(props: Props) {
     loadScript(
       "https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js",
       () => {
-        loadScript("build/js/countrySelect.min.js", () => {
-          if (typeof ($.fn as any).countrySelect === "function") {
-            setTimeout(() => {
+        loadScript(
+          "https://cdnjs.cloudflare.com/ajax/libs/country-select-js/2.1.1/js/countrySelect.min.js",
+          () => {
+            ($ as any)(document).ready(() => {
               ($("#country") as any).countrySelect();
-            }, 100);
-          } else {
-            console.error("countrySelect is not a function on jQuery");
+            });
+            setSearchLoaded(true);
           }
-        });
-        setSearchLoaded(true);
+        );
       }
     );
-  }, []);
+
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href =
+      "https://cdnjs.cloudflare.com/ajax/libs/country-select-js/2.1.1/css/countrySelect.min.css";
+    document.head.appendChild(link);
+  }, [loading]);
 
   const getFlagComponent = (countryCode: string) => {
     const upperCaseCountryCode = countryCode.toUpperCase();
@@ -71,6 +77,12 @@ function CreateTripComponent(props: Props) {
       setNewTrip(newTripChanged);
     }
   }
+
+  useEffect(() => {
+    if (searchLoaded) {
+      setLoading(true);
+    }
+  }, [searchLoaded]);
 
   function handleNewTripCreation() {
     if (!newTrip) return;

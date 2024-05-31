@@ -28,7 +28,10 @@ function TripPublicDisplayComponent(props: Props) {
       }}
     >
       <h1 className="mb-4 text-2xl font-extrabold text-black">{trip.name}</h1>
-      <p className="text-lg text-gray-700">{trip.rating} ⭐</p>
+      {trip.rating !== 0 && (
+        <p className="text-lg text-gray-700">{trip.rating} ⭐</p>
+      )}
+      {trip.rating === 0 && <p className="text-gray-700">No ratings yet.</p>}
       <p className="text-gray-600">Made by: {trip.ownerUsername}</p>
       <p className="text-gray-600">
         Published on: {formatDate(trip.publishedDate)}

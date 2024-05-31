@@ -67,6 +67,8 @@ function RateTripComponent(props: Props) {
           setRating({} as Rating);
           setRatings(newRatings);
         });
+
+      window.location.reload();
     }
   }
 

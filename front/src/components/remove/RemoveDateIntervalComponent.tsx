@@ -37,11 +37,7 @@ function RemoveDateIntervalComponent(props: Props) {
     for (let i = 0; i < dateIntervals.length; i++) {
       if (dateIntervals[i].id === dateIntervalId) {
         newDateIntervals.splice(i, 1);
-
         newTimeslots.splice(i, 1);
-        if (newTimeslots.length === 0) {
-          newTimeslots.push([]);
-        }
         break;
       }
     }
