@@ -410,7 +410,7 @@ function TripPlannerPage(props: Props) {
             <div className="grid grid-cols-6 flex-grow">
               <div className="col-span-2 overflow-auto">
                 {trip?.published && (
-                  <h2 className="ml-6 mt-2 mb-2 italic">
+                  <h2 className="ml-6 mt-2 mb-2">
                     Published by <strong>{trip.ownerUsername}</strong>
                     <br />
                     {formatDate(trip.publishedDate)}
@@ -505,25 +505,6 @@ function TripPlannerPage(props: Props) {
                     editable={editable}
                     socket={socket}
                   />
-                  {editable && isOwner && (
-                    <div className="flex flex-grow flex-col justify-start align-middle mt-2">
-                      <button
-                        className="confirmButton self-center w-max"
-                        onMouseOver={showPublishWarning}
-                        onMouseLeave={showPublishWarning}
-                        onClick={handlePublish}
-                      >
-                        Publish trip.
-                      </button>
-                      <p
-                        id="publish-warning"
-                        className="hidden text-red-800 self-center text-center"
-                      >
-                        Warning: You will not be able to edit the trip after
-                        publishing.
-                      </p>
-                    </div>
-                  )}
                 </div>
 
                 {isOwner && editable && (
@@ -535,6 +516,26 @@ function TripPlannerPage(props: Props) {
                     username={username}
                     socket={socket}
                   />
+                )}
+
+                {editable && isOwner && (
+                  <div className="flex flex-grow flex-col justify-start align-middle mt-2">
+                    <button
+                      className="confirmButton self-center w-max"
+                      onMouseOver={showPublishWarning}
+                      onMouseLeave={showPublishWarning}
+                      onClick={handlePublish}
+                    >
+                      Publish trip
+                    </button>
+                    <p
+                      id="publish-warning"
+                      className="hidden text-red-800 self-center text-center"
+                    >
+                      Warning: You will not be able to edit the trip after
+                      publishing.
+                    </p>
+                  </div>
                 )}
 
                 {!editable && jwtIsValid && trip?.published && (

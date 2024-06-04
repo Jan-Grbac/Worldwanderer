@@ -244,7 +244,7 @@ function TimeSlotDisplayComponent(props: Props) {
             <div className="flex flex-row gap-2 flex-grow justify-start">
               <h3
                 id={`name-content-` + timeslot.id}
-                className="font-medium italic rounded-md hover:bg-gray-300"
+                className="font-medium rounded-md hover:bg-gray-300"
                 onClick={toggleNameUpdate}
               >
                 {timeslot.name}
@@ -282,7 +282,7 @@ function TimeSlotDisplayComponent(props: Props) {
           {!timeslot.notes && (
             <div
               id={`notes-placeholder-` + timeslot.id}
-              className="italic font-thin ml-2 w-max rounded-md hover:bg-gray-300"
+              className="font-thin ml-2 w-max rounded-md hover:bg-gray-300"
               onClick={toggleNotesUpdate}
             >
               Add notes...
@@ -292,7 +292,7 @@ function TimeSlotDisplayComponent(props: Props) {
             <>
               <div
                 id={`notes-content-` + timeslot.id}
-                className="italic font-thin ml-2 w-max"
+                className="font-thin ml-2 w-max"
                 onClick={toggleNotesUpdate}
               >
                 {timeslot.notes}
@@ -320,7 +320,7 @@ function TimeSlotDisplayComponent(props: Props) {
           {!timeslot.startTime && (
             <p
               id={`starttime-placeholder-` + timeslot.id}
-              className="italic font-thin ml-2 w-max rounded-md hover:bg-gray-300"
+              className="font-thin ml-2 w-max rounded-md hover:bg-gray-300"
               onClick={toggleStartTimeUpdate}
             >
               Add start time...
@@ -346,7 +346,7 @@ function TimeSlotDisplayComponent(props: Props) {
           {!timeslot.endTime && (
             <p
               id={`endtime-placeholder-` + timeslot.id}
-              className="italic font-thin ml-2 w-max rounded-md hover:bg-gray-300"
+              className="font-thin ml-2 w-max rounded-md hover:bg-gray-300"
               onClick={toggleEndTimeUpdate}
             >
               Add end time...

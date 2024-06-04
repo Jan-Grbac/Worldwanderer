@@ -242,11 +242,16 @@ function DateIntervalDisplayComponent(props: Props) {
     let timeslotsCreate = document.getElementById(
       "dateinterval-timeslots-create-" + dateInterval.id
     );
+    let topArrow = document.getElementById(
+      "dateinterval-top-icon-" + dateInterval.id
+    );
 
     if (timeslotsShow?.classList.contains("hidden")) {
       timeslotsShow.classList.remove("hidden");
+      topArrow?.classList.remove("rotate-180");
     } else {
       timeslotsShow?.classList.add("hidden");
+      topArrow?.classList.add("rotate-180");
     }
 
     if (timeslotsCreate?.classList.contains("hidden")) {
@@ -288,9 +293,21 @@ function DateIntervalDisplayComponent(props: Props) {
         <div className="flex flex-col gap-2">
           <div
             id={`dateinterval-div-top-` + dateInterval.id}
-            className="min-h-6 max-h-6 rounded-t-md"
+            className="min-h-6 max-h-6 rounded-t-md hover:opacity-60 flex flex-row justify-end"
             onClick={toggleDateInterval}
-          ></div>
+          >
+            <svg
+              id={`dateinterval-top-icon-` + dateInterval.id}
+              data-accordion-icon
+              className="w-3 h-3 shrink-0 mt-2 mr-4"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 10 6"
+            >
+              <path stroke="currentColor" stroke-width="2" d="M9 5 5 1 1 5" />
+            </svg>
+          </div>
           <div className="pl-4 pr-2 pb-2">
             <div className="flex flex-row pr-2">
               <div
@@ -298,7 +315,7 @@ function DateIntervalDisplayComponent(props: Props) {
                 className="flex-grow hover:bg-gray-300 rounded-md"
                 onClick={allowNameEditing}
               >
-                <h2 className="italic font-semibold">
+                <h2 className="font-semibold">
                   {dateInterval.name !== null ? dateInterval.name : "unnamed"}
                 </h2>
               </div>
@@ -374,6 +391,7 @@ function DateIntervalDisplayComponent(props: Props) {
                   type="date"
                   name="startDate"
                   defaultValue={dateSubstring(dateInterval.startDate)}
+                  min={new Date().toISOString().split("T")[0]}
                   onChange={(event) =>
                     dateIntervalChanged("startDate", event.target.value)
                   }
@@ -394,14 +412,27 @@ function DateIntervalDisplayComponent(props: Props) {
               </div>
             </div>
             <div className="flex flex-row mb-2">
-              <p>Budget: </p>
-              <div
-                id={`dateinterval-budget-view-${dateInterval.id}`}
-                className="hover:bg-gray-300 rounded-md"
-                onClick={allowBudgetEditing}
-              >
-                &nbsp;{"$" + dateInterval.budget}&nbsp;
-              </div>
+              {dateInterval.budget !== 0.0 && (
+                <>
+                  <p>Budget: </p>
+                  <div
+                    id={`dateinterval-budget-view-${dateInterval.id}`}
+                    className="hover:bg-gray-300 rounded-md"
+                    onClick={allowBudgetEditing}
+                  >
+                    &nbsp;{"$" + dateInterval.budget}&nbsp;
+                  </div>
+                </>
+              )}
+              {dateInterval.budget === 0.0 && (
+                <p
+                  id={`dateinterval-budget-view-${dateInterval.id}`}
+                  className="hover:bg-gray-300 rounded-md"
+                  onClick={allowBudgetEditing}
+                >
+                  Add budget...
+                </p>
+              )}
               <input
                 id={`dateinterval-budget-edit-${dateInterval.id}`}
                 className=" hidden flex-grow rounded-md pl-4 pr-4"

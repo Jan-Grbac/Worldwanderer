@@ -83,7 +83,7 @@ function AdminPage(props: Props) {
       <div className="flex flex-col">
         <NavbarComponent jwtIsValid={true} username={"admin"} />
         <div className="ml-8 mt-6">
-          <h1 className="text-3xl italic">Users and their trips</h1>
+          <h1 className="text-3xl">Users and their trips</h1>
           <div className="mt-2 flex flex-row gap-32">
             <p>Username</p>
             <p>Trip name</p>
@@ -103,7 +103,7 @@ function AdminPage(props: Props) {
               className="border-2 border-black rounded-md pl-2 pr-2"
               onClick={search}
             >
-              <i>Search...</i>
+              Search...
             </button>
           </div>
           <div className="flex flex-col gap-2 mt-2">

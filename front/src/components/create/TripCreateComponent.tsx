@@ -128,11 +128,9 @@ function CreateTripComponent(props: Props) {
 
   return (
     searchLoaded && (
-      <div className="flex flex-col bg-gray-200 rounded-md rounded-tl-none ml-6 w-1/2">
+      <div className="flex flex-col bg-gray-200 rounded-md rounded-tl-none ml-6 w-3/4">
         <div className="pl-4 pt-4 flex flex-row gap-2 pr-4">
-          <strong className="pt-2">
-            <i>Trip name:</i>
-          </strong>
+          <strong className="pt-2">Trip name:</strong>
           <input
             id="name-input-trip"
             className="rounded-md flex-grow p-2"
@@ -142,9 +140,7 @@ function CreateTripComponent(props: Props) {
           ></input>
         </div>
         <div className="pl-4 pt-4 flex flex-row gap-2 pr-4">
-          <strong className="pt-2">
-            <i>Trip description (optional):</i>
-          </strong>
+          <strong className="pt-2">Trip description (optional):</strong>
           <textarea
             id="description-input-trip"
             className="rounded-md flex-grow p-2"
@@ -156,9 +152,7 @@ function CreateTripComponent(props: Props) {
           ></textarea>
         </div>
         <div className="pl-4 pt-4 flex flex-row gap-2 pr-4">
-          <strong>
-            <i>Countries (add at least one):</i>
-          </strong>
+          <strong>Countries (add at least one):</strong>
           {newTrip?.countries &&
             newTrip.countries.map(function (country: string) {
               return <div className="w-10">{getFlagComponent(country)}</div>;

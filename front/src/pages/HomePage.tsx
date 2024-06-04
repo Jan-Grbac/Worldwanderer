@@ -137,7 +137,7 @@ function HomePage(props: Props) {
       <div className="flex flex-col min-h-screen bg-gray-100">
         <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
 
-        <main className="flex-1">
+        <main className="flex-1 m-2 rounded-md">
           <div className="py-6">
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
               <div className="bg-white shadow-sm rounded-lg p-6">
@@ -151,7 +151,7 @@ function HomePage(props: Props) {
                   ))}
                   {highestRatedTrips?.length === 0 && (
                     <p className="col-span-full text-center text-gray-500">
-                      <i>No trips found. Go make some!</i>
+                      No trips found. Go make some!
                     </p>
                   )}
                 </div>
@@ -180,7 +180,7 @@ function HomePage(props: Props) {
                   className="border-2 border-gray-300 bg-blue-500 text-white rounded-r-md pl-3 pr-3 py-2 hover:bg-blue-700"
                   onClick={searchTrips}
                 >
-                  <i>Search...</i>
+                  Search...
                 </button>
               </div>
             </div>
@@ -199,7 +199,7 @@ function HomePage(props: Props) {
                   ))}
                   {searchResults?.length === 0 && (
                     <p className="col-span-full text-center text-gray-500">
-                      <i>No trips match search criteria.</i>
+                      No trips match search criteria.
                     </p>
                   )}
                 </div>

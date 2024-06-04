@@ -48,7 +48,7 @@ function RatingDisplayComponent(props: Props) {
           <br />
           {rating.comment}
           <br />
-          <i>{formatDate(rating.ratingDate)}</i>
+          {formatDate(rating.ratingDate)}
         </div>
       </>
     )

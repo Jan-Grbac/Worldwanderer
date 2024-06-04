@@ -168,7 +168,7 @@ function TripDataDisplayComponent(props: Props) {
     <>
       <div className="bg-white rounded-md border-l-2 border-orange-400 m-2 p-4">
         <div className="flex flex-col">
-          <h2 className="font-bold italic">Trip name</h2>
+          <h2 className="font-bold">Trip name</h2>
           <div
             id="trip-name-view"
             className="hover:bg-gray-100 rounded-md"
@@ -186,7 +186,7 @@ function TripDataDisplayComponent(props: Props) {
             onBlur={handleTripChanged}
             suppressContentEditableWarning={true}
           ></input>
-          <h2 className="font-bold italic">Trip description</h2>
+          <h2 className="font-bold">Trip description</h2>
           <div
             id="trip-description-view"
             className="hover:bg-gray-100 rounded-md"
@@ -208,7 +208,7 @@ function TripDataDisplayComponent(props: Props) {
           ></textarea>
           {trip.countries !== undefined && (
             <>
-              <h2 className="font-bold italic">Countries</h2>
+              <h2 className="font-bold">Countries</h2>
               <div className="flex flex-row gap-2">
                 {trip.countries.map(function (country: string) {
                   {
@@ -228,7 +228,7 @@ function TripDataDisplayComponent(props: Props) {
           className="flex-grow hover:bg-gray-400 cursor-pointer rounded-md"
           onClick={toggleDataDiv}
         >
-          <h2 className="pl-4 font-bold italic">Trip sections</h2>
+          <h2 className="pl-4 font-bold">Trip sections</h2>
         </div>
         <div id="dateintervals-div" className="hidden pb-2">
           <ul>

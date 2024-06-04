@@ -77,27 +77,27 @@ function UserProfilePage(props: Props) {
     loading && (
       <>
         <NavbarComponent jwtIsValid={jwtIsValid} username={viewerUsername} />
-        <div className="flex flex-row gap-20 ml-20">
+        <div className="flex flex-col ml-20">
           <div className="flex flex-col mt-20">
-            <div className="self-center">
-              <UserInfoDisplayComponent user={user as User} />
-            </div>
+            <h1 className="text-3xl">
+              <strong>{user?.username + "'s profile"}</strong>
+            </h1>
             {viewerUsername === profileUsername && (
               <button
-                className="confirmButton w-max self-center mt-4"
+                className="confirmButton w-max mt-4"
                 onClick={() => navigate("/editprofile")}
               >
                 Edit profile
               </button>
             )}
           </div>
-          <div className="mt-20 ml-10">
+          <div className="mt-6 ml-10">
             {trips &&
               trips.map(function (trip: Trip) {
                 return <TripPublicDisplayComponent trip={trip} />;
               })}
             {trips && trips.length === 0 && (
-              <p>This user has no published trips!</p>
+              <h2>This user has no published trips!</h2>
             )}
           </div>
         </div>

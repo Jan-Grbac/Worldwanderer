@@ -29,7 +29,7 @@ function TripEditPermissionDisplayComponent(props: Props) {
   return (
     <>
       <div>
-        <i>Editors:</i>
+        Editors:
         {allowedUsers.map(function (user: User) {
           if (user.username === "admin") {
             return <></>;

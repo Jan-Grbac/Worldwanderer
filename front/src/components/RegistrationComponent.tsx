@@ -10,6 +10,8 @@ interface Props {
 function RegistrationComponent(props: Props) {
   const { setJwt, setUsername } = { ...props };
   const [user, setUser] = useState<SignUpInfo>();
+  const [usernameCollision, setUsernameCollision] = useState<boolean>();
+  const [emailCollision, setEmailCollision] = useState<boolean>();
   const navigate = useNavigate();
 
   function handleInputChange(param: string, value: any) {
@@ -34,8 +36,10 @@ function RegistrationComponent(props: Props) {
   }
 
   function handleRegisterButtonClick() {
-    if (!user) return;
-
+    if (!user) {
+      alert("Missing sign up info.");
+      return;
+    }
     if (!isValidEmail(user.email)) {
       alert("Wrong email format!");
       return;
@@ -46,6 +50,10 @@ function RegistrationComponent(props: Props) {
     }
     if (user.password === "") {
       alert("Password cannot be empty!");
+      return;
+    }
+    if (user.password.length < 8) {
+      alert("Password must be at least 8 characters.");
       return;
     }
 
@@ -74,6 +82,84 @@ function RegistrationComponent(props: Props) {
       });
   }
 
+  function checkEmailCollision() {
+    let checkObject = {
+      email: user?.email,
+    };
+
+    const fetchData = {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify(checkObject),
+    };
+    return Boolean(
+      fetch(`/api/core/user/checkEmailCollision`, fetchData)
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+        })
+        .then((data) => {
+          console.log("email", data);
+          setEmailCollision(data);
+        })
+    );
+  }
+  function checkUsernameCollision() {
+    let checkObject = {
+      username: user?.username,
+    };
+
+    const fetchData = {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify(checkObject),
+    };
+    fetch(`/api/core/user/checkUsernameCollision`, fetchData)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        console.log("username", data);
+        setUsernameCollision(data);
+      });
+  }
+
+  useEffect(() => {
+    let button = document.getElementById(
+      "register-button"
+    ) as HTMLButtonElement;
+    let usernameCollError = document.getElementById("username-collision-error");
+    let emailCollError = document.getElementById("email-collision-error");
+
+    if (!emailCollision && !usernameCollision) {
+      usernameCollError?.classList.add("hidden");
+      emailCollError?.classList.add("hidden");
+      button.disabled = false;
+    } else {
+      if (emailCollision) {
+        emailCollError?.classList.remove("hidden");
+        button.disabled = true;
+      } else {
+        emailCollError?.classList.add("hidden");
+      }
+      if (usernameCollision) {
+        usernameCollError?.classList.remove("hidden");
+        button.disabled = true;
+      } else {
+        usernameCollError?.classList.add("hidden");
+      }
+    }
+  }, [emailCollision, usernameCollision]);
+
   function cancel() {
     navigate("/home");
   }
@@ -88,7 +174,14 @@ function RegistrationComponent(props: Props) {
           placeholder="john.doe@email.com"
           value={user?.email}
           onChange={(event) => handleInputChange("email", event.target.value)}
+          onBlur={checkEmailCollision}
         ></input>
+      </div>
+      <div
+        id="email-collision-error"
+        className="hidden self-center text-red-500"
+      >
+        Email is already in use.
       </div>
       <div className="p-2">
         <strong>Username:</strong>
@@ -99,7 +192,14 @@ function RegistrationComponent(props: Props) {
           onChange={(event) =>
             handleInputChange("username", event.target.value)
           }
+          onBlur={checkUsernameCollision}
         ></input>
+      </div>
+      <div
+        id="username-collision-error"
+        className="hidden self-center text-red-500"
+      >
+        Username is already in use.
       </div>
       <div className="p-2 mb-4">
         <strong>Password:</strong>
@@ -113,7 +213,11 @@ function RegistrationComponent(props: Props) {
         ></input>
       </div>
       <div className="flex flex-row gap-20 justify-center self-center">
-        <button className="confirmButton" onClick={handleRegisterButtonClick}>
+        <button
+          id="register-button"
+          className="confirmButton"
+          onClick={handleRegisterButtonClick}
+        >
           Register
         </button>
         <button className="declineButton" onClick={cancel}>

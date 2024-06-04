@@ -150,7 +150,10 @@ function TimeSlotCreateComponent(props: Props) {
       .then((data) => {
         let newTimeslots = [...timeslots];
         let newDateIntervalTimeslots: Array<TimeSlot>;
-        if (dateIntervalTimeslots[0].name === "") {
+        if (
+          dateIntervalTimeslots.length === 0 ||
+          dateIntervalTimeslots[0].name === ""
+        ) {
           newDateIntervalTimeslots = [];
         } else {
           newDateIntervalTimeslots = [...dateIntervalTimeslots];
@@ -247,7 +250,7 @@ function TimeSlotCreateComponent(props: Props) {
             className="flex-grow hover:bg-gray-500 cursor-pointer rounded-md"
             onClick={toggleCreateDiv}
           >
-            <h2 className="pl-4 font-bold italic">Add new place</h2>
+            <h2 className="pl-4 font-bold">Add new place</h2>
           </div>
         </div>
         <div

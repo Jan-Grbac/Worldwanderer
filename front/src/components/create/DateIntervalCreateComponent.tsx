@@ -120,13 +120,13 @@ function DateIntervalCreateComponent(props: Props) {
           lat: 0,
           lng: 0,
           dateIntervalId: "",
-          pos: 0,
+          pos: data.pos,
         } as TimeSlot;
+        console.log(newTimeslot);
 
         let newTimeslotsArray = [];
         newTimeslotsArray.push(newTimeslot);
         newTimeslots.push(newTimeslotsArray);
-        console.log(newTimeslots);
 
         let newRenderArray = [...renderArray];
         newRenderArray.push(true);
@@ -136,6 +136,9 @@ function DateIntervalCreateComponent(props: Props) {
 
         setDateIntervals(newDateIntervals);
         setNewDateInterval({} as DateInterval);
+
+        console.log("date interval created, ", newDateIntervals);
+        console.log("new timeslots", newTimeslots);
 
         if (socket) {
           socket.emit(
@@ -163,7 +166,7 @@ function DateIntervalCreateComponent(props: Props) {
             className="flex-grow hover:bg-gray-300 cursor-pointer rounded-md"
             onClick={toggleCreateDiv}
           >
-            <h2 className="pl-4 font-bold italic">Add new trip section</h2>
+            <h2 className="pl-4 font-bold">Add new trip section</h2>
           </div>
         </div>
         <div id="dateinterval-create-div" className="flex flex-col hidden">
