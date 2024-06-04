@@ -495,7 +495,7 @@ function TripPlannerPage(props: Props) {
                 </div>
               </div>
               <div>
-                <div className="flex flex-col mt-4 ml-4 mb-4">
+                <div className="flex flex-col mt-4 ml-4 mb-4 gap-4 border-l-2 border-l-orange-500 rounded-md p-2">
                   <TripEditPermissionDisplayComponent
                     jwt={jwt}
                     allowedUsers={allowedUsers}
@@ -505,21 +505,21 @@ function TripPlannerPage(props: Props) {
                     editable={editable}
                     socket={socket}
                   />
+
+                  {isOwner && editable && (
+                    <TripEditPermissionGrantComponent
+                      jwt={jwt}
+                      trip={trip as Trip}
+                      allowedUsers={allowedUsers}
+                      setAllowedUsers={setAllowedUsers}
+                      username={username}
+                      socket={socket}
+                    />
+                  )}
                 </div>
 
-                {isOwner && editable && (
-                  <TripEditPermissionGrantComponent
-                    jwt={jwt}
-                    trip={trip as Trip}
-                    allowedUsers={allowedUsers}
-                    setAllowedUsers={setAllowedUsers}
-                    username={username}
-                    socket={socket}
-                  />
-                )}
-
                 {editable && isOwner && (
-                  <div className="flex flex-grow flex-col justify-start align-middle mt-2">
+                  <div className="flex flex-grow flex-col justify-start align-middle">
                     <button
                       className="confirmButton self-center w-max"
                       onMouseOver={showPublishWarning}

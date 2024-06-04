@@ -29,14 +29,16 @@ function TripEditPermissionDisplayComponent(props: Props) {
   return (
     <>
       <div>
-        Editors:
+        <h2 className="text-bold mb-2">
+          <strong>Editors</strong>
+        </h2>
         {allowedUsers.map(function (user: User) {
           if (user.username === "admin") {
             return <></>;
           }
           return (
             <>
-              <div>
+              <div className="ml-2">
                 {user.username}{" "}
                 {user.username === trip.ownerUsername && "(Owner)"}
                 {isOwner &&
