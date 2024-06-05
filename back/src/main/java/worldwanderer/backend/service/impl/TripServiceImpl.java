@@ -192,6 +192,7 @@ public class TripServiceImpl implements TripService {
         Trip tripOld = tripRepository.getReferenceById(trip.getId());
         tripOld.setName(trip.getName());
         tripOld.setDescription(trip.getDescription());
+        tripOld.setCountries(condenseCountries(trip.getCountries()));
         tripRepository.save(tripOld);
     }
 
