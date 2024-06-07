@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 
 interface Props {
   setJwt: Function;
@@ -37,23 +38,23 @@ function RegistrationComponent(props: Props) {
 
   function handleRegisterButtonClick() {
     if (!user) {
-      alert("Missing sign up info.");
+      notifyError("Missing sign up info.");
       return;
     }
     if (!isValidEmail(user.email)) {
-      alert("Wrong email format!");
+      notifyError("Wrong email format!");
       return;
     }
     if (user.username === "") {
-      alert("Username cannot be empty!");
+      notifyError("Username cannot be empty!");
       return;
     }
     if (user.password === "") {
-      alert("Password cannot be empty!");
+      notifyError("Password cannot be empty!");
       return;
     }
     if (user.password.length < 8) {
-      alert("Password must be at least 8 characters.");
+      notifyError("Password must be at least 8 characters.");
       return;
     }
 
@@ -71,7 +72,7 @@ function RegistrationComponent(props: Props) {
         if (response.ok) {
           return response.json();
         } else {
-          alert("User already exists!");
+          notifyError("User already exists!");
           return;
         }
       })
@@ -162,6 +163,10 @@ function RegistrationComponent(props: Props) {
 
   function cancel() {
     navigate("/home");
+  }
+
+  function notifyError(input: string) {
+    toast.error(input);
   }
 
   return (

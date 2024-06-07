@@ -2,6 +2,7 @@ import { APIProvider, useMapsLibrary } from "@vis.gl/react-google-maps";
 import { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import { colorDict } from "../../assets/colors/colorDictionary";
+import { toast } from "react-toastify";
 
 interface Props {
   jwt: string;
@@ -63,7 +64,7 @@ function TimeSlotCreateComponent(props: Props) {
         const place = searchBox.getPlace();
 
         if (!place.geometry || !place.geometry.location) {
-          window.alert("No details available for input: '" + place.name + "'");
+          toast.error("No details available for input: '" + place.name + "'");
           return;
         }
 
@@ -106,7 +107,7 @@ function TimeSlotCreateComponent(props: Props) {
         "timeslot-name-input-hidden-" + dateInterval.id
       ) as HTMLInputElement;
       if (hiddenNameInput.value === "") {
-        alert("Name cannot be empty.");
+        toast.error("Name cannot be empty.");
         return;
       } else {
         timeslot["name"] = hiddenNameInput.value;
@@ -121,7 +122,7 @@ function TimeSlotCreateComponent(props: Props) {
         "timeslot-lng-input-hidden-" + dateInterval.id
       ) as HTMLInputElement;
       if (hiddenLatInput.value === "" || hiddenLngInput.value === "") {
-        alert("You must select a place.");
+        toast.error("You must select a place.");
         return;
       } else {
         timeslot["lat"] = Number(hiddenLatInput.value);

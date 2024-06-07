@@ -3,6 +3,7 @@ import NavbarComponent from "../components/NavbarComponent";
 import { useNavigate } from "react-router-dom";
 import UserInfoDisplayComponent from "../components/display/UserInfoDisplayComponent";
 import UserInfoUpdateComponent from "../components/update/UserInfoUpdateComponent";
+import { ToastContainer, toast } from "react-toastify";
 
 interface Props {
   jwt: string;
@@ -23,7 +24,7 @@ function UserEditProfilePage(props: Props) {
     if (jwt && username) {
       if (!jwtIsValid) {
         navigate("/home");
-        alert("You cannot access this site.");
+        toast.error("You cannot access this site.");
         return;
       }
 
@@ -57,6 +58,17 @@ function UserEditProfilePage(props: Props) {
     loading && (
       <>
         <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
+        <ToastContainer
+          position="top-center"
+          autoClose={3000}
+          hideProgressBar={true}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          theme="light"
+        />
         <div className="flex flex-row mt-20 gap-20 justify-center">
           <div>
             <UserInfoDisplayComponent user={user as User} />

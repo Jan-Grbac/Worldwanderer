@@ -3,6 +3,7 @@ import DateIntervalCreateComponent from "../create/DateIntervalCreateComponent";
 import * as FlagIcons from "country-flag-icons/react/3x2";
 import { Socket } from "socket.io-client";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 interface Props {
   jwt: string;
@@ -98,7 +99,7 @@ function TripDataDisplayComponent(props: Props) {
     if (newTrip.name === "") {
       document.getElementById("trip-name-edit")?.classList.add("hidden");
       document.getElementById("trip-name-view")?.classList.remove("hidden");
-      alert("Name cannot be empty.");
+      toast.error("Name cannot be empty.");
       return;
     }
 

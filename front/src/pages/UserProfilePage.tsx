@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import NavbarComponent from "../components/NavbarComponent";
 import { useNavigate } from "react-router-dom";
-import UserInfoDisplayComponent from "../components/display/UserInfoDisplayComponent";
 import TripPublicDisplayComponent from "../components/pure_display/TripPublicDisplayComponent";
+import { ToastContainer, toast } from "react-toastify";
 
 interface Props {
   jwt: string;
@@ -25,7 +25,7 @@ function UserProfilePage(props: Props) {
     if (jwt && viewerUsername) {
       if (!jwtIsValid) {
         navigate("/home");
-        alert("You cannot access this site.");
+        toast.error("You cannot access this site.");
         return;
       }
 
@@ -77,6 +77,17 @@ function UserProfilePage(props: Props) {
     loading && (
       <>
         <NavbarComponent jwtIsValid={jwtIsValid} username={viewerUsername} />
+        <ToastContainer
+          position="top-center"
+          autoClose={3000}
+          hideProgressBar={true}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          theme="light"
+        />
         <div className="flex flex-col ml-20">
           <div className="flex flex-col mt-20">
             <h1 className="text-3xl">
@@ -91,7 +102,7 @@ function UserProfilePage(props: Props) {
               </button>
             )}
           </div>
-          <div className="mt-6 ml-10 grid grid-cols-5">
+          <div className="mt-6 ml-10 grid grid-cols-5 gap-5">
             {trips &&
               trips.map(function (trip: Trip) {
                 return <TripPublicDisplayComponent trip={trip} />;

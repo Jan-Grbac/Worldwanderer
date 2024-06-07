@@ -64,7 +64,7 @@ function TripPlannerPage(props: Props) {
     ) {
       if (!jwtIsValid && jwt === "" && editable) {
         navigate("/home");
-        toast("You need to be logged in to edit a trip!");
+        notifyError("You need to be logged in to edit a trip!");
       } else {
         const tripId = window.location.href.split("/")[4];
 
@@ -97,7 +97,7 @@ function TripPlannerPage(props: Props) {
       if (response.ok) {
       } else {
         navigate("/home");
-        toast("You are not allowed to edit this trip!");
+        notifyError("You are not allowed to edit this trip!");
       }
     });
   }
@@ -116,7 +116,7 @@ function TripPlannerPage(props: Props) {
           return response.json();
         } else {
           navigate("/home");
-          toast("You are not allowed to edit this trip!");
+          notifyError("You are not allowed to edit this trip!");
         }
       })
       .then((data) => {
@@ -236,55 +236,55 @@ function TripPlannerPage(props: Props) {
 
   function userGrantedEditPrivilege(data: string) {
     if (!trip) return;
-    toast("User " + data + " was granted edit privilege.");
+    notify("User " + data + " was granted edit privilege.");
     fetchAllowedUsers(trip.id, jwt);
   }
   function userRevokedEditPrivilege(data: string) {
     if (data === username) {
-      toast("Your edit privileges were revoked.");
+      notifyError("Your edit privileges were revoked.");
       navigate("/home");
     } else {
       if (!trip) return;
-      toast("User " + data + "'s edit privilege was revoked.");
+      notify("User " + data + "'s edit privilege was revoked.");
       fetchAllowedUsers(trip.id, jwt);
     }
   }
   function dateIntervalAdded(data: string) {
     if (!trip) return;
-    toast(data + " added a date interval.");
+    notify(data + " added a date interval.");
     fetchDateIntervals(trip.id, jwt);
     fetchTimeslots(trip.id, jwt);
   }
   function dateIntervalDeleted(data: string) {
     if (!trip) return;
-    toast(data + " deleted a date interval.");
+    notify(data + " deleted a date interval.");
     fetchDateIntervals(trip.id, jwt);
     fetchTimeslots(trip.id, jwt);
   }
   function dateIntervalUpdated(data: string) {
     if (!trip) return;
-    toast(data + " updated a date interval.");
+    notify(data + " updated a date interval.");
     fetchDateIntervals(trip.id, jwt);
     fetchTimeslots(trip.id, jwt);
   }
   function timeslotAdded(data: string) {
     if (!trip) return;
-    toast(data + " added a timeslot.");
+    notify(data + " added a timeslot.");
     fetchTimeslots(trip.id, jwt);
   }
   function timeslotDeleted(data: string) {
     if (!trip) return;
-    toast(data + " deleted a timeslot.");
+    notify(data + " deleted a timeslot.");
     fetchTimeslots(trip.id, jwt);
   }
   function timeslotUpdated(data: string) {
     if (!trip) return;
-    toast(data + " updated a timeslot.");
+    notify(data + " updated a timeslot.");
     fetchTimeslots(trip.id, jwt);
   }
   function tripParamsUpdated(data: string) {
     if (!trip) return;
-    toast(data + " edited trip parameters.");
+    notify(data + " edited trip parameters.");
     fetchTrip(trip.id, jwt);
   }
 
@@ -305,7 +305,7 @@ function TripPlannerPage(props: Props) {
       s.on("UPDATED_DATE_INTERVAL", dateIntervalUpdated);
       s.on("ADDED_TIMESLOT", timeslotAdded);
       s.on("DELETED_TIMESLOT", timeslotDeleted);
-      s.on("UPDATED_TIMESLOT", dateIntervalUpdated);
+      s.on("UPDATED_TIMESLOT", timeslotUpdated);
 
       return () => {
         s.off("TRIP_PARAMS_UPDATED");
@@ -342,7 +342,7 @@ function TripPlannerPage(props: Props) {
         }
       })
       .then((data) => {
-        toast("Copy created! Happy editing.");
+        notify("Copy created! Happy editing.");
         navigate("/edittrip/" + data.id);
         window.location.reload();
       });
@@ -369,14 +369,22 @@ function TripPlannerPage(props: Props) {
         if (response.ok) {
           return;
         } else {
-          toast("Publishing failed.");
+          notifyError("Publishing failed.");
           return;
         }
       })
       .then(() => {
-        toast("Trip published successfully.");
+        notify("Trip published successfully.");
         navigate("/viewtrip/" + trip.id);
       });
+  }
+
+  function notify(input: string) {
+    toast(input);
+  }
+
+  function notifyError(input: string) {
+    toast.error(input);
   }
 
   function showPublishWarning() {
@@ -401,19 +409,6 @@ function TripPlannerPage(props: Props) {
     return "";
   }
 
-  /*
-  TODO:
-    mrvicu povecat font navbar
-    smanjit glavne sekcija font na homepage
-    maknut placeholdere na view
-    search bez selektiranja zemlje ako ne zelim
-    maknut alertove, dodat toast poruke
-
-    rating popravit
-    pomicanje gore dolje dateintervala i timeslotova
-    hoteli i ovo dodat
-  */
-
   return (
     loading && (
       <>
@@ -421,19 +416,18 @@ function TripPlannerPage(props: Props) {
           <div className="flex flex-col h-screen">
             <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
             <ToastContainer
-              position="top-right"
-              autoClose={5000}
-              hideProgressBar={false}
+              position="top-center"
+              autoClose={3000}
+              hideProgressBar={true}
               newestOnTop={false}
               closeOnClick
               rtl={false}
               pauseOnFocusLoss
               draggable
-              pauseOnHover
               theme="light"
             />
             <div className="grid grid-cols-6 flex-grow">
-              <div className="col-span-2 overflow-auto">
+              <div className="col-span-2 max-w-full m-2">
                 {trip?.published && (
                   <h2 className="ml-6 mt-2 mb-2">
                     Published by <strong>{trip.ownerUsername}</strong>
@@ -463,7 +457,7 @@ function TripPlannerPage(props: Props) {
                   setRenderArray={setRenderArray}
                 />
               </div>
-              <div className="col-span-3">
+              <div className="col-span-3 relative">
                 <MapComponent
                   jwt={jwt}
                   username={username}
@@ -484,43 +478,30 @@ function TripPlannerPage(props: Props) {
                   editable={editable}
                   renderArray={renderArray}
                 />
-                <div className="flex flex-row">
-                  {editable && suggestedAttractions.length !== 0 && (
-                    <>
-                      {suggestedAttractions.map(function (
-                        attraction: google.maps.places.PlaceResult
-                      ) {
-                        return (
-                          <AttractionDisplayComponent
-                            attraction={attraction}
-                            selectedTimeslot={selectedTimeslot as TimeSlot}
-                          />
-                        );
-                      })}
-                    </>
-                  )}
-                </div>
-                <div className="flex flex-row gap-2">
-                  {editable && hotels.length !== 0 && (
-                    <>
-                      {hotels.map(function (
-                        hotel: google.maps.places.PlaceResult
-                      ) {
-                        return (
-                          <HotelDisplayComponent
-                            hotel={hotel}
-                            selectedDateInterval={
-                              selectedDateInterval as DateInterval
-                            }
-                          />
-                        );
-                      })}
-                    </>
-                  )}
+                <div className="flex flex-col gap-2 absolute bottom-10 pl-2 pr-14">
+                  <div className="ml-4 max-w-fit text-lg underline bg-white text-orange-400 pl-4 pr-4 rounded-md italic">
+                    Suggested attractions
+                  </div>
+                  <div className="flex flex-row gap-2">
+                    {editable && suggestedAttractions.length !== 0 && (
+                      <>
+                        {suggestedAttractions.map(function (
+                          attraction: google.maps.places.PlaceResult
+                        ) {
+                          return (
+                            <AttractionDisplayComponent
+                              attraction={attraction}
+                              selectedTimeslot={selectedTimeslot as TimeSlot}
+                            />
+                          );
+                        })}
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
               <div>
-                <div className="flex flex-col mt-4 ml-4 mb-4 gap-4 border-l-2 border-l-orange-500 rounded-md p-2">
+                <div className="flex flex-col m-4 gap-4 border-l-2 border-l-orange-500 rounded-md shadow-md p-2">
                   <TripEditPermissionDisplayComponent
                     jwt={jwt}
                     allowedUsers={allowedUsers}
@@ -563,6 +544,30 @@ function TripPlannerPage(props: Props) {
                   </div>
                 )}
 
+                <div className="flex flex-col w-full">
+                  <div className="mt-2 pl-2">
+                    Check out hotels near {selectedTimeslot?.name}:
+                  </div>
+                  <div className="grid grid-cols-2 grid-rows-3 gap-3 m-2">
+                    {editable && hotels.length !== 0 && (
+                      <>
+                        {hotels.map(function (
+                          hotel: google.maps.places.PlaceResult
+                        ) {
+                          return (
+                            <HotelDisplayComponent
+                              hotel={hotel}
+                              selectedDateInterval={
+                                selectedDateInterval as DateInterval
+                              }
+                            />
+                          );
+                        })}
+                      </>
+                    )}
+                  </div>
+                </div>
+
                 {!editable && jwtIsValid && trip?.published && (
                   <button
                     onClick={copyTrip}
@@ -602,21 +607,22 @@ function TripPlannerPage(props: Props) {
                         setHasAlreadyRated={setHasAlreadyRated}
                       />
                     )}
-                  {!editable &&
-                    trip?.published &&
-                    ratings &&
-                    ratings.map(function (rating: Rating) {
-                      return (
-                        <RatingDisplayComponent
-                          jwt={jwt}
-                          username={username}
-                          rating={rating}
-                          ratings={ratings}
-                          setRatings={setRatings}
-                          setHasAlreadyRated={setHasAlreadyRated}
-                        />
-                      );
-                    })}
+                  {!editable && trip?.published && ratings && (
+                    <div className="flex flex-col border-l-2 border-orange-500 rounded-md m-4">
+                      {ratings.map(function (rating: Rating) {
+                        return (
+                          <RatingDisplayComponent
+                            jwt={jwt}
+                            username={username}
+                            rating={rating}
+                            ratings={ratings}
+                            setRatings={setRatings}
+                            setHasAlreadyRated={setHasAlreadyRated}
+                          />
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

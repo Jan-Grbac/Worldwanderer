@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 interface Props {
   setJwt: Function;
@@ -28,11 +29,11 @@ function LoginComponent(props: Props) {
     if (!user) return;
 
     if (user.username === "") {
-      alert("Username cannot be empty!");
+      notifyError("Username cannot be empty!");
       return;
     }
     if (user.password === "") {
-      alert("Password cannot be empty!");
+      notifyError("Password cannot be empty!");
       return;
     }
 
@@ -50,7 +51,7 @@ function LoginComponent(props: Props) {
         if (response.ok) {
           return response.json();
         } else {
-          alert("Wrong login info.");
+          notifyError("Wrong login info.");
           return;
         }
       })
@@ -63,6 +64,10 @@ function LoginComponent(props: Props) {
 
   function cancel() {
     navigate("/home");
+  }
+
+  function notifyError(input: string) {
+    toast.error(input);
   }
 
   return (

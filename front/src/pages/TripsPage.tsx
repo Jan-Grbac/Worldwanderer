@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TripListDisplayComponent from "../components/display/TripListDisplayComponent";
 import NavbarComponent from "../components/NavbarComponent";
+import { ToastContainer, toast } from "react-toastify";
 
 interface Props {
   jwt: string;
@@ -27,7 +28,7 @@ function TripsPage(props: Props) {
       !jwtIsValid
     ) {
       navigate("/home");
-      alert("You need to be logged in to view your trips!");
+      toast.error("You need to be logged in to view your trips!");
       return;
     }
     if (jwt && username) {
@@ -114,6 +115,17 @@ function TripsPage(props: Props) {
       <>
         <div className="flex flex-col">
           <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
+          <ToastContainer
+            position="top-center"
+            autoClose={3000}
+            hideProgressBar={true}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            theme="light"
+          />
           <div className="flex flex-col flex-grow ml-4 mt-4 mr-4">
             <TripListDisplayComponent
               jwt={jwt}

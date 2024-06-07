@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import NavbarComponent from "../components/NavbarComponent";
 import TripPublicDisplayComponent from "../components/pure_display/TripPublicDisplayComponent";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 interface Props {
   jwt: string;
@@ -82,9 +83,6 @@ function HomePage(props: Props) {
         .then((response) => {
           if (response.ok) {
             return response.json();
-          } else {
-            alert("Wrong username info.");
-            return;
           }
         })
         .then((data) => {
@@ -106,9 +104,15 @@ function HomePage(props: Props) {
     let query = (
       document.getElementById("trip-search-input") as HTMLInputElement
     ).value;
-    let country_code = String(
-      ($("#country_code") as JQuery<HTMLInputElement>).val()
-    );
+    let country_code = "";
+    let country_search_checkbox = document.getElementById(
+      "search-country-checkbox"
+    ) as HTMLInputElement;
+    if (country_search_checkbox.checked) {
+      country_code = String(
+        ($("#country_code") as JQuery<HTMLInputElement>).val()
+      );
+    }
 
     const fetchData = {
       headers: {
@@ -136,7 +140,17 @@ function HomePage(props: Props) {
     loading && (
       <div className="flex flex-col min-h-screen bg-gray-100">
         <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
-
+        <ToastContainer
+          position="top-center"
+          autoClose={3000}
+          hideProgressBar={true}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          theme="light"
+        />
         <main className="flex-1 m-2 rounded-md">
           <div className="py-6">
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -168,21 +182,27 @@ function HomePage(props: Props) {
                 <input
                   id="trip-search-input"
                   type="text"
-                  className="border-2 border-gray-300 rounded-l-md pl-3 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="border-2 border-gray-300 rounded-l-md pl-3 pr-3 py-2"
                 />
                 <input
                   type="text"
                   id="country"
-                  className="p-2 w-40 border-2 border-gray-300"
+                  className="p-2 w-40 border-2 rounded-r-md border-gray-300"
                 />
                 <input type="hidden" id="country_code" />
-                <button
-                  className="border-2 border-gray-300 bg-blue-500 text-white rounded-r-md pl-3 pr-3 py-2 hover:bg-blue-700"
-                  onClick={searchTrips}
-                >
-                  Search...
-                </button>
+                <input
+                  className="ml-4"
+                  id="search-country-checkbox"
+                  type="checkbox"
+                ></input>
+                <p className="p-2">Include country in search</p>
               </div>
+              <button
+                className="border-2 border-gray-300 bg-blue-500 text-white rounded-md pl-3 pr-3 py-2 mt-2 hover:bg-blue-700"
+                onClick={searchTrips}
+              >
+                Search...
+              </button>
             </div>
           </section>
 

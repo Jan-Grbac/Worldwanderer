@@ -19,8 +19,6 @@ function RemoveTimeSlotComponent(props: Props) {
     };
 
   function removeTimeslot() {
-    console.log("Timeslot removal:");
-    console.log(timeslots);
     let newTimeslots = [...timeslots] as Array<Array<TimeSlot>>;
 
     for (let i = 0; i < timeslots.length; i++) {

@@ -28,9 +28,6 @@ function RemoveDateIntervalComponent(props: Props) {
   };
 
   function removeDateInterval() {
-    console.log("Date removal:");
-    console.log(dateIntervals);
-    console.log(timeslots);
     let newDateIntervals = [...dateIntervals] as Array<DateInterval>;
     let newTimeslots = [...timeslots] as Array<Array<TimeSlot>>;
 

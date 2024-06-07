@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 interface Props {
   jwt: string;
@@ -91,11 +92,11 @@ function UserInfoUpdateComponent(props: Props) {
     });
 
     if (emailCollision) {
-      alert("Email collision");
+      toast.error("Email is already in use.");
       return;
     }
     if (usernameCollision) {
-      alert("Username collision");
+      toast.error("Username is already in use.");
       return;
     }
 
@@ -116,11 +117,11 @@ function UserInfoUpdateComponent(props: Props) {
       })
       .then((data) => {
         if (data) {
-          alert("Update successful");
+          toast("Update successful.");
           setJwt("");
           navigate("/signin");
         } else {
-          alert("Update failed. Password mismatch.");
+          toast.error("Update failed. Password mismatch.");
         }
       });
   }

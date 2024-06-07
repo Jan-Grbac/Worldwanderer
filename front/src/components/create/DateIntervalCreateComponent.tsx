@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Socket } from "socket.io-client";
+import { toast } from "react-toastify";
 
 interface Props {
   jwt: string;
@@ -55,14 +56,14 @@ function DateIntervalCreateComponent(props: Props) {
     if (!newDateInterval) return;
 
     if (newDateInterval.startDate === undefined) {
-      alert("Start date must be selected!");
+      toast.error("Start date must be selected!");
       return;
     }
     if (newDateInterval.endDate === undefined) {
       newDateInterval.endDate = newDateInterval.startDate;
     }
     if (newDateInterval.startDate > newDateInterval.endDate) {
-      alert("End date must be after start date.");
+      toast.error("End date must be after start date.");
       return;
     }
 

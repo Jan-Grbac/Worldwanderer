@@ -1,6 +1,6 @@
 import RemoveDateIntervalComponent from "../remove/RemoveDateIntervalComponent";
 import TimeSlotCreateComponent from "../create/TimeSlotCreateComponent";
-import TimeSlotDisplayComponent from "./TimeSlotDisplayComponent";
+import TimeSlotDisplayComponent from "./TimeslotDisplayComponent";
 import { Socket } from "socket.io-client";
 import { useEffect, useState } from "react";
 import { colorDict } from "../../assets/colors/colorDictionary";

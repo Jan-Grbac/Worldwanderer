@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Socket } from "socket.io-client";
+import { toast } from "react-toastify";
 
 interface Props {
   jwt: string;
@@ -40,7 +41,9 @@ function TripEditPermissionGrantComponent(props: Props) {
           setGrantUsername("");
           return true;
         } else {
-          alert("User doesn't exist or is already able to edit the trip!");
+          toast.error(
+            "User doesn't exist or is already able to edit the trip!"
+          );
           navigate("/edittrip/" + trip.id);
           return false;
         }
@@ -101,12 +104,12 @@ function TripEditPermissionGrantComponent(props: Props) {
 
   return (
     <>
-      <div className="flex flex-col p-2 gap-2 bg-gray-100 rounded-md ml-4 mr-4 mb-4">
+      <div className="flex flex-col p-2 gap-2 bg-gray-50 rounded-md ml-4 mr-4 mb-4">
         <div className="flex flex-row self-center">
           <strong>Username:</strong>
           <input
             id="grant-edit-privilege-username-input"
-            className="rounded-md pl-4 pr-4 ml-2 max-w-24 border-2 border-black"
+            className="rounded-md pl-4 pr-4 ml-2 max-w-24 border-2"
             type="text"
             value={grantUsername}
             onChange={(event) =>

@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import RegistrationComponent from "../components/RegistrationComponent";
 import NavbarComponent from "../components/NavbarComponent";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 
 interface Props {
   jwtIsValid: boolean;
@@ -14,10 +15,14 @@ function RegistrationPage(props: Props) {
 
   const navigate = useNavigate();
 
+  function notify(input: string) {
+    toast(input);
+  }
+
   useEffect(() => {
     if (jwtIsValid) {
       navigate("/home");
-      alert("You are already signed in!");
+      notify("You are already signed in!");
     }
   }, [jwtIsValid]);
 
@@ -25,6 +30,17 @@ function RegistrationPage(props: Props) {
     <>
       <NavbarComponent jwtIsValid={jwtIsValid} username="" />
       <div className="flex justify-center mt-20">
+        <ToastContainer
+          position="top-center"
+          autoClose={3000}
+          hideProgressBar={true}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          theme="light"
+        />
         <RegistrationComponent setJwt={setJwt} setUsername={setUsername} />
       </div>
     </>

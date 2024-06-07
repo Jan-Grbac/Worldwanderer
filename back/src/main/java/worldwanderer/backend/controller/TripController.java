@@ -151,10 +151,14 @@ public class TripController {
 
     @PostMapping("/searchTrip")
     public ResponseEntity<List<TripData>> searchTrips(@RequestBody HomePageSearchQuery query) {
-        if(query.getQuery().isEmpty())
-            return ResponseEntity.ok(new LinkedList<>());
         String strQuery = query.getQuery();
-        List<Trip> trips = tripService.searchTrips(strQuery, query.getCountry());
+        List<Trip> trips;
+        if(query.getCountry().isEmpty()) {
+            trips = tripService.searchTrips(strQuery);
+        }
+        else {
+            trips = tripService.searchTrips(strQuery, query.getCountry());
+        }
         List<TripData> tripDataList = tripService.transformTripIntoTripData(trips);
         return ResponseEntity.ok(tripDataList);
     }

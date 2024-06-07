@@ -46,14 +46,14 @@ function HotelDisplayComponent(props: Props) {
       <>
         <div
           onClick={handleHotelClick}
-          className="rounded-md border-2 border-black w-1/3 flex flex-col justify-start"
+          className="rounded-md shadow-md flex flex-col justify-between max-h-60"
         >
-          <div className="pt-2 pb-2">
+          <div className="mt-2 mb-2">
             <img
-              className="self-center align-middle object-contain max-h-20 max-w-40 min-h-20 min-w-40"
+              className="self-center align-middle object-contain max-h-20 max-w-32 min-h-20 min-w-32"
               src={hotel.photos[0].getUrl()}
-              width={150}
               height={150}
+              width={150}
             ></img>
           </div>
           <div className="pl-2 pr-2">{hotel.name}</div>

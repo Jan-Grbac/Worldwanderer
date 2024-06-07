@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { toast } from "react-toastify";
 
 interface Props {
   attraction: google.maps.places.PlaceResult;
@@ -43,20 +44,18 @@ function AttractionDisplayComponent(props: Props) {
           "timeslot-lng-input-hidden-" + selectedTimeslot.dateIntervalId
         ) as HTMLInputElement
       ).value = String(attraction.geometry.location.lng());
+
+      toast("Attraction copied to place selector. Add place to confirm!");
     }
   }
 
   return (
     attraction.photos && (
-      <div
-        onClick={handleAttractionClick}
-        className="rounded-md border-2 border-black w-1/3 flex flex-col justify-start"
-      >
+      <div className="rounded-md shadow-md border-t-2 border-orange-500 w-1/3 flex flex-col justify-between bg-white">
         <div className="pt-2 pb-2">
           <img
             className="self-center align-middle object-contain max-h-20 max-w-40 min-h-20 min-w-40"
             src={attraction.photos[0].getUrl()}
-            width={150}
             height={150}
           ></img>
         </div>
@@ -66,6 +65,12 @@ function AttractionDisplayComponent(props: Props) {
           {attraction.rating}
           {attraction.rating && "⭐"}
         </div>
+        <button
+          className="confirmButton max-w-fit self-center mb-2"
+          onClick={handleAttractionClick}
+        >
+          Add to trip
+        </button>
       </div>
     )
   );

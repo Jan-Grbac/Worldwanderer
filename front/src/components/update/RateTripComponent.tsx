@@ -73,8 +73,8 @@ function RateTripComponent(props: Props) {
   }
 
   return (
-    <div className="flex flex-col border-2 border-black rounded-md m-2">
-      <div className="flex flex-row text-3xl self-center hover:cursor-pointer">
+    <div className="flex flex-col border-l-2 shadow-md border-orange-500 rounded-md m-4">
+      <div className="flex flex-row text-3xl self-center hover:cursor-pointer text-orange-300">
         <div onClick={() => handleInputChange("grade", 1)}>
           {rating.grade >= 1 ? "★" : "☆"}
         </div>
@@ -93,7 +93,7 @@ function RateTripComponent(props: Props) {
       </div>
       <textarea
         value={rating?.comment}
-        className="pl-2 pr-2 ml-2 mr-2 bg-gray-200 rounded-md"
+        className="pl-2 pr-2 ml-2 mr-2 bg-gray-50 rounded-md"
         rows={4}
         onChange={(event) => handleInputChange("comment", event.target.value)}
       ></textarea>

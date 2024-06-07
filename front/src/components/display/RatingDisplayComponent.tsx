@@ -30,9 +30,9 @@ function RatingDisplayComponent(props: Props) {
   return (
     rating && (
       <>
-        <div className="flex flex-col ml-4 mr-4 mt-4 border-black border-2 rounded-md p-2 pl-4">
+        <div className="flex flex-col m-4 rounded-md shadow-md border-l-2 border-b-2 p-2 pl-4">
           <div className="flex flex-row">
-            <div className="flex-grow text-xl">{rating.username}</div>
+            <div className="flex-grow text-lg">{rating.username}</div>
             {username === rating.username && (
               <RemoveRatingComponent
                 jwt={jwt}
@@ -43,12 +43,12 @@ function RatingDisplayComponent(props: Props) {
               />
             )}
           </div>
-          {"★".repeat(rating.grade)}
-          {"☆".repeat(5 - rating.grade)}
-          <br />
-          {rating.comment}
-          <br />
-          {formatDate(rating.ratingDate)}
+          <div className="text-orange-300">
+            {"★".repeat(rating.grade)}
+            {"☆".repeat(5 - rating.grade)}
+          </div>
+          <div>{rating.comment}</div>
+          <div className="text-xs">{formatDate(rating.ratingDate)}</div>
         </div>
       </>
     )

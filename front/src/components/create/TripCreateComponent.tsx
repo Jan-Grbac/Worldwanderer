@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as FlagIcons from "country-flag-icons/react/3x2";
 import "jquery";
+import { toast } from "react-toastify";
 
 interface Props {
   jwt: string;
@@ -88,11 +89,11 @@ function CreateTripComponent(props: Props) {
     if (!newTrip) return;
 
     if (newTrip.name === "") {
-      alert("Name cannot be empty!");
+      toast.error("Name cannot be empty!");
       return;
     }
     if (newTrip.countries === undefined) {
-      alert("You need to select at least one country.");
+      toast.error("You need to select at least one country.");
       return;
     }
 

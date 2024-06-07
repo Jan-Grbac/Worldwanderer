@@ -12,6 +12,7 @@ import LogoutPage from "./pages/LogoutPage";
 import UserEditProfilePage from "./pages/UserEditProfilePage";
 import AdminPage from "./pages/AdminPage";
 import UserProfilePage from "./pages/UserProfilePage";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const cookies = new Cookies();

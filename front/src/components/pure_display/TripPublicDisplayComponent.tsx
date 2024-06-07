@@ -46,7 +46,7 @@ function TripPublicDisplayComponent(props: Props) {
   }
 
   function getTimespanInDays() {
-    if (!dateIntervals) return;
+    if (!dateIntervals || dateIntervals.length === 0) return 0;
 
     let dateMin = dateIntervals[0].startDate;
     let dateMax = dateIntervals[0].endDate;
@@ -97,6 +97,7 @@ function TripPublicDisplayComponent(props: Props) {
           </div>
         </div>
         <p>{getTimespanInDays()} days</p>
+
         {trip.rating !== 0 && (
           <p className="text-lg text-gray-700">{trip.rating} ⭐</p>
         )}
