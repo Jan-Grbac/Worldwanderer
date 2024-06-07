@@ -11,7 +11,7 @@ import AttractionDisplayComponent from "../components/display/AttractionDisplayC
 import RateTripComponent from "../components/update/RateTripComponent";
 import RatingDisplayComponent from "../components/display/RatingDisplayComponent";
 import HotelDisplayComponent from "../components/display/HotelDisplayComponent";
-import { render } from "react-dom";
+import { ToastContainer, toast } from "react-toastify";
 
 interface Props {
   jwt: string;
@@ -64,7 +64,7 @@ function TripPlannerPage(props: Props) {
     ) {
       if (!jwtIsValid && jwt === "" && editable) {
         navigate("/home");
-        alert("You need to be logged in to edit a trip!");
+        toast("You need to be logged in to edit a trip!");
       } else {
         const tripId = window.location.href.split("/")[4];
 
@@ -97,7 +97,7 @@ function TripPlannerPage(props: Props) {
       if (response.ok) {
       } else {
         navigate("/home");
-        alert("You are not allowed to edit this trip!");
+        toast("You are not allowed to edit this trip!");
       }
     });
   }
@@ -116,7 +116,7 @@ function TripPlannerPage(props: Props) {
           return response.json();
         } else {
           navigate("/home");
-          alert("You are not allowed to edit this trip!");
+          toast("You are not allowed to edit this trip!");
         }
       })
       .then((data) => {
@@ -236,55 +236,55 @@ function TripPlannerPage(props: Props) {
 
   function userGrantedEditPrivilege(data: string) {
     if (!trip) return;
-    alert("User " + data + " was granted edit privilege.");
+    toast("User " + data + " was granted edit privilege.");
     fetchAllowedUsers(trip.id, jwt);
   }
   function userRevokedEditPrivilege(data: string) {
     if (data === username) {
-      alert("Your edit privileges were revoked.");
+      toast("Your edit privileges were revoked.");
       navigate("/home");
     } else {
       if (!trip) return;
-      alert("User " + data + "'s edit privilege was revoked.");
+      toast("User " + data + "'s edit privilege was revoked.");
       fetchAllowedUsers(trip.id, jwt);
     }
   }
   function dateIntervalAdded(data: string) {
     if (!trip) return;
-    alert(data + " added a date interval.");
+    toast(data + " added a date interval.");
     fetchDateIntervals(trip.id, jwt);
     fetchTimeslots(trip.id, jwt);
   }
   function dateIntervalDeleted(data: string) {
     if (!trip) return;
-    alert(data + " deleted a date interval.");
+    toast(data + " deleted a date interval.");
     fetchDateIntervals(trip.id, jwt);
     fetchTimeslots(trip.id, jwt);
   }
   function dateIntervalUpdated(data: string) {
     if (!trip) return;
-    alert(data + " updated a date interval.");
+    toast(data + " updated a date interval.");
     fetchDateIntervals(trip.id, jwt);
     fetchTimeslots(trip.id, jwt);
   }
   function timeslotAdded(data: string) {
     if (!trip) return;
-    alert(data + " added a timeslot.");
+    toast(data + " added a timeslot.");
     fetchTimeslots(trip.id, jwt);
   }
   function timeslotDeleted(data: string) {
     if (!trip) return;
-    alert(data + " deleted a timeslot.");
+    toast(data + " deleted a timeslot.");
     fetchTimeslots(trip.id, jwt);
   }
   function timeslotUpdated(data: string) {
     if (!trip) return;
-    alert(data + " updated a timeslot.");
+    toast(data + " updated a timeslot.");
     fetchTimeslots(trip.id, jwt);
   }
   function tripParamsUpdated(data: string) {
     if (!trip) return;
-    alert(data + " edited trip parameters.");
+    toast(data + " edited trip parameters.");
     fetchTrip(trip.id, jwt);
   }
 
@@ -342,7 +342,7 @@ function TripPlannerPage(props: Props) {
         }
       })
       .then((data) => {
-        alert("Copy created! Happy editing.");
+        toast("Copy created! Happy editing.");
         navigate("/edittrip/" + data.id);
         window.location.reload();
       });
@@ -369,12 +369,12 @@ function TripPlannerPage(props: Props) {
         if (response.ok) {
           return;
         } else {
-          alert("Publishing failed.");
+          toast("Publishing failed.");
           return;
         }
       })
       .then(() => {
-        alert("Trip published successfully.");
+        toast("Trip published successfully.");
         navigate("/viewtrip/" + trip.id);
       });
   }
@@ -401,12 +401,37 @@ function TripPlannerPage(props: Props) {
     return "";
   }
 
+  /*
+  TODO:
+    mrvicu povecat font navbar
+    smanjit glavne sekcija font na homepage
+    maknut placeholdere na view
+    search bez selektiranja zemlje ako ne zelim
+    maknut alertove, dodat toast poruke
+
+    rating popravit
+    pomicanje gore dolje dateintervala i timeslotova
+    hoteli i ovo dodat
+  */
+
   return (
     loading && (
       <>
         <APIProvider apiKey="AIzaSyACu8umhkkYq6tvxaHbP_Y_sAHRV9rCuMQ">
           <div className="flex flex-col h-screen">
             <NavbarComponent jwtIsValid={jwtIsValid} username={username} />
+            <ToastContainer
+              position="top-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+            />
             <div className="grid grid-cols-6 flex-grow">
               <div className="col-span-2 overflow-auto">
                 {trip?.published && (

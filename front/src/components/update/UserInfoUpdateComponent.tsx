@@ -170,57 +170,49 @@ function UserInfoUpdateComponent(props: Props) {
   }, [emailCollision, usernameCollision]);
 
   return (
-    <div>
-      <div className="formContainer">
-        <div className="p-2">
-          Update email:
-          <input
-            className="wordInputField"
-            id="new-email-input"
-            type="email"
-            value={updatedUser?.email}
-            onChange={(event) => handleInputChange("email", event.target.value)}
-            onBlur={checkEmailCollision}
-          ></input>
-        </div>
-        <div className="p-2">
-          Update username:
-          <input
-            className="wordInputField"
-            id="new-username-input"
-            type="text"
-            value={updatedUser?.username}
-            onChange={(event) =>
-              handleInputChange("username", event.target.value)
-            }
-            onBlur={checkUsernameCollision}
-          ></input>
-        </div>
-        <div className="p-2">
-          Password:
-          <input
-            className="wordInputField"
-            id="new-password-input"
-            type="password"
-            value={updatedUser?.newPassword}
-            onChange={(event) =>
-              handleInputChange("newPassword", event.target.value)
-            }
-          ></input>
-        </div>
-        <div className="p-2 mb-4">
-          Old password:
-          <input
-            className="wordInputField"
-            id="old-password-input"
-            type="password"
-            value={updatedUser?.oldPassword}
-            onChange={(event) =>
-              handleInputChange("oldPassword", event.target.value)
-            }
-          ></input>
-        </div>
-        <div className="flex flex-row self-center gap-20 justify-center">
+    <>
+      <div className="p-8 bg-white border-t-2 border-t-orange-500 shadow-md rounded-md grid grid-cols-3 grid-rows-5">
+        <strong className="pl-2 pt-2">Update email:</strong>
+        <input
+          className="wordInputField col-span-2 m-1"
+          id="new-email-input"
+          type="email"
+          value={updatedUser?.email}
+          onChange={(event) => handleInputChange("email", event.target.value)}
+          onBlur={checkEmailCollision}
+        ></input>
+        <strong className="pl-2 pt-2">Update username:</strong>
+        <input
+          className="wordInputField col-span-2 m-1"
+          id="new-username-input"
+          type="text"
+          value={updatedUser?.username}
+          onChange={(event) =>
+            handleInputChange("username", event.target.value)
+          }
+          onBlur={checkUsernameCollision}
+        ></input>
+        <strong className="pl-2 pt-2">Update password:</strong>
+        <input
+          className="wordInputField col-span-2 m-1"
+          id="new-password-input"
+          type="password"
+          value={updatedUser?.newPassword}
+          onChange={(event) =>
+            handleInputChange("newPassword", event.target.value)
+          }
+        ></input>
+        <strong className="pl-2 pt-2">Old password:</strong>
+        <input
+          className="wordInputField col-span-2 m-1"
+          id="old-password-input"
+          type="password"
+          value={updatedUser?.oldPassword}
+          onChange={(event) =>
+            handleInputChange("oldPassword", event.target.value)
+          }
+        ></input>
+        <div className="col-span-3 mt-2 flex flex-row justify-evenly">
           <button className="confirmButton" onClick={tryUpdate}>
             Update
           </button>
@@ -229,7 +221,7 @@ function UserInfoUpdateComponent(props: Props) {
           </button>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

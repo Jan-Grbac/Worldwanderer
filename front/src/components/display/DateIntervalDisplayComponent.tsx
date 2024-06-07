@@ -219,9 +219,9 @@ function DateIntervalDisplayComponent(props: Props) {
     if (selectedDateInterval) {
       let div = document.getElementById("dateinterval-" + dateInterval.id);
       if (selectedDateInterval.id === dateInterval.id) {
-        div?.classList.add("border-2", "border-black");
+        div?.classList.add("bg-gray-300");
       } else {
-        div?.classList.remove("border-2", "border-black");
+        div?.classList.remove("bg-gray-300");
       }
     }
   }, [selectedDateInterval]);
@@ -312,7 +312,7 @@ function DateIntervalDisplayComponent(props: Props) {
             <div className="flex flex-row pr-2">
               <div
                 id={`dateinterval-name-view-${dateInterval.id}`}
-                className="flex-grow hover:bg-gray-300 rounded-md"
+                className="flex-grow hover:bg-gray-400 rounded-md"
                 onClick={allowNameEditing}
               >
                 <h2 className="font-semibold">
@@ -363,7 +363,7 @@ function DateIntervalDisplayComponent(props: Props) {
 
             <div
               id={`dateinterval-date-view-${dateInterval.id}`}
-              className="hover:bg-gray-300 rounded-md"
+              className="hover:bg-gray-400 rounded-md"
               onClick={allowDateEditing}
             >
               {dateInterval.startDate === dateInterval.endDate && (
@@ -417,7 +417,7 @@ function DateIntervalDisplayComponent(props: Props) {
                   <p>Budget: </p>
                   <div
                     id={`dateinterval-budget-view-${dateInterval.id}`}
-                    className="hover:bg-gray-300 rounded-md"
+                    className="hover:bg-gray-400 rounded-md"
                     onClick={allowBudgetEditing}
                   >
                     &nbsp;{"$" + dateInterval.budget}&nbsp;
@@ -427,7 +427,7 @@ function DateIntervalDisplayComponent(props: Props) {
               {dateInterval.budget === 0.0 && (
                 <p
                   id={`dateinterval-budget-view-${dateInterval.id}`}
-                  className="hover:bg-gray-300 rounded-md"
+                  className="hover:bg-gray-400 rounded-md"
                   onClick={allowBudgetEditing}
                 >
                   Add budget...
@@ -478,7 +478,7 @@ function DateIntervalDisplayComponent(props: Props) {
                 <TimeSlotCreateComponent
                   jwt={jwt}
                   username={username}
-                  dateIntervalId={dateInterval.id}
+                  dateInterval={dateInterval}
                   timeslots={timeslots}
                   setTimeslots={setTimeslots}
                   dateIntervalTimeslots={dateIntervalTimeslots}

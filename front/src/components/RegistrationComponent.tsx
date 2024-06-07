@@ -166,7 +166,7 @@ function RegistrationComponent(props: Props) {
 
   return (
     <div className="formContainer">
-      <div className="p-2">
+      <div className="p-2 flex flex-row justify-between">
         <strong>Email:</strong>
         <input
           className="wordInputField pl-4"
@@ -183,7 +183,7 @@ function RegistrationComponent(props: Props) {
       >
         Email is already in use.
       </div>
-      <div className="p-2">
+      <div className="p-2 flex flex-row justify-between">
         <strong>Username:</strong>
         <input
           className="wordInputField pl-4"
@@ -201,7 +201,7 @@ function RegistrationComponent(props: Props) {
       >
         Username is already in use.
       </div>
-      <div className="p-2 mb-4">
+      <div className="p-2 mb-4 flex flex-row justify-between">
         <strong>Password:</strong>
         <input
           className="wordInputField pl-4"

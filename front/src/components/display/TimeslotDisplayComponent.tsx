@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import RemoveTimeSlotComponent from "../remove/RemoveTimeSlotComponent";
 import { Socket } from "socket.io-client";
 import { weatherCodeDict } from "../../assets/weather/dictionary";
+import { colorDict } from "../../assets/colors/colorDictionary";
 
 interface Props {
   jwt: string;
@@ -225,19 +226,30 @@ function TimeSlotDisplayComponent(props: Props) {
   useEffect(() => {
     if (selectedTimeslot) {
       let div = document.getElementById("timeslot-" + timeslot.id);
+      if (!div) return;
+
       if (selectedTimeslot.id === timeslot.id) {
-        div?.classList.add("border-2", "border-black");
+        div?.classList.remove("border-l-4");
+        div?.classList.add("border-l-8");
       } else {
-        div?.classList.remove("border-2", "border-black");
+        div?.classList.remove("border-l-8");
+        div?.classList.add("border-l-4");
       }
     }
   }, [selectedTimeslot]);
+
+  useEffect(() => {
+    let div = document.getElementById("timeslot-" + timeslot.id);
+    if (!div) return;
+
+    div.style.borderColor = colorDict[dateInterval.pos % 20];
+  }, [loading]);
 
   return (
     loading && (
       <div
         id={`timeslot-${timeslot.id}`}
-        className="flex flex-col bg-gray-400 rounded-md p-2"
+        className="flex flex-col bg-gray-100 rounded-md p-2 border-l-4"
       >
         <div>
           <div className="flex flex-row">

@@ -61,7 +61,7 @@ function UserEditProfilePage(props: Props) {
           <div>
             <UserInfoDisplayComponent user={user as User} />
           </div>
-          <div>
+          <div className="self-center w-1/3">
             <UserInfoUpdateComponent
               jwt={jwt}
               setJwt={setJwt}

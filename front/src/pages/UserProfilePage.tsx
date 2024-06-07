@@ -91,7 +91,7 @@ function UserProfilePage(props: Props) {
               </button>
             )}
           </div>
-          <div className="mt-6 ml-10">
+          <div className="mt-6 ml-10 grid grid-cols-5">
             {trips &&
               trips.map(function (trip: Trip) {
                 return <TripPublicDisplayComponent trip={trip} />;

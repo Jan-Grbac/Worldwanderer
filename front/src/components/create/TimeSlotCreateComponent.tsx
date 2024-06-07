@@ -1,11 +1,12 @@
 import { APIProvider, useMapsLibrary } from "@vis.gl/react-google-maps";
 import { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
+import { colorDict } from "../../assets/colors/colorDictionary";
 
 interface Props {
   jwt: string;
   username: string;
-  dateIntervalId: string;
+  dateInterval: DateInterval;
   timeslots: Array<Array<TimeSlot>>;
   dateIntervalTimeslots: Array<TimeSlot>;
   setTimeslots: Function;
@@ -20,7 +21,7 @@ function TimeSlotCreateComponent(props: Props) {
   const {
     jwt,
     username,
-    dateIntervalId,
+    dateInterval,
     timeslots,
     setTimeslots,
     dateIntervalTimeslots,
@@ -48,7 +49,7 @@ function TimeSlotCreateComponent(props: Props) {
       setSearchBox(
         new placesLib.Autocomplete(
           document.getElementById(
-            "searchBox-" + dateIntervalId
+            "searchBox-" + dateInterval.id
           ) as HTMLInputElement,
           options
         )
@@ -102,7 +103,7 @@ function TimeSlotCreateComponent(props: Props) {
 
     if (timeslot.name === undefined) {
       let hiddenNameInput = document.getElementById(
-        "timeslot-name-input-hidden-" + dateIntervalId
+        "timeslot-name-input-hidden-" + dateInterval.id
       ) as HTMLInputElement;
       if (hiddenNameInput.value === "") {
         alert("Name cannot be empty.");
@@ -114,10 +115,10 @@ function TimeSlotCreateComponent(props: Props) {
     }
     if (timeslot.lat === undefined || timeslot.lng === undefined) {
       let hiddenLatInput = document.getElementById(
-        "timeslot-lat-input-hidden-" + dateIntervalId
+        "timeslot-lat-input-hidden-" + dateInterval.id
       ) as HTMLInputElement;
       let hiddenLngInput = document.getElementById(
-        "timeslot-lng-input-hidden-" + dateIntervalId
+        "timeslot-lng-input-hidden-" + dateInterval.id
       ) as HTMLInputElement;
       if (hiddenLatInput.value === "" || hiddenLngInput.value === "") {
         alert("You must select a place.");
@@ -139,7 +140,7 @@ function TimeSlotCreateComponent(props: Props) {
       method: "POST",
       body: JSON.stringify(timeslot),
     };
-    fetch(`/api/core/timeslot/createTimeslot/${dateIntervalId}`, fetchData)
+    fetch(`/api/core/timeslot/createTimeslot/${dateInterval.id}`, fetchData)
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -185,27 +186,27 @@ function TimeSlotCreateComponent(props: Props) {
 
         (
           document.getElementById(
-            `searchBox-${dateIntervalId}`
+            `searchBox-${dateInterval.id}`
           ) as HTMLInputElement
         ).value = "";
         (
           document.getElementById(
-            `timeslot-name-input-` + dateIntervalId
+            `timeslot-name-input-` + dateInterval.id
           ) as HTMLInputElement
         ).value = "";
         (
           document.getElementById(
-            `timeslot-notes-input-` + dateIntervalId
+            `timeslot-notes-input-` + dateInterval.id
           ) as HTMLInputElement
         ).value = "";
         (
           document.getElementById(
-            `timeslot-starttime-input-` + dateIntervalId
+            `timeslot-starttime-input-` + dateInterval.id
           ) as HTMLInputElement
         ).value = "--:-- --";
         (
           document.getElementById(
-            `timeslot-endtime-input-` + dateIntervalId
+            `timeslot-endtime-input-` + dateInterval.id
           ) as HTMLInputElement
         ).value = "--:-- --";
 
@@ -216,7 +217,7 @@ function TimeSlotCreateComponent(props: Props) {
   }
 
   function toggleCreateDiv() {
-    let div = document.getElementById("timeslot-create-div-" + dateIntervalId);
+    let div = document.getElementById("timeslot-create-div-" + dateInterval.id);
     if (div?.classList.contains("hidden")) {
       div.classList.remove("hidden");
     } else {
@@ -227,7 +228,7 @@ function TimeSlotCreateComponent(props: Props) {
   function activateMapSelection() {
     setSelectOnMap(true);
     let button = document.getElementById(
-      "timeslot-create-map-button-" + dateIntervalId
+      "timeslot-create-map-button-" + dateInterval.id
     );
     button?.classList.add("bg-gray-500");
   }
@@ -242,102 +243,103 @@ function TimeSlotCreateComponent(props: Props) {
     }
   }, [selectOnMap]);
 
+  useEffect(() => {
+    let div = document.getElementById("timeslot-create-div-" + dateInterval.id);
+    if (!div) return;
+
+    div.style.borderColor = colorDict[dateInterval.pos % 20];
+  }, []);
+
   return (
     <>
-      <div className="rounded-md bg-gray-400 mt-2">
+      <div className="rounded-md bg-gray-100 mt-2">
         <div className="flex flex-row">
           <div
-            className="flex-grow hover:bg-gray-500 cursor-pointer rounded-md"
+            className="flex-grow hover:bg-gray-200 cursor-pointer rounded-md"
             onClick={toggleCreateDiv}
           >
             <h2 className="pl-4 font-bold">Add new place</h2>
           </div>
         </div>
         <div
-          id={`timeslot-create-div-${dateIntervalId}`}
-          className="hidden flex flex-col gap-2 pl-2 pr-2 mt-2 pb-2 bg-gray-400 rounded-md"
+          id={`timeslot-create-div-${dateInterval.id}`}
+          className="hidden grid grid-rows-7 grid-cols-3 pl-2 pr-2 mt-2 pb-2 bg-gray-100 rounded-md max-h-96 border-b-4"
         >
-          <div className="flex flex-row">
-            Name:
+          <strong className="pl-4 pt-2">Name:</strong>
+          <input
+            id={`timeslot-name-input-${dateInterval.id}`}
+            className="rounded-md pl-4 pr-4 col-span-2 m-1 mb-2 mt-2"
+            type="text"
+            value={timeslot?.name}
+            onChange={(event) => handleInputChange("name", event.target.value)}
+          ></input>
+          <strong className="pl-4 pt-2">Destination:</strong>
+          <div className="col-span-2">
             <input
-              id={`timeslot-name-input-${dateIntervalId}`}
-              className="ml-2 rounded-md pl-4 pr-4"
-              type="text"
-              value={timeslot?.name}
-              onChange={(event) =>
-                handleInputChange("name", event.target.value)
-              }
-            ></input>
-          </div>
-          <div className="flex flex-row">
-            Destination:
-            <input
-              id={`searchBox-${dateIntervalId}`}
-              className="ml-2 rounded-md pl-4 pr-4"
+              id={`searchBox-${dateInterval.id}`}
+              className="rounded-md pl-4 pr-4 m-1"
             />
             <button
-              id={`timeslot-create-map-button-${dateIntervalId}`}
+              id={`timeslot-create-map-button-${dateInterval.id}`}
               onClick={() => activateMapSelection()}
-              className="ml-2 bg-gray-300 rounded-md hover:bg-gray-500"
+              className="ml-2 bg-gray-300 rounded-md hover:bg-gray-500 m-1"
             >
               🚩
             </button>
           </div>
           <input
             type="text"
-            className="hidden"
-            id={`timeslot-name-input-hidden-${dateIntervalId}`}
+            className="hidden col-span-2"
+            id={`timeslot-name-input-hidden-${dateInterval.id}`}
           />
           <input
             type="text"
-            className="hidden"
-            id={`timeslot-lat-input-hidden-${dateIntervalId}`}
+            className="hidden col-span-2"
+            id={`timeslot-lat-input-hidden-${dateInterval.id}`}
           />
           <input
             type="text"
-            className="hidden"
-            id={`timeslot-lng-input-hidden-${dateIntervalId}`}
+            className="hidden col-span-2"
+            id={`timeslot-lng-input-hidden-${dateInterval.id}`}
           />
-          Notes (optional):
+          <strong className="col-span-3 max-h-2 pl-4 pt-2">
+            Notes (optional):
+          </strong>
           <textarea
-            id={`timeslot-notes-input-${dateIntervalId}`}
-            className="rounded-md pl-2 pr-2"
-            rows={3}
+            id={`timeslot-notes-input-${dateInterval.id}`}
+            className="rounded-md ml-4 mb-2 p-1 col-span-3"
+            rows={4}
             value={timeslot?.notes}
             onChange={(event) => handleInputChange("notes", event.target.value)}
           ></textarea>
-          <div className="flex flex-row justify-evenly">
-            <div className="flex flex-col">
-              Start time (optional):
-              <input
-                id={`timeslot-starttime-input-${dateIntervalId}`}
-                className="rounded-md pl-2 pr-2"
-                type="time"
-                value={timeslot?.startTime}
-                onChange={(event) =>
-                  handleInputChange("startTime", event.target.value)
-                }
-              ></input>
-            </div>
-            <div className="flex flex-col">
-              End time (optional):
-              <input
-                id={`timeslot-endtime-input-${dateIntervalId}`}
-                className="rounded-md pl-2 pr-2"
-                type="time"
-                value={timeslot?.endTime}
-                onChange={(event) =>
-                  handleInputChange("endTime", event.target.value)
-                }
-              ></input>
-            </div>
+          <strong className="pl-4 pt-2">Start time (optional):</strong>
+          <input
+            id={`timeslot-starttime-input-${dateInterval.id}`}
+            className="rounded-md pl-2 pr-2 col-span-2 m-1"
+            type="time"
+            value={timeslot?.startTime}
+            onChange={(event) =>
+              handleInputChange("startTime", event.target.value)
+            }
+          ></input>
+          <strong className="pl-4 pt-2">End time (optional):</strong>
+          <input
+            id={`timeslot-endtime-input-${dateInterval.id}`}
+            className="rounded-md pl-2 pr-2 col-span-2 m-1"
+            type="time"
+            value={timeslot?.endTime}
+            onChange={(event) =>
+              handleInputChange("endTime", event.target.value)
+            }
+          ></input>
+          <div className="flex justify-center col-start-2">
+            <button
+              onClick={handleSubmit}
+              className="confirmButton w-max self-center mt-1"
+            >
+              Add
+            </button>
           </div>
-          <button
-            onClick={handleSubmit}
-            className="confirmButton w-max self-center mt-1"
-          >
-            Add
-          </button>
         </div>
       </div>
     </>

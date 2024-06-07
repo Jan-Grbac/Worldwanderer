@@ -169,61 +169,54 @@ function DateIntervalCreateComponent(props: Props) {
             <h2 className="pl-4 font-bold">Add new trip section</h2>
           </div>
         </div>
-        <div id="dateinterval-create-div" className="flex flex-col hidden">
-          <div className="p-2 ml-2">
-            Name (optional):
-            <input
-              id="dateinterval-name-input"
-              className="ml-4 rounded-md pl-4 pr-4"
-              type="text"
-              onChange={(event) =>
-                handleInputChange("name", event.target.value)
-              }
-            ></input>
-          </div>
-          <div className="flex flex-row justify-start gap-2">
-            <div className="p-2 ml-2">
-              Start date:
-              <input
-                id="dateinterval-startdate-input"
-                className="rounded-md pl-4 pr-4"
-                type="date"
-                onChange={(event) =>
-                  handleInputChange("startDate", event.target.value)
-                }
-              ></input>
-            </div>
-            <div className="p-2">
-              End date (optional):
-              <input
-                id="dateinterval-enddate-input"
-                className="rounded-md pl-4 pr-4"
-                type="date"
-                onChange={(event) =>
-                  handleInputChange("endDate", event.target.value)
-                }
-              ></input>
-            </div>
-          </div>
-          <div className="p-2 ml-2">
-            Budget (optional):
-            <input
-              id="dateinterval-budget-input"
-              className="ml-4 rounded-md pl-4 pr-4"
-              type="number"
-              placeholder="0.0$"
-              onChange={(event) =>
-                handleInputChange("budget", event.target.value)
-              }
-            ></input>
-          </div>
+        <div
+          id="dateinterval-create-div"
+          className="ml-2 mt-1 p-2 grid grid-rows-5 grid-cols-3 hidden"
+        >
+          <strong className="pl-2 pt-2">Name (optional):</strong>
+          <input
+            id="dateinterval-name-input"
+            className="rounded-md pl-4 pr-4 m-1 col-span-2"
+            type="text"
+            onChange={(event) => handleInputChange("name", event.target.value)}
+          ></input>
+          <strong className="pl-2 pt-2">Start date:</strong>
+          <input
+            id="dateinterval-startdate-input"
+            className="rounded-md pl-4 pr-4 m-1 col-span-2"
+            type="date"
+            onChange={(event) =>
+              handleInputChange("startDate", event.target.value)
+            }
+          ></input>
+          <strong className="pl-2 pt-2">End date (optional):</strong>
+          <input
+            id="dateinterval-enddate-input"
+            className="rounded-md pl-4 pr-4 m-1 col-span-2"
+            type="date"
+            onChange={(event) =>
+              handleInputChange("endDate", event.target.value)
+            }
+          ></input>
+          <strong className="pl-2 pt-2">Budget (optional):</strong>
+          <input
+            id="dateinterval-budget-input"
+            className="rounded-md pl-4 pr-4 m-1 col-span-2"
+            type="number"
+            placeholder="0.0$"
+            onChange={(event) =>
+              handleInputChange("budget", event.target.value)
+            }
+          ></input>
 
-          <button
-            className="confirmButton mb-2 w-max self-center"
-            onClick={handleNewDateIntervalCreation}
-          >
-            Add
-          </button>
+          <div className="col-start-2 flex flex-row justify-center">
+            <button
+              className="confirmButton mb-2 mt-1"
+              onClick={handleNewDateIntervalCreation}
+            >
+              Add
+            </button>
+          </div>
         </div>
       </div>
     </>

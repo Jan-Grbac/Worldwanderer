@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import RemoveTripComponent from "../remove/RemoveTripComponent";
 import TripCreateComponent from "../create/TripCreateComponent";
 import NavbarComponent from "../NavbarComponent";
+import * as FlagIcons from "country-flag-icons/react/3x2";
 
 interface Props {
   jwt: string;
@@ -74,6 +75,13 @@ function TripListDisplayComponent(props: Props) {
     }
   }
 
+  const getFlagComponent = (countryCode: string) => {
+    console.log(countryCode);
+    const upperCaseCountryCode = countryCode.toUpperCase();
+    const FlagComponent = (FlagIcons as any)[upperCaseCountryCode];
+    return FlagComponent ? <FlagComponent /> : null;
+  };
+
   return (
     <>
       <div className="flex flex-col h-full bg-gray-100 rounded-md">
@@ -96,7 +104,19 @@ function TripListDisplayComponent(props: Props) {
                         aria-controls={`accordion-open-body-${trip.id}`}
                         onClick={() => accordion(trip.id)}
                       >
-                        {trip.name}
+                        <div className="flex flex-row">
+                          <strong className="mr-4">{trip.name}</strong>
+                          <div className="flex flex-row gap-1">
+                            {trip.countries &&
+                              trip.countries.map(function (country: string) {
+                                return (
+                                  <div className="w-8">
+                                    {getFlagComponent(country)}
+                                  </div>
+                                );
+                              })}
+                          </div>
+                        </div>
                         <div className="flex items-center gap-3">
                           <svg
                             id={`accordion-icon-${trip.id}`}
@@ -123,7 +143,7 @@ function TripListDisplayComponent(props: Props) {
                       </button>
                       <div
                         id={`accordion-open-body-${trip.id}`}
-                        className="w-1/2 ml-6 p-5 border border-gray-300 bg-white hidden flex-col"
+                        className="w-1/2 ml-6 p-5 border border-gray-300 bg-white rounded-b-md hidden flex-col"
                       >
                         <p className="text-gray-600">{trip.description}</p>
                         <button
@@ -163,7 +183,19 @@ function TripListDisplayComponent(props: Props) {
                         aria-controls={`accordion-open-body-${trip.id}`}
                         onClick={() => accordion(trip.id)}
                       >
-                        {trip.name}
+                        <div className="flex flex-row">
+                          <strong className="mr-4">{trip.name}</strong>
+                          <div className="flex flex-row gap-1">
+                            {trip.countries &&
+                              trip.countries.map(function (country: string) {
+                                return (
+                                  <div className="w-8">
+                                    {getFlagComponent(country)}
+                                  </div>
+                                );
+                              })}
+                          </div>
+                        </div>
                         <div className="flex items-center gap-3">
                           <svg
                             id={`accordion-icon-${trip.id}`}
@@ -190,7 +222,7 @@ function TripListDisplayComponent(props: Props) {
                       </button>
                       <div
                         id={`accordion-open-body-${trip.id}`}
-                        className="w-1/2 ml-6 p-5 border border-gray-300 bg-white hidden flex-col"
+                        className="w-1/2 ml-6 p-5 border border-gray-300 bg-white rounded-b-md hidden flex-col"
                       >
                         <p className="text-gray-600">{trip.description}</p>
                         <button
@@ -223,7 +255,19 @@ function TripListDisplayComponent(props: Props) {
                       aria-controls={`accordion-open-body-${trip.id}`}
                       onClick={() => accordion(trip.id)}
                     >
-                      {trip.name}
+                      <div className="flex flex-row">
+                        <strong className="mr-4">{trip.name}</strong>
+                        <div className="flex flex-row gap-1">
+                          {trip.countries &&
+                            trip.countries.map(function (country: string) {
+                              return (
+                                <div className="w-8">
+                                  {getFlagComponent(country)}
+                                </div>
+                              );
+                            })}
+                        </div>
+                      </div>
                       <div className="flex items-center gap-3">
                         <svg
                           id={`accordion-icon-${trip.id}`}
@@ -244,7 +288,7 @@ function TripListDisplayComponent(props: Props) {
                     </button>
                     <div
                       id={`accordion-open-body-${trip.id}`}
-                      className="w-1/2 ml-12 p-5 border border-gray-300 bg-white hidden flex-col"
+                      className="w-1/2 ml-12 p-5 border border-gray-300 bg-white rounded-b-md hidden flex-col"
                     >
                       <p className="text-gray-600">{trip.description}</p>
                       <button

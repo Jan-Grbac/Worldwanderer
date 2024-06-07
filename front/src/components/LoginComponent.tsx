@@ -67,7 +67,7 @@ function LoginComponent(props: Props) {
 
   return (
     <div className="formContainer">
-      <div className="p-2">
+      <div className="p-2 flex flex-row justify-between">
         <strong>Username:</strong>
         <input
           className="wordInputField"
@@ -78,7 +78,7 @@ function LoginComponent(props: Props) {
           }
         ></input>
       </div>
-      <div className="p-2 mb-4">
+      <div className="p-2 mb-4 flex flex-row justify-between">
         <strong>Password:</strong>
         <input
           className="wordInputField"

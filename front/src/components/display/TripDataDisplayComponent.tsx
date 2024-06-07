@@ -176,7 +176,7 @@ function TripDataDisplayComponent(props: Props) {
         map.panTo(new google.maps.LatLng(firstTimeslot.lat, firstTimeslot.lng));
       } else {
         let div = document.getElementById("timeslot-" + selectedTimeslot.id);
-        div?.classList.remove("border-2", "border-black");
+        div?.classList.remove("bg-gray-300");
         setSelectedTimeslot(undefined);
       }
     }
