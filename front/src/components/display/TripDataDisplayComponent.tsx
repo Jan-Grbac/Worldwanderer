@@ -275,15 +275,34 @@ function TripDataDisplayComponent(props: Props) {
               suppressContentEditableWarning={true}
             ></input>
             <h2 className="font-bold">Trip description</h2>
-            <div
-              id="trip-description-view"
-              className="hover:bg-gray-100 rounded-md"
-              onClick={allowDescriptionEditing}
-            >
-              {trip.description === "" || trip.description === null
-                ? "Add description..."
-                : trip.description}
-            </div>
+            {editable && (
+              <div
+                id="trip-description-view"
+                className="hover:bg-gray-100 rounded-md"
+                onClick={allowDescriptionEditing}
+              >
+                {trip.description === "" || trip.description === null
+                  ? "Add description..."
+                  : trip.description}
+              </div>
+            )}
+            {!editable &&
+              (trip.description === "" || trip.description === null) && (
+                <div
+                  className="hover:bg-gray-100 rounded-md"
+                  onClick={allowDescriptionEditing}
+                >
+                  No description.
+                </div>
+              )}
+            {!editable && trip.description !== "" && (
+              <div
+                className="hover:bg-gray-100 rounded-md"
+                onClick={allowDescriptionEditing}
+              >
+                {trip.description}
+              </div>
+            )}
             <textarea
               id="trip-description-edit"
               className="hidden"
@@ -346,7 +365,7 @@ function TripDataDisplayComponent(props: Props) {
             className="flex-grow hover:bg-gray-400 cursor-pointer rounded-md"
             onClick={toggleDataDiv}
           >
-            <h2 className="pl-4 font-bold">Trip sections</h2>
+            <h2 className="pl-4 pt-1 pb-1 font-bold">Trip sections</h2>
           </div>
           <div id="dateintervals-div" className="hidden pb-2">
             <ul>

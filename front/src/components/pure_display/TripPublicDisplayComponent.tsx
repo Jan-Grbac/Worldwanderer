@@ -84,20 +84,19 @@ function TripPublicDisplayComponent(props: Props) {
         }}
       >
         <div className="flex flex-row">
-          <h1 className="mb-4 text-2xl font-extrabold text-black mr-4">
+          <h1 className="mb-4 text-xl font-bold text-black mr-4">
             {trip.name}
           </h1>
           <div className="flex flex-row gap-1">
             {trip.countries &&
               trip.countries.map(function (country: string) {
                 return (
-                  <div className="w-8 mt-2">{getFlagComponent(country)}</div>
+                  <div className="w-8 mt-1">{getFlagComponent(country)}</div>
                 );
               })}
           </div>
         </div>
-        <p>{getTimespanInDays()} days</p>
-
+        <div>{getTimespanInDays()} days</div>
         {trip.rating !== 0 && (
           <p className="text-lg text-gray-700">{trip.rating} ⭐</p>
         )}

@@ -42,24 +42,24 @@ function NavbarComponent(props: Props) {
               <div className="flex flex-grow justify-between items-center w-full pl-32 pr-32">
                 <div className="flex justify-start gap-10 ml-4">
                   <button className="basicButton" onClick={home}>
-                    <h2 className="text-lg font-medium text-black hover:text-orange-500">
+                    <h2 className="text-3xl font-medium text-black hover:text-orange-500">
                       Main page
                     </h2>
                   </button>
                   <button className="basicButton" onClick={trips}>
-                    <h2 className="text-lg font-medium text-black hover:text-orange-500">
+                    <h2 className="text-3xl font-medium text-black hover:text-orange-500">
                       Your trips
                     </h2>
                   </button>
                 </div>
                 <div className="flex items-center gap-10 mr-4">
                   <button className="basicButton" onClick={profile}>
-                    <h2 className="text-lg font-medium text-black hover:text-orange-500">
+                    <h2 className="text-3xl font-medium text-black hover:text-orange-500">
                       Your profile
                     </h2>
                   </button>
                   <button className="basicButton" onClick={logout}>
-                    <h2 className="text-lg font-medium text-black hover:text-orange-500">
+                    <h2 className="text-3xl font-medium text-black hover:text-orange-500">
                       Logout
                     </h2>
                   </button>
@@ -70,14 +70,14 @@ function NavbarComponent(props: Props) {
               <div className="flex flex-grow justify-between items-center w-full pl-32 pr-32">
                 <div className="flex justify-start gap-5 ml-4">
                   <button className="basicButton" onClick={admin}>
-                    <h2 className="text-lg font-medium text-black hover:text-orange-500">
+                    <h2 className="text-3xl font-medium text-black hover:text-orange-500">
                       Admin panel
                     </h2>
                   </button>
                 </div>
                 <div className="flex items-center gap-5 mr-4">
                   <button className="basicButton" onClick={logout}>
-                    <h2 className="text-lg font-medium text-black hover:text-orange-500">
+                    <h2 className="text-3xl font-medium text-black hover:text-orange-500">
                       Logout
                     </h2>
                   </button>
@@ -89,19 +89,19 @@ function NavbarComponent(props: Props) {
           <div className="flex flex-grow justify-between items-center w-full pl-32 pr-32">
             <div className="flex justify-start gap-5 ml-4">
               <button className="basicButton" onClick={home}>
-                <h2 className="text-lg font-medium text-black hover:text-orange-500">
+                <h2 className="text-3xl font-medium text-black hover:text-orange-500">
                   Main page
                 </h2>
               </button>
             </div>
             <div className="flex justify-end gap-10 ml-4">
               <button className="basicButton" onClick={signup}>
-                <h2 className="text-lg font-medium text-black hover:text-orange-500">
+                <h2 className="text-3xl font-medium text-black hover:text-orange-500">
                   Sign up
                 </h2>
               </button>
               <button className="basicButton" onClick={signin}>
-                <h2 className="text-lg font-medium text-black hover:text-orange-500">
+                <h2 className="text-3xl font-medium text-black hover:text-orange-500">
                   Sign in
                 </h2>
               </button>

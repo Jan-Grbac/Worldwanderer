@@ -259,7 +259,7 @@ function TimeSlotCreateComponent(props: Props) {
             className="flex-grow hover:bg-gray-200 cursor-pointer rounded-md"
             onClick={toggleCreateDiv}
           >
-            <h2 className="pl-4 font-bold">Add new place</h2>
+            <h2 className="pl-4 font-medium">Add new place</h2>
           </div>
         </div>
         <div

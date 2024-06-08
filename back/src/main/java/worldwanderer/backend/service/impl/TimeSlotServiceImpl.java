@@ -79,6 +79,7 @@ public class TimeSlotServiceImpl implements TimeSlotService {
         }
         timeSlot.setName(timeSlotData.getName());
         timeSlot.setNotes(timeSlotData.getNotes());
+        timeSlot.setPos(timeSlotData.getPos());
 
         timeSlotRepository.save(timeSlot);
     }

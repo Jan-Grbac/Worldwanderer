@@ -89,12 +89,12 @@ function TripListDisplayComponent(props: Props) {
           <div className="py-6">
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
               <div className="bg-white shadow-sm rounded-lg p-6">
-                <h2 className="mb-4 text-3xl font-bold text-black">
+                <h2 className="mb-4 text-2xl font-semibold text-black">
                   Your trips
                 </h2>
                 <hr className="mb-6 border-b-2 border-orange-500 mx-auto" />
                 <div className="m-8">
-                  <h2 className="text-3xl mb-4 text-black">Work in progress</h2>
+                  <h2 className="text-xl mb-4 text-black">Work in progress</h2>
                   {ownedTrips.map((trip) => (
                     <div key={trip.id}>
                       <button
@@ -173,7 +173,7 @@ function TripListDisplayComponent(props: Props) {
                     </div>
                   </div>
 
-                  <h2 className="text-3xl mb-4 mt-4 text-black">Published</h2>
+                  <h2 className="text-xl mb-4 mt-4 text-black">Published</h2>
                   {publishedTrips.map((trip) => (
                     <div key={trip.id}>
                       <button
@@ -242,7 +242,7 @@ function TripListDisplayComponent(props: Props) {
           <div className="py-6">
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
               <div className="bg-white shadow-sm rounded-lg p-6">
-                <h2 className="mb-4 text-3xl font-bold text-black">
+                <h2 className="mb-4 text-2xl font-semibold text-black">
                   Shared with you
                 </h2>
                 <hr className="mb-6 border-b-2 border-orange-500 mx-auto" />

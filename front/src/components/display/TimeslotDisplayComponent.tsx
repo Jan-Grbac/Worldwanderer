@@ -223,6 +223,61 @@ function TimeSlotDisplayComponent(props: Props) {
     setTimeslots(newTimeslots);
   }
 
+  function shift(change: number) {
+    let newTimeSlots = [...timeslots];
+    let newDateIntervalTimeslots = [...timeslots[dateInterval.pos]];
+
+    let temp2 = {
+      ...newDateIntervalTimeslots[timeslot.pos],
+      pos: timeslot.pos - change,
+    };
+    newDateIntervalTimeslots[timeslot.pos] = {
+      ...newDateIntervalTimeslots[timeslot.pos - change],
+      pos: timeslot.pos,
+    };
+    newDateIntervalTimeslots[timeslot.pos - change] = temp2;
+    newTimeSlots[dateInterval.pos] = newDateIntervalTimeslots;
+
+    let movedUpTimeslot = newDateIntervalTimeslots[timeslot.pos];
+    let movedDownTimeslot = newDateIntervalTimeslots[timeslot.pos - change];
+
+    setTimeslots(newTimeSlots);
+
+    let fetchData = {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify(movedUpTimeslot),
+    };
+    fetch(`/api/core/timeslot/updateTimeslot`, fetchData).then((response) => {
+      if (response.ok) {
+        return;
+      }
+    });
+
+    fetchData = {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify(movedDownTimeslot),
+    };
+    fetch(`/api/core/timeslot/updateTimeslot`, fetchData).then((response) => {
+      if (response.ok) {
+        return;
+      }
+    });
+
+    if (socket) {
+      socket.emit("UPDATE", tripId + ":" + username + ":UPDATED_TIMESLOT");
+    }
+  }
+
   useEffect(() => {
     if (selectedTimeslot) {
       let div = document.getElementById("timeslot-" + timeslot.id);
@@ -291,7 +346,7 @@ function TimeSlotDisplayComponent(props: Props) {
               />
             )}
           </div>
-          {!timeslot.notes && (
+          {editable && !timeslot.notes && (
             <div
               id={`notes-placeholder-` + timeslot.id}
               className="font-thin ml-2 w-max rounded-md hover:bg-gray-300"
@@ -329,7 +384,7 @@ function TimeSlotDisplayComponent(props: Props) {
               From: {timeslot.startTime}
             </p>
           )}
-          {!timeslot.startTime && (
+          {editable && !timeslot.startTime && (
             <p
               id={`starttime-placeholder-` + timeslot.id}
               className="font-thin ml-2 w-max rounded-md hover:bg-gray-300"
@@ -355,7 +410,7 @@ function TimeSlotDisplayComponent(props: Props) {
               To: {timeslot.endTime}
             </p>
           )}
-          {!timeslot.endTime && (
+          {editable && !timeslot.endTime && (
             <p
               id={`endtime-placeholder-` + timeslot.id}
               className="font-thin ml-2 w-max rounded-md hover:bg-gray-300"
@@ -372,6 +427,28 @@ function TimeSlotDisplayComponent(props: Props) {
             onKeyDown={handleEnterKeyPress}
             onBlur={toggleEndTimeUpdate}
           ></input>
+          <div className="flex flex-row gap-4 mt-2">
+            {editable &&
+              timeslot.pos !== 0 &&
+              timeslots[dateInterval.pos].length >= 2 && (
+                <button
+                  onClick={() => shift(1)}
+                  className="text-xl font-bold hover:bg-gray-200 rounded-md pl-2 pr-2"
+                >
+                  ↑
+                </button>
+              )}
+            {editable &&
+              timeslot.pos !== timeslots[dateInterval.pos].length - 1 &&
+              timeslots[dateInterval.pos].length >= 2 && (
+                <button
+                  onClick={() => shift(-1)}
+                  className="text-xl font-bold hover:bg-gray-200 rounded-md pl-2 pr-2"
+                >
+                  ↓
+                </button>
+              )}
+          </div>
         </div>
       </div>
     )

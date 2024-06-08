@@ -284,6 +284,71 @@ function DateIntervalDisplayComponent(props: Props) {
     setRenderArray(newRenderArray);
   }
 
+  function shift(change: number) {
+    let newDateIntervals = [...dateIntervals];
+
+    let temp = {
+      ...newDateIntervals[dateInterval.pos - change],
+      pos: dateInterval.pos,
+    };
+    newDateIntervals[dateInterval.pos - change] = {
+      ...newDateIntervals[dateInterval.pos],
+      pos: dateInterval.pos - change,
+    };
+    newDateIntervals[dateInterval.pos] = temp;
+
+    let newTimeSlots = [...timeslots];
+    let temp2 = [...newTimeSlots[dateInterval.pos]];
+    newTimeSlots[dateInterval.pos] = [
+      ...newTimeSlots[dateInterval.pos - change],
+    ];
+    newTimeSlots[dateInterval.pos - change] = temp2;
+
+    setDateIntervals(newDateIntervals);
+    setTimeslots(newTimeSlots);
+
+    let movedUpInterval = newDateIntervals[dateInterval.pos];
+    let movedDownInterval = newDateIntervals[dateInterval.pos - change];
+
+    let fetchData = {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify(movedUpInterval),
+    };
+    fetch(`/api/core/dateInterval/updateDateInterval`, fetchData).then(
+      (response) => {
+        if (response.ok) {
+          return;
+        }
+      }
+    );
+
+    fetchData = {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify(movedDownInterval),
+    };
+    fetch(`/api/core/dateInterval/updateDateInterval`, fetchData).then(
+      (response) => {
+        if (response.ok) {
+          return;
+        }
+      }
+    );
+
+    if (socket) {
+      socket.emit("UPDATE", tripId + ":" + username + ":UPDATED_DATE_INTERVAL");
+    }
+  }
+
   return (
     <>
       <div
@@ -424,7 +489,7 @@ function DateIntervalDisplayComponent(props: Props) {
                   </div>
                 </>
               )}
-              {dateInterval.budget === 0.0 && (
+              {editable && dateInterval.budget === 0.0 && (
                 <p
                   id={`dateinterval-budget-view-${dateInterval.id}`}
                   className="hover:bg-gray-400 rounded-md"
@@ -489,6 +554,28 @@ function DateIntervalDisplayComponent(props: Props) {
                   setSelectOnMap={setSelectOnMap}
                 />
               )}
+            </div>
+            <div className="flex flex-row gap-4 mt-2">
+              {editable &&
+                dateInterval.pos !== 0 &&
+                dateIntervals.length >= 2 && (
+                  <button
+                    onClick={() => shift(1)}
+                    className="text-xl font-bold hover:bg-gray-300 rounded-md pl-2 pr-2"
+                  >
+                    ↑
+                  </button>
+                )}
+              {editable &&
+                dateInterval.pos !== dateIntervals.length - 1 &&
+                dateIntervals.length >= 2 && (
+                  <button
+                    onClick={() => shift(-1)}
+                    className="text-xl font-bold hover:bg-gray-300 rounded-md pl-2 pr-2"
+                  >
+                    ↓
+                  </button>
+                )}
             </div>
           </div>
         </div>

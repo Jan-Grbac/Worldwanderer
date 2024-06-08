@@ -85,6 +85,7 @@ public class DateIntervalServiceImpl implements DateIntervalService {
         dateIntervalOld.setEndDate(dateInterval.getEndDate());
         dateIntervalOld.setName(dateInterval.getName());
         dateIntervalOld.setBudget(dateInterval.getBudget());
+        dateIntervalOld.setPos(dateInterval.getPos());
         dateIntervalRepository.save(dateIntervalOld);
     }
 }

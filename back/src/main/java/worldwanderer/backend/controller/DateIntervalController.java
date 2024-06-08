@@ -33,7 +33,6 @@ public class DateIntervalController {
     public ResponseEntity<List<DateIntervalData>> getIntervalsForTripId(@PathVariable String tripId) {
         Trip trip = tripService.getTripForId(Long.parseLong(tripId));
         List<DateInterval> intervals = dateIntervalService.getDateIntervalsForTrip(trip);
-        intervals.sort(Comparator.comparing(DateInterval::getStartDate).thenComparing(DateInterval::getEndDate));
         List<DateIntervalData> intervalsData = new LinkedList<>();
         for(DateInterval dateInterval : intervals) {
             intervalsData.add(

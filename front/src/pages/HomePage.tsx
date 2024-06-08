@@ -155,7 +155,7 @@ function HomePage(props: Props) {
           <div className="py-6">
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
               <div className="bg-white shadow-sm rounded-lg p-6">
-                <h2 className="mb-4 text-3xl font-bold text-black">
+                <h2 className="mb-4 text-2xl font-semibold text-black">
                   Featured trips
                 </h2>
                 <hr className="mb-6 border-b-2 border-orange-500 mx-auto" />
@@ -175,7 +175,7 @@ function HomePage(props: Props) {
 
           <section className="py-6 bg-gray-50">
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 text-center">
-              <h2 className="text-2xl font-bold text-black">
+              <h2 className="text-2xl font-semibold text-black">
                 Search for trips
               </h2>
               <div className="mt-4 flex justify-center">
@@ -209,7 +209,7 @@ function HomePage(props: Props) {
           <div className="py-6">
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
               <div className="bg-white shadow-sm rounded-lg p-6">
-                <h2 className="mb-4 text-3xl font-bold text-black">
+                <h2 className="mb-4 text-2xl font-semibold text-black">
                   Search results
                 </h2>
                 <hr className="mb-6 border-b-2 border-orange-500 mx-auto" />

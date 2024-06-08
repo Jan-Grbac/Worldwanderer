@@ -478,27 +478,29 @@ function TripPlannerPage(props: Props) {
                   editable={editable}
                   renderArray={renderArray}
                 />
-                <div className="flex flex-col gap-2 absolute bottom-10 pl-2 pr-14">
-                  <div className="ml-4 max-w-fit text-lg underline bg-white text-orange-400 pl-4 pr-4 rounded-md italic">
-                    Suggested attractions
+                {editable && suggestedAttractions.length !== 0 && (
+                  <div className="flex flex-col gap-2 absolute bottom-10 pl-2 pr-14">
+                    <div className="ml-4 max-w-fit text-lg underline bg-white text-orange-400 pl-4 pr-4 rounded-md italic">
+                      Suggested attractions
+                    </div>
+                    <div className="flex flex-row gap-2">
+                      {editable && suggestedAttractions.length !== 0 && (
+                        <>
+                          {suggestedAttractions.map(function (
+                            attraction: google.maps.places.PlaceResult
+                          ) {
+                            return (
+                              <AttractionDisplayComponent
+                                attraction={attraction}
+                                selectedTimeslot={selectedTimeslot as TimeSlot}
+                              />
+                            );
+                          })}
+                        </>
+                      )}
+                    </div>
                   </div>
-                  <div className="flex flex-row gap-2">
-                    {editable && suggestedAttractions.length !== 0 && (
-                      <>
-                        {suggestedAttractions.map(function (
-                          attraction: google.maps.places.PlaceResult
-                        ) {
-                          return (
-                            <AttractionDisplayComponent
-                              attraction={attraction}
-                              selectedTimeslot={selectedTimeslot as TimeSlot}
-                            />
-                          );
-                        })}
-                      </>
-                    )}
-                  </div>
-                </div>
+                )}
               </div>
               <div>
                 <div className="flex flex-col m-4 gap-4 border-l-2 border-l-orange-500 rounded-md shadow-md p-2">
@@ -544,29 +546,31 @@ function TripPlannerPage(props: Props) {
                   </div>
                 )}
 
-                <div className="flex flex-col w-full">
-                  <div className="mt-2 pl-2">
-                    Check out hotels near {selectedTimeslot?.name}:
+                {editable && hotels.length !== 0 && (
+                  <div className="flex flex-col w-full">
+                    <div className="mt-2 pl-2">
+                      Check out hotels near {selectedTimeslot?.name}:
+                    </div>
+                    <div className="grid grid-cols-2 grid-rows-3 gap-3 m-2">
+                      {editable && hotels.length !== 0 && (
+                        <>
+                          {hotels.map(function (
+                            hotel: google.maps.places.PlaceResult
+                          ) {
+                            return (
+                              <HotelDisplayComponent
+                                hotel={hotel}
+                                selectedDateInterval={
+                                  selectedDateInterval as DateInterval
+                                }
+                              />
+                            );
+                          })}
+                        </>
+                      )}
+                    </div>
                   </div>
-                  <div className="grid grid-cols-2 grid-rows-3 gap-3 m-2">
-                    {editable && hotels.length !== 0 && (
-                      <>
-                        {hotels.map(function (
-                          hotel: google.maps.places.PlaceResult
-                        ) {
-                          return (
-                            <HotelDisplayComponent
-                              hotel={hotel}
-                              selectedDateInterval={
-                                selectedDateInterval as DateInterval
-                              }
-                            />
-                          );
-                        })}
-                      </>
-                    )}
-                  </div>
-                </div>
+                )}
 
                 {!editable && jwtIsValid && trip?.published && (
                   <button

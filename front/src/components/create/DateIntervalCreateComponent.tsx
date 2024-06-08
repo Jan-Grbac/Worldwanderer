@@ -167,7 +167,7 @@ function DateIntervalCreateComponent(props: Props) {
             className="flex-grow hover:bg-gray-300 cursor-pointer rounded-md"
             onClick={toggleCreateDiv}
           >
-            <h2 className="pl-4 font-bold">Add new trip section</h2>
+            <h2 className="pl-4 font-semibold">Add new trip section</h2>
           </div>
         </div>
         <div
