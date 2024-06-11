@@ -571,31 +571,32 @@ function TripPlannerPage(props: Props) {
                     </div>
                   </div>
                 )}
-
-                {!editable && jwtIsValid && trip?.published && (
-                  <button
-                    onClick={copyTrip}
-                    className="confirmButton max-w-50 ml-4 mr-4"
-                  >
-                    Copy published trip and edit
-                  </button>
-                )}
-                {!editable && !jwtIsValid && trip?.published && (
-                  <button
-                    onClick={() => navigate("/signin")}
-                    className="confirmButton max-w-50 ml-4 mr-4"
-                  >
-                    Sign in to copy trip
-                  </button>
-                )}
-                {!editable && isOwner && !trip?.published && (
-                  <button
-                    onClick={() => navigate("/edittrip/" + trip?.id)}
-                    className="confirmButton max-w-50 ml-4 mr-4"
-                  >
-                    Edit your trip
-                  </button>
-                )}
+                <div className="flex flex-row justify-center">
+                  {!editable && jwtIsValid && trip?.published && (
+                    <button
+                      onClick={copyTrip}
+                      className="confirmButton max-w-50 ml-4 mr-4 self-center"
+                    >
+                      Copy published trip and edit
+                    </button>
+                  )}
+                  {!editable && !jwtIsValid && trip?.published && (
+                    <button
+                      onClick={() => navigate("/signin")}
+                      className="confirmButton max-w-50 ml-4 mr-4 self-center"
+                    >
+                      Sign in to copy trip
+                    </button>
+                  )}
+                  {!editable && isOwner && !trip?.published && (
+                    <button
+                      onClick={() => navigate("/edittrip/" + trip?.id)}
+                      className="confirmButton max-w-50 ml-4 mr-4 self-center"
+                    >
+                      Edit your trip
+                    </button>
+                  )}
+                </div>
                 <div>
                   {!editable &&
                     trip?.published &&
